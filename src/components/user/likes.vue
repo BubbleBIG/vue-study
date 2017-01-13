@@ -12,7 +12,7 @@
                 <div class="userLink likesLink">Likes</div>
             </router-link></li>
         </ul>
-        <div class="pins"><h1 style="height:1000px">++Likes++</h1></div>
+        <div class="likes"><h1 style="height:1000px">++Likes++</h1></div>
     </div>
 </template>
 
@@ -25,8 +25,8 @@
     }
 </script>
 
-<style lang="stylus" rel="stylesheet/stylus">
-    .pins
+<style lang="stylus" scope>
+    .likes
         h1
             font-size: 50px
 </style>

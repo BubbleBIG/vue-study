@@ -1,5 +1,5 @@
 <template>
-    <div class="navb">
+    <div class="navb flex">
         <span class="navb-group navb-g" style="width:40px;margin:0 10px 0 20px">
             <router-link to="/"style="padding:0"><img width="40" height="40" alt="Brand" src="../../assets/v.png"></router-link>
         </span>
@@ -10,20 +10,21 @@
             <input id="search1" type="text" class="form-control" placeholder="Search" 
             style="background-color:#ebebeb;margin-top:5px;font-size: 16px;font-weight: 600;height: 32px;line-height: 20px;">
         </form>
-        <span class="navb-group navb-g" style="width:px;padding:4px 0;">
-        <a class="categoriesheader"><div class="categoriesHeader"></div></a>
-        <ul class="dropdown-menu">
-        <span class="bot"></span>
-        <span class="top"></span>
-        <div></div>
-        </ul>
+        <span class="navb-group navb-g categoriesheader" style="width:px;padding:4px 0;">
+            <el-popover ref="popover1" placement="bottom" width="400" trigger="click">
+            <div style="height:500px"></div>
+            </el-popover>
+        <a v-popover:popover1 class=""><div class="categoriesHeader"></div></a>
         </span>
         <span class="navb-group navb-g" style="width:px;padding:4px 0;vertical-align: middles">
         <router-link to="/user" class="userimg"><div class="userImg"></div>
         </router-link>
         </span>
         <span class="navb-group navb-g" style="width:px;padding:4px 0;margin-right:4px;">
-        <a class="newsimg"><div class="newsImg"></div></a>
+            <el-popover ref="popover2" placement="bottom" width="400" trigger="click">
+            <div style="height:500px"></div>
+            </el-popover>
+        <a v-popover:popover2 class="newsimg"><div class="newsImg"></div></a>
         <div>
             <span class="bot"></span>
             <span class="top"></span>
@@ -32,7 +33,12 @@
     </div>
 </template>
 <script>
-    export default {}
+    export default {
+        data () {
+            return {
+            }
+        }
+    }
 </script>
 <style lang="stylus" rel="stylesheet/stylus">
     .navb-group

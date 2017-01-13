@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div id="app">
     <v-header></v-header>
     <div style="margin-top: 65px"></div>
     <router-view></router-view>
@@ -14,13 +14,17 @@
   }
 </script>
 <style lang="stylus" rel="stylesheet/stylus">
+  .flex
+    display: flex
+    display: -webkit-box
+    display: -ms-flexbox
+    display: -webkit-fle
   .navb
     position: fixed
     top: 0
     left: 0
     z-index: 999
     padding: 10px 0
-    display: flex
     width: 100%
     height: 40px
     line-height: 36px

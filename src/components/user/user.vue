@@ -1,14 +1,15 @@
 <template>
-    <div class="userCommon">
+    <div>
         <div class="fixedHeader">
-            <ul style="width:25%;padding: 7px 2px">
+        <div class="userCommon flex">
+            <ul class="" style="width:25%;padding: 7px 2px">
                 <li>
-                    <div class="iconButton">
+                    <router-link to="/settings" class="iconButton">
                         <button class="Button editSettingsButton mr2">
                             <em style="margin: 8px"></em>
                             <span class="accessibilityText">Edit settings</span>
                         </button>
-                    </div>
+                    </router-link>
                 </li>
                 <li class="" >
                     <div class="iconButton">
@@ -20,7 +21,10 @@
                 </li>
                 <li class="" >
                     <div class="iconButton">
-                        <button class="Button userMenuButton">
+                         <el-popover ref="popover3" placement="bottom" width="150" trigger="click">
+                            <div style="height:120px"></div>
+                        </el-popover>
+                        <button v-popover:popover3 class="Button userMenuButton">
                             <em style="margin: 10px"></em>
                             <span class="accessibilityText">User menu</span>
                         </button>
@@ -33,7 +37,8 @@
             </div>
             <div style="width:25%"></div>
         </div>
-        <div>
+        </div>
+        <div class="userCommon">
             <div class="flex" style="padding-top:64px">
                 <div class="user-info">
                     <div class="fontFamily"><h1>Bubble</h1></div>
@@ -55,15 +60,15 @@
     .fixedHeader
         position: fixed
         background-color: #fff
-        width: 756px
+        width: 100%
         z-index: 100
-        display: flex
+        /*display: flex*/
         opacity: 0.95
         .boardName
             font-size: 21px
             font-weight: bold
             vertical-align: middle
-            padding-top: 10px
+            padding-top: 18px
             top: -50px
             -webkit-text-stroke: 1.5px #000
             text-shadow: 0px 5px 5px #333
@@ -90,13 +95,6 @@
                 letter-spacing: -1.25px
                 line-height: 42px
                 word-spacing: -2.25px
-    
-    .flex
-        width: 100%
-        display: -webkit-box
-        display: -ms-flexbox
-        display: -webkit-flex
-        display: flex
     .editSettingsButton
         em
             width: 28px

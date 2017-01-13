@@ -12,7 +12,8 @@ var useCssSourceMap = cssSourceMapDev || cssSourceMapProd
 
 module.exports = {
   entry: {
-    app: './src/main.js'
+    app: ['whatwg-fetch', './src/main.js']
+    // app: './src/main.js'
   },
   output: {
     path: config.build.assetsRoot,
@@ -63,6 +64,10 @@ module.exports = {
           path.join(projectRoot, 'src')
         ],
         exclude: /node_modules/
+      },
+      {
+        test: /\.scss$/,
+        loaders: ["style", "css", "sass"]
       },
       {
         test: /\.json$/,
