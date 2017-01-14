@@ -2,13 +2,13 @@
     <div class="user-routers">
         <v-user></v-user>
         <ul class="userCommon">
-            <li><router-link to="/user/boards" class="userLink">
+            <li><router-link to="/u/boards" class="userLink">
                 <div class="userLink boardsLink">Boards</div>
             </router-link></li>
-            <li><router-link to="/user/pins" class="userLink">
+            <li><router-link to="/u/pins" class="userLink">
                 <div class="userLink pinsLink">Pins</div>
             </router-link></li>
-            <li><router-link to="/user/likes" class="userLink">
+            <li><router-link to="/u/likes" class="userLink">
                 <div class="userLink likesLink">Likes</div>
             </router-link></li>
         </ul>
@@ -146,15 +146,21 @@
         methods: {
             getBoards () {
                 let self = this
-                fetch('http://localhost:3000/todos')
+                fetch('http://localhost/camU/index/index/getboards.html', {
+                    method: 'GET',
+                    mode: 'no-cors',
+                    headers: { 'Content-Type': 'application/json' },
+                    credentials: 'same-origin'
+                })
                 .then(res => res.json())
                 .then(function (bos) {
+                    console.log(bos)
                     self.bos = bos
                 })
             },
             onSubmit () {
                 let self = this
-                var bname = this.form.name.trim()
+                var bname = this.form2.name.trim()
                 var secret = this.radio1
                 fetch('http://localhost:3000/todos', {
                     method: 'POST',

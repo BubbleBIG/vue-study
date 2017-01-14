@@ -2,13 +2,13 @@
     <div class="user-routers">
         <v-user></v-user>
         <ul class="userCommon">
-            <li><router-link to="/user/boards" class="userLink">
+            <li><router-link to="/u/boards" class="userLink">
                 <div class="userLink boardsLink">Boards</div>
             </router-link></li>
-            <li><router-link to="/user/pins" class="userLink">
+            <li><router-link to="/u/pins" class="userLink">
                 <div class="userLink pinsLink">Pins</div>
             </router-link></li>
-            <li><router-link to="/user/likes" class="userLink">
+            <li><router-link to="/u/likes" class="userLink">
                 <div class="userLink likesLink">Likes</div>
             </router-link></li>
         </ul>

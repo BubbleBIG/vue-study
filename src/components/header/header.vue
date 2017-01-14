@@ -17,7 +17,7 @@
         <a v-popover:popover1 class=""><div class="categoriesHeader"></div></a>
         </span>
         <span class="navb-group navb-g" style="width:px;padding:4px 0;vertical-align: middles">
-        <router-link to="/user" class="userimg"><div class="userImg"></div>
+        <router-link to="/u" class="userimg"><div class="userImg"></div>
         </router-link>
         </span>
         <span class="navb-group navb-g" style="width:px;padding:4px 0;margin-right:4px;">
