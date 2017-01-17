@@ -1,7 +1,7 @@
 <template>
     <div class="user-routers">
-        <v-user></v-user>
-        <ul class="userCommon">
+        <!--<v-user></v-user>-->
+        <!--<ul class="userCommon">
             <li><router-link to="/u/boards" class="userLink">
                 <div class="userLink boardsLink">Boards</div>
             </router-link></li>
@@ -11,7 +11,7 @@
             <li><router-link to="/u/likes" class="userLink">
                 <div class="userLink likesLink">Likes</div>
             </router-link></li>
-        </ul>
+        </ul>-->
         <div class="boards">
             <div class="boardsItems flex-wrap">
                 <div class="ProfileBoardCard" style="margin:20px 0;padding: 0 12px">
@@ -35,7 +35,7 @@
                         </div>
                         <div class="px1 py2">
                             <div class="pz3" style="color:#555">{{ bo.bname }}</div>
-                            <div class="pz3 pz4">0 Pins</div>
+                            <div class="pz3 pz4">{{ bo.count }} Pins</div>
                             <button class="pz3 pz5" style="color: #555" @click="changeBoard(bo.id),
                                 dialogFormVisible1 = true">Edit</button>
                         </div>
@@ -114,18 +114,17 @@
     // firebase.initializeApp(config)
 
     // var usersRef = firebase.database().ref('users')
-    import user from './user.vue'
+    // import user from './user.vue'
     export default {
-        components: {
-        'v-user': user
-        },
+        // components: {
+        // 'v-user': user
+        // },
         data () {
             return {
                 radio1: 'No',
                 // radio2: '',
                 dialogFormVisible1: false,
                 form1: {
-                // bname: ''
                 },
                 formLabelWidth: '120px',
                 dialogFormVisible2: false,
@@ -146,9 +145,10 @@
         methods: {
             getBoards () {
                 let self = this
-                fetch('http://localhost/camU/index/index/getboards.html', {
+                fetch('http://localhost:3000/todos', {
+                // fetch('http://localhost/camU/index/index/getboards', {
                     method: 'GET',
-                    mode: 'no-cors',
+                    // mode: 'no-cors',
                     headers: { 'Content-Type': 'application/json' },
                     credentials: 'same-origin'
                 })

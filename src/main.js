@@ -7,7 +7,7 @@ import 'element-ui/lib/theme-default/index.css'
 import App from './App'
 import 'whatwg-fetch'
 import home from './components/home/home'
-// import user from './components/user/user'
+import user from './components/user/user'
 import boards from './components/user/boards'
 import pins from './components/user/pins'
 import likes from './components/user/likes'
@@ -19,13 +19,13 @@ Vue.use(VueRouter)
 Vue.use(ElementUI)
 
 /* eslint-disable no-new */
-const UrlTest = {
-  template: `
-    <div class="user">
-      <router-view></router-view>
-    </div>
-  `
-}
+// const UrlTest = {
+//   template: `
+//     <div class="user">
+//       <router-view></router-view>
+//     </div>
+//   `
+// }
  const router = new VueRouter({
   linkActiveClass: 'active',
   mode: 'history',
@@ -34,7 +34,7 @@ const UrlTest = {
     { path: '/', component: home },
     { path: '/settings', component: settings },
     { path: '/:id',
-      component: UrlTest,
+      component: user,
       children: [
         { path: '', component: boards },
         { path: 'boards', component: boards },

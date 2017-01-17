@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="user-routers">
         <div class="fixedHeader">
         <div class="userCommon flex">
             <ul class="" style="width:25%;padding: 7px 2px">
@@ -33,7 +33,7 @@
                 </li>
             </ul>
             <div style="width:50%;vertical-align: middle">
-                <div align="center" class="boardName"><h1>Bubble</h1></div>
+                <div align="center" id="boardName" class="boardName"><h1>Bubble</h1></div>
             </div>
             <div style="width:25%"></div>
         </div>
@@ -49,6 +49,18 @@
                 </div>
             </div>
         </div>
+        <ul class="userCommon">
+            <li><router-link to="/u/boards" class="userLink">
+                <div class="userLink boardsLink">Boards</div>
+            </router-link></li>
+            <li><router-link to="/u/pins" class="userLink">
+                <div class="userLink pinsLink">Pins</div>
+            </router-link></li>
+            <li><router-link to="/u/likes" class="userLink">
+                <div class="userLink likesLink">Likes</div>
+            </router-link></li>
+        </ul>
+        <router-view></router-view>
     </div>
 </template>
 
