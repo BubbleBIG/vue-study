@@ -2,21 +2,25 @@
 // (runtime-only or standalone) has been set in webpack.base.conf with an alias.
 import Vue from 'vue'
 import VueRouter from 'vue-router'
+// import 'radon-ui/dist/radon-ui.css'
 import ElementUI from 'element-ui'
 import 'element-ui/lib/theme-default/index.css'
 import App from './App'
-import 'whatwg-fetch'
+// import 'whatwg-fetch'
 import home from './components/home/home'
 import user from './components/user/user'
 import boards from './components/user/boards'
 import pins from './components/user/pins'
 import likes from './components/user/likes'
 import settings from './components/user/settings'
+import VueAwesomeSwiper from 'vue-awesome-swiper'
+// import '../static/js/test.js'
 // require('es6-promise').polyfill()
 // require('isomorphic-fetch')
 
 Vue.use(VueRouter)
 Vue.use(ElementUI)
+Vue.use(VueAwesomeSwiper)
 
 /* eslint-disable no-new */
 // const UrlTest = {

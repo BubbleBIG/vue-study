@@ -19,10 +19,12 @@
                         </button>
                     </div>
                 </li>
-                <li class="" >
+                <li class="" id="userInfo">
                     <div class="iconButton">
-                         <el-popover ref="popover3" placement="bottom" width="150" trigger="click">
-                            <div style="height:120px"></div>
+                         <el-popover ref="popover3" placement="bottom" width="100" trigger="click">
+                            <div style="height:130px;text-align:center">
+                                <div>Logout</div>
+                            </div>
                         </el-popover>
                         <button v-popover:popover3 class="Button userMenuButton">
                             <em style="margin: 10px"></em>
@@ -43,21 +45,21 @@
                 <div class="user-info">
                     <div class="fontFamily"><h1>Bubble</h1></div>
                 </div>
-                <div class="user-info" align="right">
+                <div class="user-info gradient-wrap" align="right">
                     <div></div>
                     <img src="../../common/images/person.png" width="156" height="156" />
                 </div>
             </div>
         </div>
         <ul class="userCommon">
-            <li><router-link to="/u/boards" class="userLink">
+            <li><router-link :to="'/' + userName + '/boards'" class="userLink boardLink">
                 <div class="userLink boardsLink">Boards</div>
             </router-link></li>
-            <li><router-link to="/u/pins" class="userLink">
+            <li><router-link :to="'/' + userName + '/pins'" class="userLink" onclick="llk1()">
                 <div class="userLink pinsLink">Pins</div>
             </router-link></li>
-            <li><router-link to="/u/likes" class="userLink">
-                <div class="userLink likesLink">Likes</div>
+            <li><router-link :to="'/' + userName + '/likes'" class="userLink">
+                <div onclick="llk ()" class="userLink likesLink">Likes</div>
             </router-link></li>
         </ul>
         <router-view></router-view>
@@ -65,7 +67,31 @@
 </template>
 
 <script>
-    export default {}
+    export default {
+        data () {
+            return {
+                userName: 'Bubble'
+            }
+        }
+    }
+// window.onload = function () {
+// window.onscroll = function () {
+//     var scrollTop = document.documentElement.scrollTop || window.pageYOffset || document.body.scrollTop;
+//     var bName = document.getElementById('boardName');
+//     if (scrollTop >= 50) {
+//         bName.classList.add("transitionIn");
+//         bName.classList.remove("transitionOut");
+//         // addClass (bName,"transitionIn");
+//         // removeClass (bName,"transitionOut");
+//         // console.log(bName);
+//     } else {
+//         bName.classList.remove("transitionIn");
+//         bName.classList.add("transitionOut");
+//         // removeClass (bName,"transitionIn");
+//         // addClass (bName,"transitionOut");
+//     }
+// }
+// }
 </script>
 
 <style lang="stylus" rel="stylesheet/stylus">

@@ -63,9 +63,7 @@
                 </div>
             </el-form>
         </el-dialog>
-        <el-dialog title="Edit your board" v-model="dialogFormVisible1">
-            <span style="float: left;margin-top:-48px;margin-left:130px;
-            font-size:18px;color:#000">{{ form1.bname }}</span>
+        <el-dialog :title="'Edit your board -- ' + form1.bname" v-model="dialogFormVisible1" top="18%">
             <el-form :model="form1" ref="form1" label-position="left">
                 <el-form-item label="Name" :label-width="formLabelWidth">
                 <el-input v-model="form1.bname" auto-complete="off"></el-input>
@@ -84,7 +82,8 @@
                     </el-select>
                 </el-form-item>
                 <el-form-item label="Cover" :label-width="formLabelWidth">
-                    <el-button>Change</el-button>
+                    <el-button @click="dialogVisible2 = true,
+                    changeCover(form1.id)">Change</el-button>
                 </el-form-item>
                 <el-form-item label="Secret" :label-width="formLabelWidth">
                 <el-radio-group v-model="form1.secret">
@@ -94,12 +93,43 @@
                 </el-form-item>
                 <hr>
                 <div class="dialog-footer">
-                    <el-button class="pz3" :plain="true" type="danger" @click="delBoard(form1.id)"
-                     style="float:left">Delete board</el-button>
+                    <el-button class="pz3" :plain="true" type="danger" @click="dialogVisible = true" style="float:left">Delete board</el-button>
                     <el-button class="pz3" @click="dialogFormVisible1 = false">Cancel</el-button>
                     <el-button class="pz3" style="color: #fff" type="primary" @click="">Save</el-button>
                 </div>
             </el-form>
+        </el-dialog>
+        <el-dialog :title="'Change Board Cover / ' + form1.bname" v-model="dialogVisible2" top="20%">
+            <swiper :options="swiperOption">
+            <swiper-slide v-for="slide in pinss">
+            <el-radio-group v-model="radio3" fill="#FF4949">
+                 <el-radio-button :label="slide.id"
+                 :style="{backgroundImage:'url(' + slide.url + ')'}">
+                 </el-radio-button>
+            </el-radio-group>
+            </swiper-slide>
+            <!--<swiper-slide v-for="slide in pinss">{{ slide.id }}</swiper-slide>-->
+            <div class="swiper-button-prev" slot="button-prev"></div>
+            <div class="swiper-button-next" slot="button-next"></div>
+            </swiper>
+                <!--<el-carousel :interval="9999999" type="card"
+                height="300px" :autoplay="false">
+                    <el-carousel-item v-for="item in pinss">
+                    <h3>{{ item.id }}</h3>
+                    </el-carousel-item>
+                </el-carousel>-->
+            <span slot="footer" class="dialog-footer">
+                <el-button @click="dialogVisible2 = false">Cancel</el-button>
+                <el-button type="primary" @click="">Save Changes</el-button>
+            </span>
+        </el-dialog>
+        <el-dialog title="Are you sure?" v-model="dialogVisible" size="tiny" top="35%">
+            <span>Once you delete a board and all its Pins, you can't undo it!</span>
+            <span slot="footer" class="dialog-footer">
+                <el-button @click="dialogVisible = false">Cancel</el-button>
+                <el-button type="primary" @click="
+                    delBoard(form1.id)">Delete board</el-button>
+            </span>
         </el-dialog>
     </div>
     
@@ -122,7 +152,11 @@
         data () {
             return {
                 radio1: 'No',
+                radio3: 1,
+                visible2: false,
                 // radio2: '',
+                dialogVisible: false,
+                dialogVisible2: false,
                 dialogFormVisible1: false,
                 form1: {
                 },
@@ -136,7 +170,17 @@
                     label: 'Other'
                     }],
                 value: '',
-                bos: []
+                bos: [],
+                swiperOption: {
+                    pagination: '.swiper-pagination',
+                    effect: 'cube',
+                    // effect: 'flip',
+                    grabCursor: true,
+                    mousewheelControl: true,
+                    nextButton: '.swiper-button-next',
+                    prevButton: '.swiper-button-prev'
+                },
+                pinss: {}
             }
         },
         created: function () {
@@ -154,7 +198,7 @@
                 })
                 .then(res => res.json())
                 .then(function (bos) {
-                    console.log(bos)
+                    // console.log(bos)
                     self.bos = bos
                 })
             },
@@ -191,7 +235,7 @@
                 .then(res => res.json())
                 .then(function (res) {
                     self.form1 = res
-                    console.log(self.form1.bname)
+                    // console.log(self.form1.bname)
                 // if (res.status >= 200) {
                 //     for (var i = self.todos.length - 1; i >= 0; i--) {
 
@@ -203,9 +247,50 @@
                 // }
                 })
             },
+            changeCover (e) {
+                let self = this
+                fetch('http://localhost:3000/upload', {
+                // fetch('http://localhost/camU/index/index/getpins', {
+                    method: 'GET',
+                    // mode: 'no-cors',
+                    headers: { 'Content-Type': 'application/json' },
+                    credentials: 'same-origin'
+                })
+                .then(res => res.json())
+                .then(function (pins) {
+                    // console.log(pins)
+                    self.pinss = pins
+                })
+                console.log(e + 'hhhh')
+            },
             delBoard (e) {
+                        let self = this
+                fetch('http://localhost:3000/todos/' + e, {
+                    method: 'GET'
+                })
+                .then(res => res.json())
+                .then(function (res) {
+                    self.form1 = res
+                    // console.log(self.form1.bname)
+                // if (res.status >= 200) {
+                //     for (var i = self.todos.length - 1; i >= 0; i--) {
+
+                //     if (self.todos[i].id === e) {
+                //         console.log(i)
+                //         // self.todos.splice(i,1)
+                //     }
+                //     }
+                // }
+                })
                 console.log(e)
             }
+        },
+        mounted() {
+            setInterval(() => {
+            // console.log('simulate async data')
+            let swiperSlides = this.pinss
+            if (swiperSlides.length < 2) swiperSlides.push(swiperSlides.length + 1)
+            }, 3000)
         }
     }
 </script>
@@ -307,4 +392,13 @@
 @media (max-width: 974px) and (min-width: 650px)
     .boardsItems
             width: 650px
+.swiper-container
+    width: 300px!important
+    height: 300px!important
+    label
+        width: 300px
+        height: 300px
+        background-position: 50%!important
+        background-size: cover!important
+
 </style>
