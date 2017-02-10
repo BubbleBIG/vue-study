@@ -1,5 +1,6 @@
 <template>
     <div class="settings" style="width:500px;margin: 0 auto">
+    <v-header></v-header>
         <el-form label-position="top" :model="formStacked" class="demo-form-stacked">
             <el-form-item label="Email Address" style="padding-top:20px">
                 <el-input v-model="formStacked.mail"></el-input>
@@ -67,7 +68,11 @@
 </template>
 
 <script>
+import header from '../header/header.vue'
     export default {
+        components: {
+        'v-header': header
+        },
         data () {
             return {
                 userName: 'Bubble',

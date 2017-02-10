@@ -8,6 +8,7 @@ import 'element-ui/lib/theme-default/index.css'
 import App from './App'
 // import 'whatwg-fetch'
 import home from './components/home/home'
+import login from './components/user/login'
 import user from './components/user/user'
 import boards from './components/user/boards'
 import pins from './components/user/pins'
@@ -30,12 +31,22 @@ Vue.use(VueAwesomeSwiper)
 //     </div>
 //   `
 // }
+function guardRoute (to, from, next) {
+  if (window.confirm('Navigate to ?')) {
+    next()
+  } else {
+    next('/login')
+  }
+}
+
  const router = new VueRouter({
   linkActiveClass: 'active',
   mode: 'history',
   base: __dirname,
    routes: [
+    // { path: '/', component: home, beforeEnter: guardRoute },
     { path: '/', component: home },
+    { path: '/login', component: login },
     { path: '/settings', component: settings },
     { path: '/:id',
       component: user,
@@ -47,6 +58,35 @@ Vue.use(VueAwesomeSwiper)
       ]
     }
   ]
+})
+
+router.beforeEach((to, from, next) => {
+  // console.log(to)
+  let self = this
+  fetch('http://localhost:3000/login', {
+    method: 'GET'
+  })
+  .then(res => res.json())
+  .then(function (id) {
+    const {auth = true} = to.meta      // meta代表的是to中的meta对象，path代表的是to中的path对象
+    var isLogin = Boolean(1)    // true用户已登录,false用户未登录
+    if (auth && !isLogin && to.path !== '/login') {  // auth 代表需要通过用户身份验证,默认为true,代表需要被验证,false为不用检验
+      return next({ path: '/login' },
+      {a: 10})   //  跳转到login页面
+    } else if (auth && isLogin && to.path === '/login') {
+      setTimeout(() => {
+        // return next('/')
+        }, 1000)
+      // return next('/')
+    }
+    next()   // 进行下一个钩子函数
+  })
+  // const {auth = true} = meta      // meta代表的是to中的meta对象，path代表的是to中的path对象
+  // var isLogin = Boolean(id)    // true用户已登录,false用户未登录
+  // if (auth && !isLogin && path !== '/login') {  // auth 代表需要通过用户身份验证,默认为true,代表需要被验证,false为不用检验
+  //   return next({ path: '/login' })   //  跳转到login页面
+  // }
+  // next()   // 进行下一个钩子函数
 })
 new Vue({
   router,

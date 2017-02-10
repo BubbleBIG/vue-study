@@ -1,15 +1,17 @@
 <template>
   <div id="app">
-    <v-header></v-header>
+    <!--<div v-if="">-->
+    <!--<v-header></v-header>-->
+    <!--</div>-->
     <div style="margin-top: 65px"></div>
     <router-view></router-view>
   </div>
 </template>
 <script>
-  import header from './components/header/header.vue'
+  // import header from './components/header/header.vue'
   export default {
     components: {
-      'v-header': header
+      // 'v-header': header
     }
   }
 </script>

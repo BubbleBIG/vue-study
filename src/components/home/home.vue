@@ -1,4 +1,6 @@
 <template>
+    <div>
+    <v-header></v-header>
     <div class="user-routers">
 		<div class="boards pins">
 			<div v-for="pin in pins" class="pinsItemsClass pinsItem" align="center">
@@ -58,11 +60,14 @@
 			<h1 style="height:1000px">++Home++</h1>
 		</div>
     </div>
+    </div>
 </template>
 
 <script>
+import header from '../header/header.vue'
     export default {
         components: {
+        'v-header': header
         },
         data () {
             return {

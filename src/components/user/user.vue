@@ -1,5 +1,6 @@
 <template>
     <div class="user-routers">
+    <v-header></v-header>
         <div class="fixedHeader">
         <div class="userCommon flex">
             <ul class="" style="width:25%;padding: 7px 2px">
@@ -23,7 +24,7 @@
                     <div class="iconButton">
                          <el-popover ref="popover3" placement="bottom" width="100" trigger="click">
                             <div style="height:130px;text-align:center">
-                                <div>Logout</div>
+                                <el-button type="text" @click="logout">Logout</el-button>
                             </div>
                         </el-popover>
                         <button v-popover:popover3 class="Button userMenuButton">
@@ -52,7 +53,7 @@
             </div>
         </div>
         <ul class="userCommon">
-            <li><router-link :to="'/' + userName + '/boards'" class="userLink boardLink">
+            <li><router-link :to="'/' + userName + '/boards'" class="userLink">
                 <div class="userLink boardsLink">Boards</div>
             </router-link></li>
             <li><router-link :to="'/' + userName + '/pins'" class="userLink" onclick="llk1()">
@@ -67,10 +68,19 @@
 </template>
 
 <script>
+import header from '../header/header.vue'
     export default {
+        components: {
+        'v-header': header
+        },
         data () {
             return {
                 userName: 'Bubble'
+            }
+        },
+        methods: {
+            logout () {
+                console.log(1)
             }
         }
     }

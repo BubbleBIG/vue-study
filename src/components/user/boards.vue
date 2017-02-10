@@ -63,7 +63,7 @@
                 </div>
             </el-form>
         </el-dialog>
-        <el-dialog :title="'Edit your board -- ' + form1.bname" v-model="dialogFormVisible1" top="18%">
+        <el-dialog :title="'Edit your board : ' + form1.bname" v-model="dialogFormVisible1" top="18%">
             <el-form :model="form1" ref="form1" label-position="left">
                 <el-form-item label="Name" :label-width="formLabelWidth">
                 <el-input v-model="form1.bname" auto-complete="off"></el-input>

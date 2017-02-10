@@ -291,6 +291,9 @@ window.addEventListener('load', function () {
 @media (max-width: 2079px) and (min-width: 1820px)
     .pins
         width: 1820px
+@media (max-width: 1819px) and (min-width: 1560px)
+    .pins
+        width: 1560px
 @media (max-width: 1559px) and (min-width: 1300px)
     .pins
         width: 1300px
