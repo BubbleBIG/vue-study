@@ -6,9 +6,11 @@
     <meta name="viewport"
         content="width=device-width,initial-scale=1.0,maximum-scale=1.0,minimum-scale=1.0,user-scalable=no">
     <link rel="stylesheet" type="text/css" href="/static/css/reset.css">
-    <!--<script src="/static/js/jquery.min.js"></script>-->
-    <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+    <script src="/static/js/jquery-3.1.1.js"></script>
+     <!--<script src="https://cdn.bootcss.com/jquery/1.12.4/jquery.min.js"></script>-->
+    <!--<script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>-->
     <script src="/static/js/grade.js"></script>
+    <!--<script src="/static/js/test.js"></script>-->
   </head>
   <body>
     <div id="app"></div>
@@ -40,6 +42,115 @@
     //     });
     //     return false;
     // }
+    // $(function () {
+    //   $(window).on('resize',function () {
+    //          waterfall();
+    //     })
+    //     function waterfall () {
+    //         var itemW = $('.item').outerWidth(true),
+    //             windowW = $(window).width(),
+    //             colNum = Math.floor(windowW/itemW),//有多少列
+    //             colNowHeight = [];//存放每一列当前总的高度
+
+    //         for(var i = 0;i < colNum;i++){
+    //             colNowHeight.push(0);//初始化数组，每列当前总的高度0
+    //         }
+
+    //         //遍历每个item选择他们的归属
+    //         $('.item').each(function() {
+    //             $this = $(this);
+    //             //遍历找出高度最短的列及其对应的高度
+    //             var minColNowHeight = colNowHeight[0],
+    //                 minCol = 0;//最小总高度的列
+    //             for(var i = 0;i < colNowHeight.length;i++){
+    //                 if (colNowHeight[i] < minColNowHeight) {
+    //                     minColNowHeight = colNowHeight[i];
+    //                     minCol = i;
+    //                 }
+    //             }
+    //             $this.css({
+    //                 left: itemW * minCol,
+    //                 top: minColNowHeight
+    //             });
+    //             colNowHeight[minCol] += $this.outerHeight(true);
+    //         });
+    //     }
+    // })
+//     var _doc = document,
+//     _win = window;
+
+// // getId(IdName) / 获取ID 方法
+// function GetId(IdName){
+//     return _doc.getElementById(IdName);
+// }
+
+// // GetTag(Fathers,TagName) / 获取 tagname 方法
+// function GetTag(Fathers,TagName){
+//     return Fathers.getElementsByTagName(TagName);
+// }
+// /* 常用js方法结束 */
+
+// // 通过常用方法，找到需要处理的元素
+// var _obj = GetId("waterfall"),
+//     _ul = GetTag(_obj,"ul"),
+//     _li = GetTag(_obj,"li");
+
+// // 瀑布流函数
+// function WaterFall(){
+//     var StartTime = new Date().getTime();
+//     var _blank = 20,                        // 瀑布流间距
+//         _liW = 200 + _blank,                // 每列宽度
+//         // _winW = _doc.outerWidth,            // 窗口宽度
+//         _winW = _win.outerWidth,            // 窗口宽度
+//         _row = parseInt(_winW/_liW),        // 得到最多放几列
+//         _ulW = _row * _liW - _blank + 'px'; // 算出 ul 的宽度
+//     _ul[0].style.width = _ulW;              // 设定ul的宽度
+
+//         console.log(_winW)
+//     var _arr = [];                          // 和jquery 版本一样，建立一个空数组
+
+//     // 开始循环每一个 li
+//     for (var i = 0; i < _li.length; i++) {
+//         if (i<_row) {                               // 第一行的处理
+
+//             _li[i].style.top = 0;
+//             _li[i].style.left = i*_liW + 'px';
+//             _arr[i] = _li[i].offsetHeight;          // 将自身的高度，写入数组
+
+//         }else{
+
+//             var _minH = +Infinity,                  // 最小高度变量，默认为无穷大
+//                 _minI;                              // 空变量，用来存最小高度数组的 key 值
+
+//             // 循环由第一行每个li的高度组成的数组
+//             for (var j = 0; j < _arr.length; j++) {
+
+//                 if (_arr[j]<_minH) {                // 如果当前数组的值小于上面设定的_minH
+//                     var _minH = _arr[j],            // 则将 _minH 变量写成当前数组的值 （通过循环，能找到最小值）
+//                         _minI = j;                  // 将最小值的 key 值写入到 _minI
+//                 };
+//             };
+
+//             _li[i].style.top = _minH + _blank + 'px';
+//             _li[i].style.left = _minI * _liW + 'px';
+
+//             // 将数组中最小的值，加上这个 li 的高度和留白，得出的值存入数组
+//             _arr[_minI] += _li[i].offsetHeight + _blank;
+
+//         };
+//     };
+//     var StopTime = new Date().getTime();
+//     console.log("耗时"+(StopTime-StartTime)+"毫秒")
+// }
+
+// // 加载完成后执行
+// window.onload = function() {
+//     WaterFall();
+// };
+// // 窗口变化时执行
+// window.onresize = function() {
+//     WaterFall();
+// };
     </script>
   </body>
   <style>

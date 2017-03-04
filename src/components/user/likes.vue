@@ -4,6 +4,40 @@
         <input type="file" name="photo" id="photo" @change="uploadOne">
         <p><input type="button" name="b1" value="submit" onclick="fsubmit()"></p>
     </form>
+    <waterfall :line-gap="260" :watch="pins">
+    <!-- each component is wrapped by a waterfall slot -->
+    <waterfall-slot
+        v-for="(pin, index) in pins"
+        :width="260"
+        :height="pin.height + 100"
+        :order="index"
+        :key="pin.id"
+    >
+    <div style="padding: 12px">
+        <img :src="pin.url" width="100%" class=""/>
+        <div>
+            <div class="pinMetaWrapper">
+                    <div style="width: 150px;height:29px;line-height:14px;font-size:14px;
+                    word-break:break-all;float:left;overflow:hidden">
+                        我qwqwqwqdjasdnassadasdsadsad是我qwqwqwqdjasdnassadasdsadsad是</div>
+                    <a href="###" align="right"><em class="repinIconSmall"></em>
+                    <em class="repinCountSmall">111111</em></a>
+                </div>
+                <div style="height: 50px;clear:both" align="left">
+                    <a href="####" style="height: 30px;color: #a8a8a8">
+                        <div class="userPic"><img src="../../common/images/person.png"
+                        style="vertical-align: middle;width:24px;height:24px"></div>
+                        <div class="creditName">Saved to</div>
+                        <div class="creditTitle">first</div>
+                    </a>
+                </div>
+        </div>
+    </div>
+        <!--
+        your component
+        -->
+    </waterfall-slot>
+    </waterfall>
 		<!--<el-button type="text" @click="open4">点击打开 Message Box</el-button>-->
         <!--<v-user></v-user>-->
         <!--<ul class="userCommon">
@@ -22,7 +56,7 @@
 			margin-left: 20px; margin-top: 10px; transition: all 1s; max-height: 800px;">
 				<img :src="pin.url" width="100%" class=""/>
 			</div>-->
-			<!--<div class="item h1">2</div>
+			<div class="item h1">2</div>
 			<div class="item h2">3</div>
 			<div class="item h1">4</div>
 			<div class="item h2">5</div>
@@ -37,7 +71,7 @@
 			<div class="item h4">14</div>
 			<div class="item h2">15</div>
 			<div class="item h1">16</div>
-			<div class="item h4">17</div>   	-->
+			<div class="item h4">17</div>   	
 		<!--</div>-->
         <div class="likes">
 			<!--<div class="wrap pins" style="width:100%">
@@ -52,16 +86,87 @@
 </template>
 
 <script>
+import Waterfall from 'vue-waterfall/lib/waterfall'
+import WaterfallSlot from 'vue-waterfall/lib/waterfall-slot'
     // import user from './user.vue'
 	// import { rdUpload } from 'radon-ui'
     export default {
         components: {
 			// rdUpload
         // 'v-user': user
+        Waterfall,
+        WaterfallSlot
+        },
+        mounted: function () {
+            document.title = this.$route.path   // 改变网页title
+                function getViewSize () {
+return {"width": window['innerWidth'] || document.documentElement.clientWidth,
+"height": window['innerHeight'] || document.documentElement.clientHeight}
+}
+function getFullSize () {
+let w = Math.max(document.documentElement.clientWidth, document.body.clientWidth) +
+
+Math.max(document.documentElement.scrollLeft, document.body.scrollLeft);
+let h = Math.max(document.documentElement.clientHeight, document.body.clientHeight) +
+
+Math.max(document.documentElement.scrollTop, document.body.scrollTop);
+w = Math.max(document.documentElement.scrollWidth, w);
+h = Math.max(document.documentElement.scrollHeight, h);
+return {"width": w, "height": h};
+}
+
+function setContainerSize () {
+    var size = getViewSize();
+// console.log(size["width"]);
+// console.log(size["height"]);
+}
+
+setContainerSize();
+// waterfall();
+window.onresize = setContainerSize;
+window.onresize = waterfall;
+function waterfall () {
+    var size = getViewSize();
+    // console.log(size["width"]);
+    var itemW = $('.item').outerWidth(true)
+    // windowW = $(window).width(),
+    // var windowW = size["width"]
+    var windowW = window.innerWidth
+    var colNum = Math.floor(windowW / itemW)  //    有多少列
+        // colNum = 4;
+        var colNowHeight = [];//    存放每一列当前总的高度
+        //  console.log(windowW);
+    for (let i = 0; i < colNum; i++) {
+        colNowHeight.push(0);// 初始化数组，每列当前总的高度0
+    }
+    //  遍历每个item选择他们的归属
+    $('.item').each(function () {
+        var $this = $(this);
+        //  遍历找出高度最短的列及其对应的高度
+        let minColNowHeight = colNowHeight[0]
+        var minCol = 0;//   最小总高度的列
+        for (let i = 0; i < colNowHeight.length; i++) {
+            if (colNowHeight[i] < minColNowHeight) {
+                minColNowHeight = colNowHeight[i];
+                minCol = i;
+            }
+        }
+        $this.css({
+            left: itemW * minCol,
+            top: minColNowHeight
+        });
+        colNowHeight[minCol] += $this.outerHeight(true);
+    });
+}
+$(function () {
+   waterfall();
+})
         },
         data () {
             return {
-                pins: []
+                pins: [],
+                align: 'center',
+                isBusy: false
             }
         },
         created: function () {

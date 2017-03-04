@@ -63,6 +63,7 @@
                 <!--<el-button type="primary" @click="">upload</el-button>-->
             </el-form>
         </el-dialog>
+        <div id="pinheight"><img src="../../common/images/person.png"  width="75" height="95"></div>
     </div>
     
 </template>
@@ -73,7 +74,33 @@ import header from '../header/header.vue'
         components: {
         'v-header': header
         },
+        mounted: function () {
+            document.title = this.$route.path   // 改变网页title
+            var b = $("#pinheight").outerHeight(true)
+            var a = $('#pinheight')
+            // var h = window.offsetHeight
+            var o = document.getElementById("pinheight")
+            let c = document.getElementById("pinheight")
+            var h = o.offsetHeight;
+            var w = o.offsetWidth;
+            // debugger;
+            console.log(w)
+            console.log(h)
+            console.log(b)
+            console.log(a)
+        },
         data () {
+            var b = $("#pinheight").outerHeight(true)
+            var a = $('#pinheight')
+            // var h = window.offsetHeight
+            // var o = document.getElementById("pinheight")
+            // let c = document.getElementById("pinheight")
+            // var h = o.offsetHeight;
+            // var w = o.offsetWidth;
+            // debugger;
+            // console.log(w)
+            // console.log(h)
+            console.log(b)
             return {
                 userName: 'Bubble',
                 radio3: 0,
@@ -93,7 +120,24 @@ import header from '../header/header.vue'
                 dialogFormVisible4: false
             }
         },
+        created: function () {
+            this.pinHeight()
+        },
         methods: {
+            pinHeight () {
+                // var b = $("#pinheight").outerHeight(true)
+                // var a = $('#pinheight')
+                // // var h = window.offsetHeight
+                // var o = document.getElementById("pinheight")
+                // let c = document.getElementById("pinheight")
+                // var h = o.offsetHeight;
+                // var w = o.offsetWidth;
+                // // debugger;
+                // console.log(w)
+                // console.log(h)
+                // console.log(b)
+                // console.log(a)
+            },
             onSubmit () {
                 console.log('submit!')
             }

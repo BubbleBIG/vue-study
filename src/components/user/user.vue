@@ -73,11 +73,28 @@ import header from '../header/header.vue'
         components: {
         'v-header': header
         },
+        mounted: function () {
+            document.title = this.$route.path   // 改变网页title
+            window.onscroll = function () {     // 滑动条触发动画
+                var scrollTop = document.documentElement.scrollTop || window.pageYOffset || document.body.scrollTop;
+                var bName = document.getElementById('boardName');
+                if (scrollTop >= 50) {
+                    bName.classList.add("transitionIn");
+                    bName.classList.remove("transitionOut");
+                } else {
+                    bName.classList.remove("transitionIn");
+                    bName.classList.add("transitionOut");
+                }
+            }
+        },
         data () {
             return {
                 userName: 'Bubble'
             }
         },
+        // mounted: function () {
+        //     document.title = this.$route.path
+        // },
         methods: {
             logout () {
                 console.log(1)

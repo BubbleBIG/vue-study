@@ -123,7 +123,7 @@
                 <el-button type="primary" @click="">Save Changes</el-button>
             </span>
         </el-dialog>
-        <el-dialog title="Are you sure?" v-model="dialogVisible" size="tiny" top="35%">
+        <el-dialog title="Are you sure?" v-model="dialogVisible" top="35%">
             <span>Once you delete a board and all its Pins, you can't undo it!</span>
             <span slot="footer" class="dialog-footer">
                 <el-button @click="dialogVisible = false">Cancel</el-button>
@@ -185,6 +185,7 @@
         },
         created: function () {
             this.getBoards()
+            // this.delb()
         },
         methods: {
             getBoards () {
@@ -263,6 +264,49 @@
                 })
                 console.log(e + 'hhhh')
             },
+            // delb (e) {
+            //     let self = this
+            //     fetch('http://localhost:3000/todos/' + e, {
+            //         method: 'GET'
+            //     })
+            //     .then(res => res.json())
+            //     .then(function (res) {
+            //         self.form1 = res
+            //         // console.log(self.form1.bname)
+            //     // if (res.status >= 200) {
+            //     //     for (var i = self.todos.length - 1; i >= 0; i--) {
+
+            //     //     if (self.todos[i].id === e) {
+            //     //         console.log(i)
+            //     //         // self.todos.splice(i,1)
+            //     //     }
+            //     //     }
+            //     // }
+            //     })
+            //     console.log(e)
+            // },
+            // remove (id) {
+            //     // console.log(id)
+            //     this.$confirm('此操作将永久删除该文件, 是否继续?', '提示', {
+            //     confirmButtonText: '确定',
+            //     cancelButtonText: '取消',
+            //     type: 'warning'
+            //     })
+            //     .then(() => {
+            //             // delb({ id })
+            //             // .then(() => {
+            //         this.$message({
+            //             type: 'success',
+            //             message: '删除成功!'
+            //         })
+            //             // })
+            //     }).catch(() => {
+            //     this.$message({
+            //         type: 'info',
+            //         message: '已取消删除'
+            //     })
+            //     })
+            // }
             delBoard (e) {
                         let self = this
                 fetch('http://localhost:3000/todos/' + e, {
@@ -271,6 +315,7 @@
                 .then(res => res.json())
                 .then(function (res) {
                     self.form1 = res
+                    router.replace({path: '/'});
                     // console.log(self.form1.bname)
                 // if (res.status >= 200) {
                 //     for (var i = self.todos.length - 1; i >= 0; i--) {
@@ -286,6 +331,8 @@
             }
         },
         mounted() {
+            document.title = this.$route.path   // 改变网页title
+            console.log(this.$route)
             setInterval(() => {
             // console.log('simulate async data')
             let swiperSlides = this.pinss

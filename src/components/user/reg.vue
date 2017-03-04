@@ -1,28 +1,32 @@
 <template>
     <div class="user-routers">
-        <div class="loginCard">
+        <div class="signUpCard">
         <el-card class="box-card">
           <div slot="header" class="clearfix">
-            <span style="">Log In</span>
+            <span style="">Sign Up</span>
           </div>
-            <el-form :model="ruleForm1" :rules="rules1" ref="ruleForm1">
+            <el-form :model="ruleForm2" :rules="rules2" ref="ruleForm2">
             <el-form-item prop="name">
-                <el-input v-model="ruleForm1.name"
+                <el-input v-model="ruleForm2.name"
                 auto-complete="off" placeholder="Username"></el-input>
             </el-form-item>
             <el-form-item prop="pass">
-                <el-input type="password" v-model="ruleForm1.pass"
+                <el-input type="password" v-model="ruleForm2.pass"
                 auto-complete="off" placeholder="Password"></el-input>
             </el-form-item>
+            <el-form-item prop="checkPass">
+              <el-input type="password" v-model="ruleForm2.checkPass"
+              auto-complete="off" placeholder="Type again"></el-input>
+            </el-form-item>
             <el-form-item>
-                <el-button type="primary" @click="loginForm(ruleForm1)">
-                    Log in</el-button>
-                <el-button @click="resetForm('ruleForm1')">Reset</el-button>
+                <el-button type="primary" @click="signupForm('ruleForm2')">
+                    Sign Up</el-button>
+                <el-button @click="resetForm('ruleForm2')">Reset</el-button>
             </el-form-item>
             <el-form-item style="text-align:center">
-                <span class="demonstration">Need an account?
-                  <router-link to="/reg" style="display:inline;padding: 0px 10px;
-                  font-weight:bold">Sign Up</router-link></span>
+                <span class="demonstration">Already a member?
+                  <router-link to="/log" style="display:inline;padding: 0px 10px;
+                  font-weight:bold">Log In</router-link></span>
             </el-form-item>
             </el-form>
         </el-card>
@@ -36,7 +40,7 @@
             document.title = this.$route.path   // 改变网页title
         },
     data() {
-      var checkName = (rule, value, callback) => {
+      var checkName1 = (rule, value, callback) => {
         if (!value) {
           return callback(new Error('用户名不能为空'));
         }
@@ -48,34 +52,60 @@
             }
         }, 800);
       };
-      var validatePass = (rule, value, callback) => {
+      var validatePass1 = (rule, value, callback) => {
         if (value === '') {
           callback(new Error('请输入密码'));
         } else {
-          if (value.length < 1) {
+          if (value.length < 2) {
             callback(new Error('请输入至少2个字符'));
           }
           callback();
         }
+      };
+      var validatePass2 = (rule, value, callback) => {
+        if (value === '') {
+          callback(new Error('请再次输入密码'));
+        } else if (value !== this.ruleForm2.pass) {
+          callback(new Error('两次输入密码不一致!'));
+        } else {
+          callback();
+        }
       }
       return {
-        ruleForm1: {
+        url: this.$route.path,
+        ruleForm2: {
           pass: '',
+          checkPass: '',
           name: ''
         },
-        url: this.$route.path,
-        rules1: {
+        rules2: {
           pass: [
-            { validator: validatePass, trigger: 'blur' }
+            { validator: validatePass1, trigger: 'blur' }
+          ],
+          checkPass: [
+            { validator: validatePass2, trigger: 'blur' }
           ],
           name: [
-            { validator: checkName, trigger: 'blur' }
+            { validator: checkName1, trigger: 'blur' }
           ]
         }
       };
     },
+    created: function () {
+        this.getId()
+    },
     methods: {
-      loginForm(formName) {
+        getId () {
+            let self = this
+            fetch('http://localhost/camU/index/index/test3.html', {
+                method: 'GET'
+            })
+            .then(res => res.json())
+            .then(function (id) {
+                console.log(id)
+            })
+        },
+        signForm(formName) {
         // console.log(this.$route.path)
         // this.$refs[formName].validate((valid) => {
           console.log(formName)
@@ -106,9 +136,9 @@
           .then(res => res.json())
           .then(function (id) {
             console.log(id)
-            if (id.status === 1) {
+            if (id) {
               // console.log(self.$route.path)
-              self.$router.push('/reg')
+              self.$router.push('/')
               console.log(self.$route)
               // alert('submit!');
             } else {

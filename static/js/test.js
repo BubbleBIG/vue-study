@@ -1,15 +1,15 @@
-$(function() {
-    $(window).scroll(function() {
-        if($(window).scrollTop() >= 45){
-            $('.boardName').addClass('transitionIn');
-            $('.boardName').removeClass('transitionOut');
+// $(function() {
+//     $(window).scroll(function() {
+//         if($(window).scrollTop() >= 45){
+//             $('.boardName').addClass('transitionIn');
+//             $('.boardName').removeClass('transitionOut');
 
-        }else{
-            $('.boardName').removeClass('transitionIn');
-            $('.boardName').addClass('transitionOut');;
-        }
-    });
-})
+//         }else{
+//             $('.boardName').removeClass('transitionIn');
+//             $('.boardName').addClass('transitionOut');;
+//         }
+//     });
+// })
 // window.onload = function () {
 // window.onscroll = function () {
 //     var scrollTop = document.documentElement.scrollTop || window.pageYOffset || document.body.scrollTop;
@@ -116,8 +116,9 @@ function waterfall () {
     size=getViewSize (); 
     // console.log(size["width"]);
     let itemW = $('.item').outerWidth(true),
-    // windowW = $(window).width(),
-        windowW = size["width"],
+    // windowW = window.outerWidth
+        windowW = window.innerWidth
+        // windowW = size["width"],
         colNum = Math.floor(windowW/itemW),//有多少列
         // colNum = 4; 
         colNowHeight = [];//存放每一列当前总的高度
@@ -163,3 +164,18 @@ function vv () {
     // document.getElementById('myform').submit();
     console.log('vvv')
 }
+    // var txt = $("textarea");
+    // txt.style.height = txt.scrollHeight + "px";
+    // if (typeof txt.oninput === "undefined") {
+    // txt.onpropertychange = function() {
+    //     if (event.propertyName === "value") {
+    //     this.style.height = "20px";
+    //     this.style.height = this.scrollHeight + "px";
+    //     }
+    // }
+    // } else {
+    //     txt.oninput = function() {
+    //     this.style.height = "auto";
+    //     this.style.height = this.scrollHeight + "px";
+    // }
+    // }

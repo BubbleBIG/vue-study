@@ -15,7 +15,7 @@
                 <div class="pinsCard pinsCard2 gradient-wrap">
                     <div class="">
                         <!--{{ pin.id }}-->
-                        <img :src="pin.url" width="100%" style="max-width: 100%"/>
+                        <img :src="'/camU/public' + pin.url" width="100%" style="max-width: 100%"/>
                     </div>
                 </div>
                 </div>
@@ -78,6 +78,75 @@
                 fileList: []
             }
         },
+        mounted: function () {
+            document.title = this.$route.path   // 改变网页title
+            window.onload = function() {
+            Grade(document.querySelectorAll('.gradient-wrap'))
+        }
+        Grade(document.querySelectorAll('.gradient-wrap'))
+        function getViewSize () {
+return {"width": window['innerWidth'] || document.documentElement.clientWidth,
+"height": window['innerHeight'] || document.documentElement.clientHeight}
+}
+function getFullSize () {
+let w = Math.max(document.documentElement.clientWidth, document.body.clientWidth) +
+
+Math.max(document.documentElement.scrollLeft, document.body.scrollLeft);
+let h = Math.max(document.documentElement.clientHeight, document.body.clientHeight) +
+
+Math.max(document.documentElement.scrollTop, document.body.scrollTop);
+w = Math.max(document.documentElement.scrollWidth, w);
+h = Math.max(document.documentElement.scrollHeight, h);
+return {"width": w, "height": h};
+}
+
+function setContainerSize () {
+    var size = getViewSize();
+// console.log(size["width"]);
+// console.log(size["height"]);
+}
+
+setContainerSize();
+// waterfall();
+window.onresize = setContainerSize;
+window.onresize = waterfall;
+function waterfall () {
+    var size = getViewSize();
+    // console.log(size["width"]);
+    var itemW = $('.item').outerWidth(true)
+    // windowW = $(window).width(),
+    // var windowW = size["width"]
+    var windowW = window.innerWidth
+    var colNum = Math.floor(windowW / itemW)  //    有多少列
+        // colNum = 4;
+        var colNowHeight = [];//    存放每一列当前总的高度
+        //  console.log(windowW);
+    for (let i = 0; i < colNum; i++) {
+        colNowHeight.push(0);// 初始化数组，每列当前总的高度0
+    }
+    //  遍历每个item选择他们的归属
+    $('.item').each(function () {
+        var $this = $(this);
+        //  遍历找出高度最短的列及其对应的高度
+        let minColNowHeight = colNowHeight[0]
+        var minCol = 0;//   最小总高度的列
+        for (let i = 0; i < colNowHeight.length; i++) {
+            if (colNowHeight[i] < minColNowHeight) {
+                minColNowHeight = colNowHeight[i];
+                minCol = i;
+            }
+        }
+        $this.css({
+            left: itemW * minCol,
+            top: minColNowHeight
+        });
+        colNowHeight[minCol] += $this.outerHeight(true);
+    });
+}
+$(function () {
+   waterfall();
+})
+        },
         created: function () {
             this.pin()
             this.getpins()
@@ -124,12 +193,12 @@
             },
             getpins () {
                 let self = this
-                fetch('http://localhost:3000/upload', {
-                // fetch('http://localhost/camU/index/index/getpins', {
-                    method: 'GET',
+                // fetch('http://localhost:3000/upload', {
+                fetch('http://localhost/camU/index/index/getpins', {
+                    method: 'GET'
                     // mode: 'no-cors',
-                    headers: { 'Content-Type': 'application/json' },
-                    credentials: 'same-origin'
+                    // headers: { 'Content-Type': 'application/json' },
+                    // credentials: 'same-origin'
                 })
                 .then(res => res.json())
                 .then(function (pins) {
