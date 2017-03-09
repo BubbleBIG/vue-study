@@ -3,8 +3,8 @@
     <v-header></v-header>
     <div class="user-routers">
 		<div class="pins">
-			<div v-for="pin in pins" class="pinsItemsClass pinsItem"
-            @click="dialogPin = true">
+			<div v-for="pin in pins" class="pinsItemsClass pinsItem">
+                <router-link :to="{ name: 'pin', params: { id: pin.id }}">
                 <div class="">
                 <div class="">
                     <div class="">
@@ -33,16 +33,9 @@
                         </ul>
                     </a>
                 </div>
+                </router-link>
             </div>
 		</div>
-        <el-dialog title="////" v-model="dialogPin" top="25%">
-            <el-form>
-                <div class="dialog-footer">
-                    <el-button @click="dialogPin = false">Cancel</el-button>
-                    <el-button type="primary" @click="">Create</el-button>
-                </div>
-            </el-form>
-        </el-dialog>
         <!--<ul class="userCommon">
             <li><router-link to="/u/boards" class="userLink">
                 <div class="userLink boardsLink">Boards</div>
@@ -77,10 +70,6 @@ import header from '../header/header.vue'
         },
         data () {
             return {
-                form2: {
-                    name: '3'
-                },
-                dialogPin: false,
                 pins: [],
 				currentDate: new Date(),
                 url: this.$route.path

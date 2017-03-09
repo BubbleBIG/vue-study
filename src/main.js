@@ -15,11 +15,15 @@ import boards from './components/user/boards'
 import pins from './components/user/pins'
 import likes from './components/user/likes'
 import settings from './components/user/settings'
+import pin from './components/user/pin'
+import test from './components/user/test'
 import VueAwesomeSwiper from 'vue-awesome-swiper'
 // import '../static/js/test.js'
 // require('es6-promise').polyfill()
 // require('isomorphic-fetch')
+import Vuex from 'vuex'
 
+Vue.use(Vuex)
 Vue.use(VueRouter)
 Vue.use(ElementUI)
 Vue.use(VueAwesomeSwiper)
@@ -42,14 +46,16 @@ function guardRoute (to, from, next) {
 
  const router = new VueRouter({
   linkActiveClass: 'active',
-  mode: 'history',
+  // mode: 'history',
   base: __dirname,
    routes: [
     // { path: '/', component: home, beforeEnter: guardRoute },
     { path: '/', component: home },
     { path: '/log', component: login },
     { path: '/reg', component: reg },
+    { path: '/test', component: test },
     { path: '/settings', component: settings },
+    { path: '/pin/:id', name: 'pin', component: pin },
     { path: '/:id',
       component: user,
       children: [
