@@ -38,6 +38,9 @@
   export default {
     mounted: function () {
             document.title = this.$route.path   // 改变网页title
+            // let strCookie = document.cookie;
+            // let arrCookie = strCookie.split("=")
+            // console.log(arrCookie[1])
         },
     data() {
       var checkName1 = (rule, value, callback) => {
@@ -96,14 +99,14 @@
     },
     methods: {
         getId () {
-            let self = this
-            fetch('http://localhost/camU/index/index/test3.html', {
-                method: 'GET'
-            })
-            .then(res => res.json())
-            .then(function (id) {
-                console.log(id)
-            })
+            // let self = this
+            // fetch('http://localhost/camU/index/index/test3.html', {
+            //     method: 'GET'
+            // })
+            // .then(res => res.json())
+            // .then(function (id) {
+            //     console.log(id)
+            // })
         },
         signForm(formName) {
         // console.log(this.$route.path)

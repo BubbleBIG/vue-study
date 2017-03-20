@@ -22,7 +22,7 @@ var Grade = function () {
             width: 0,
             height: 0
         };
-        this.imageData = [];
+        this.imageData = []
         this.readImage();
     }
 

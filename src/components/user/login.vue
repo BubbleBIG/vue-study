@@ -108,8 +108,11 @@
             console.log(id)
             if (id.status === 1) {
               // console.log(self.$route.path)
-              self.$router.push('/reg')
-              console.log(self.$route)
+              document.cookie = "name = " + id.uid;
+              setTimeout(() => {
+                self.$router.push('/')
+              }, 800)
+              // console.log(self.$route)
               // alert('submit!');
             } else {
               console.log('error login!!');

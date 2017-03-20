@@ -97,7 +97,15 @@ import header from '../header/header.vue'
         // },
         methods: {
             logout () {
-                console.log(1)
+                let self = this
+                var date = new Date()
+                date.setTime(date.getTime() - 10000)
+                document.cookie = 'name' + " = v; expires = " + date.toGMTString()
+                setTimeout(() => {
+                    self.$router.push('/log')
+                }, 800)
+                // if (document.cookie)
+                console.log(document.cookie)
             }
         }
     }

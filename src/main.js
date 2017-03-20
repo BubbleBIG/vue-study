@@ -71,24 +71,27 @@ function guardRoute (to, from, next) {
 router.beforeEach((to, from, next) => {
   // console.log(to)
   let self = this
-  fetch('http://localhost:3000/login', {
-    method: 'GET'
-  })
-  .then(res => res.json())
-  .then(function (id) {
+  // fetch('http://localhost:3000/login', {
+  //   method: 'GET'
+  // })
+  // .then(res => res.json())
+  // .then(function (id) {
+    let strCookie = document.cookie;
+    let arrCookie = strCookie.split("=")
+    // console.log(arrCookie[1]) //cookie
     const {auth = true} = to.meta      // meta代表的是to中的meta对象，path代表的是to中的path对象
-    var isLogin = Boolean(1)    // true用户已登录,false用户未登录
-    if (auth && !isLogin && to.path !== '/log') {  // auth 代表需要通过用户身份验证,默认为true,代表需要被验证,false为不用检验
+    var isLogin = Boolean(arrCookie[1])    // true用户已登录,false用户未登录
+    if (auth && !isLogin && to.path !== '/log' && to.path !== '/reg') {  // auth 代表需要通过用户身份验证,默认为true,代表需要被验证,false为不用检验
       return next({ path: '/log' },
       {a: 10})   //  跳转到login页面
     } else if (auth && isLogin && to.path === '/log') {
       setTimeout(() => {
         // return next('/')
-        }, 1000)
+        }, 800)
       // return next('/')
     }
     next(vm => vm.da = to.path)   // 进行下一个钩子函数
-  })
+  // })
   // const {auth = true} = meta      // meta代表的是to中的meta对象，path代表的是to中的path对象
   // var isLogin = Boolean(id)    // true用户已登录,false用户未登录
   // if (auth && !isLogin && path !== '/log') {  // auth 代表需要通过用户身份验证,默认为true,代表需要被验证,false为不用检验

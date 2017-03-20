@@ -15,7 +15,8 @@
                 <div class="pinsCard pinsCard2 gradient-wrap">
                     <div class="">
                         <!--{{ pin.id }}-->
-                        <img :src="'/camU/public' + pin.url" width="100%" style="max-width: 100%"/>
+                        <!--<img :src="'/camU/public' + pin.url" width="100%" style="max-width: 100%"/>-->
+                        <img :src="pin.url" width="100%" style="max-width: 100%"/>
                     </div>
                 </div>
                 </div>
@@ -193,8 +194,8 @@ $(function () {
             },
             getpins () {
                 let self = this
-                // fetch('http://localhost:3000/upload', {
-                fetch('http://localhost/camU/index/index/getpins', {
+                fetch('http://localhost:3000/upload', {
+                // fetch('http://localhost/camU/index/index/getpins', {
                     method: 'GET'
                     // mode: 'no-cors',
                     // headers: { 'Content-Type': 'application/json' },
