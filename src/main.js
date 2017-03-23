@@ -69,6 +69,13 @@ function guardRoute (to, from, next) {
 })
 
 router.beforeEach((to, from, next) => {
+  // fetch('http://localhost/camU/index/index/test3', {
+  //   method: 'GET'
+  // })
+  // .then(res => res.json())
+  // .then(function (id) {
+  //   console.log(id)
+  // })
   // console.log(to)
   let self = this
   // fetch('http://localhost:3000/login', {

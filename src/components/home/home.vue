@@ -64,9 +64,9 @@ import header from '../header/header.vue'
     export default {
         mounted: function () {
             document.title = this.$route.path   // 改变网页title
-            let strCookie = document.cookie;
-            let arrCookie = strCookie.split("=")
-            console.log(arrCookie[1])
+            // let strCookie = document.cookie;
+            // let arrCookie = strCookie.split("=")
+            // console.log(arrCookie[1])
         },
         components: {
         'v-header': header

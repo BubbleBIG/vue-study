@@ -148,16 +148,20 @@ import header from '../header/header.vue'
     }
 </script>
 
-<style lang="stylus" scope>
-$a = #f1b1c1
-.settings
-    label
-        font-weight: bold
-    h1
-        font-size: 50px
-        color: $a
-.el-input-group__prepend
-    color: #333
-    font-weight: bold
-    border: none
+<style lang='scss' scope>
+// $a = #f1b1c1
+.settings {
+    label {
+        font-weight: bold;
+    }
+    h1 {
+        font-size: 50px;
+        color: #f1b1c1;
+    }
+}
+.el-input-group__prepend {
+    color: #333;
+    font-weight: bold;
+    border: none;
+}
 </style>

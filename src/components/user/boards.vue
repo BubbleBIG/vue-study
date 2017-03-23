@@ -23,8 +23,8 @@
                         </div>
                         <div class="px1 py2">
                             <div  class="pz3">Create board</div>
-                        </div>
-                    </button>
+                        </button>
+                    </di>
                 </div>
                 <div v-for="bo in bos" class="ProfileBoardCard" style="margin:20px 0;padding: 0 12px">
                     <div class="createCard" type="text">
@@ -36,7 +36,7 @@
                         <div class="px1 py2">
                             <div class="pz3" style="color:#555">{{ bo.bname }}</div>
                             <div class="pz3 pz4">{{ bo.count }} Pins</div>
-                            <button class="pz3 pz5" style="color: #555" @click="changeBoard(bo.id),
+                            <button class="pz3 pz5" style="color: #555" @click="changeBoard(bo.bid),
                                 dialogFormVisible1 = true">Edit</button>
                         </div>
                     </div>
@@ -52,10 +52,17 @@
                 <el-input v-model="form2.name" auto-complete="off"></el-input>
                 </el-form-item>
                 <el-form-item label="Secret" :label-width="formLabelWidth">
-                <el-radio-group v-model="radio1">
+                    <el-switch
+                    v-model="radio1"
+                    on-text="Yes"
+                    off-text="No"
+                    on-color="#13ce66"
+                    off-color="#ff4949">
+                    </el-switch>
+                <!--<el-radio-group v-model="radio1">
                     <el-radio-button label="Yes"></el-radio-button>
                     <el-radio-button label="No"></el-radio-button>>
-                </el-radio-group>
+                </el-radio-group>-->
                 </el-form-item>
                 <div class="dialog-footer">
                     <el-button @click="dialogFormVisible2 = false">Cancel</el-button>
@@ -82,14 +89,24 @@
                     </el-select>
                 </el-form-item>
                 <el-form-item label="Cover" :label-width="formLabelWidth">
-                    <el-button @click="dialogVisible2 = true,
-                    changeCover(form1.id)">Change</el-button>
+                    <el-button v-if="form1.count > 0"
+                    @click="dialogVisible2 = true,
+                    changeCover(form1.bid)">Change</el-button>
+                    <el-button v-else
+                    type="primary" :disabled="true">Change</el-button>
                 </el-form-item>
                 <el-form-item label="Secret" :label-width="formLabelWidth">
-                <el-radio-group v-model="form1.secret">
+                    <el-switch
+                    v-model="form1.secret"
+                    on-text="Yes"
+                    off-text="No"
+                    on-color="#13ce66"
+                    off-color="#ff4949">
+                    </el-switch>
+                <!--<el-radio-group v-model="form1.secret">
                     <el-radio-button label="Yes"></el-radio-button>
                     <el-radio-button label="No"></el-radio-button>>
-                </el-radio-group>
+                </el-radio-group>-->
                 </el-form-item>
                 <hr>
                 <div class="dialog-footer">
@@ -100,7 +117,7 @@
             </el-form>
         </el-dialog>
         <el-dialog :title="'Change Board Cover / ' + form1.bname" v-model="dialogVisible2" top="20%">
-            <swiper :options="swiperOption">
+            <!--<swiper :options="swiperOption">
             <swiper-slide v-for="slide in pinss">
             <el-radio-group v-model="radio3" fill="#FF4949">
                  <el-radio-button :label="slide.id"
@@ -108,16 +125,15 @@
                  </el-radio-button>
             </el-radio-group>
             </swiper-slide>
-            <!--<swiper-slide v-for="slide in pinss">{{ slide.id }}</swiper-slide>-->
             <div class="swiper-button-prev" slot="button-prev"></div>
             <div class="swiper-button-next" slot="button-next"></div>
-            </swiper>
-                <!--<el-carousel :interval="9999999" type="card"
-                height="300px" :autoplay="false">
-                    <el-carousel-item v-for="item in pinss">
-                    <h3>{{ item.id }}</h3>
-                    </el-carousel-item>
-                </el-carousel>-->
+            </swiper>-->
+                <!--<el-carousel type="card" indicator-position="none"
+                height="300px" :autoplay="false">-->
+                    <div>
+                    <img :src="'http://localhost' + pinss.url" width="100%">
+                    </div>
+                <!--</el-carousel>-->
             <span slot="footer" class="dialog-footer">
                 <el-button @click="dialogVisible2 = false">Cancel</el-button>
                 <el-button type="primary" @click="">Save Changes</el-button>
@@ -128,7 +144,7 @@
             <span slot="footer" class="dialog-footer">
                 <el-button @click="dialogVisible = false">Cancel</el-button>
                 <el-button type="primary" @click="
-                    delBoard(form1.id)">Delete board</el-button>
+                    delBoard(form1.bid)">Delete board</el-button>
             </span>
         </el-dialog>
     </div>
@@ -150,7 +166,7 @@
         // },
         data () {
             return {
-                radio1: 'No',
+                radio1: false,
                 radio3: 1,
                 visible2: false,
                 // radio2: '',
@@ -189,12 +205,17 @@
         methods: {
             getBoards () {
                 let self = this
-                fetch('http://localhost:3000/todos', {
-                // fetch('http://localhost/camU/index/index/getboards', {
-                    method: 'GET',
+                let strCookie = document.cookie;
+                let arrCookie = strCookie.split("=")
+                let formData = new FormData()
+                formData.append("id", arrCookie[1]);
+                // fetch('http://localhost:3000/todos', {
+                fetch('http://localhost/camU/index/index/getboards', {
+                    method: 'POST',
+                    body: formData
                     // mode: 'no-cors',
-                    headers: { 'Content-Type': 'application/json' },
-                    credentials: 'same-origin'
+                    // headers: { 'Content-Type': 'application/json' },
+                    // credentials: 'same-origin'
                 })
                 .then(res => res.json())
                 .then(function (bos) {
@@ -206,15 +227,31 @@
                 let self = this
                 var bname = this.form2.name.trim()
                 var secret = this.radio1
-                fetch('http://localhost:3000/todos', {
+                let strCookie = document.cookie;
+                let arrCookie = strCookie.split("=")
+                let formData = new FormData()
+                formData.append("id", arrCookie[1])
+                formData.append("bname", this.form2.name.trim())
+                formData.append('secret', this.radio1)
+                fetch('http://localhost/camU/index/index/createboard', {
                     method: 'POST',
-                    body: JSON.stringify({ bname, secret }),
-                    headers: { 'Content-Type': 'application/json' },
-                    credentials: 'same-origin'
+                    body: formData
+                    // mode: 'no-cors',
+                    // headers: { 'Content-Type': 'application/json' },
+                    // credentials: 'same-origin'
                 })
                 .then(res => res.json())
+                // fetch('http://localhost:3000/todos', {
+                //     method: 'POST',
+                //     body: JSON.stringify({ bname, secret }),
+                //     headers: { 'Content-Type': 'application/json' },
+                //     credentials: 'same-origin'
+                // })
+                // .then(res => res.json())
                 .then(function (response) {
-                    self.bos.push(response)
+                    self.bos.unshift(response)
+                    self.dialogFormVisible2 = false
+                    debugger
                     if (response.status >= 200) {
                     //    return {dialogFormVisible: false}
                     }
@@ -229,12 +266,34 @@
             },
             changeBoard (e) {
                 let self = this
-                fetch('http://localhost:3000/todos/' + e, {
-                    method: 'GET'
+                let strCookie = document.cookie;
+                let arrCookie = strCookie.split("=")
+                let formData = new FormData()
+                formData.append("id", arrCookie[1])
+                formData.append("bid", e)
+                fetch('http://localhost/camU/index/index/getboard', {
+                    method: 'POST',
+                    body: formData
+                    // mode: 'no-cors',
+                    // headers: { 'Content-Type': 'application/json' },
+                    // credentials: 'same-origin'
                 })
                 .then(res => res.json())
                 .then(function (res) {
+                       if (res.secret === 'false') {
+                           res.secret = false
+                       } else {
+                           res.secret = true
+                       }
                     self.form1 = res
+                    // debugger
+                // fetch('http://localhost:3000/todos/' + 1, {
+                //     method: 'GET'
+                // })
+                // .then(res => res.json())
+                // .then(function (res) {
+                //     self.form1 = res
+                    // debugger
                     // console.log(self.form1.bname)
                 // if (res.status >= 200) {
                 //     for (var i = self.todos.length - 1; i >= 0; i--) {
@@ -249,16 +308,28 @@
             },
             changeCover (e) {
                 let self = this
-                fetch('http://localhost:3000/upload', {
-                // fetch('http://localhost/camU/index/index/getpins', {
-                    method: 'GET',
+                let strCookie = document.cookie;
+                let arrCookie = strCookie.split("=")
+                let formData = new FormData()
+                formData.append("id", arrCookie[1])
+                formData.append("bid", e)
+                fetch('http://localhost/camU/index/index/changecover', {
+                    method: 'POST',
+                    body: formData
                     // mode: 'no-cors',
-                    headers: { 'Content-Type': 'application/json' },
-                    credentials: 'same-origin'
+                    // headers: { 'Content-Type': 'application/json' },
+                    // credentials: 'same-origin'
                 })
                 .then(res => res.json())
+                // fetch('http://localhost:3000/upload', {
+                // // fetch('http://localhost/camU/index/index/getpins', {
+                //     method: 'GET',
+                //     // mode: 'no-cors',
+                //     headers: { 'Content-Type': 'application/json' },
+                //     credentials: 'same-origin'
+                // })
+                // .then(res => res.json())
                 .then(function (pins) {
-                    // console.log(pins)
                     self.pinss = pins
                 })
                 console.log(e + 'hhhh')
@@ -307,14 +378,39 @@
             //     })
             // }
             delBoard (e) {
-                        let self = this
-                fetch('http://localhost:3000/todos/' + e, {
-                    method: 'GET'
+                let self = this
+                let strCookie = document.cookie;
+                let arrCookie = strCookie.split("=")
+                let formData = new FormData()
+                formData.append("id", arrCookie[1])
+                formData.append("bid", e)
+                fetch('http://localhost/camU/index/index/delboard', {
+                    method: 'POST',
+                    body: formData
+                    // mode: 'no-cors',
+                    // headers: { 'Content-Type': 'application/json' },
+                    // credentials: 'same-origin'
                 })
                 .then(res => res.json())
+                // fetch('http://localhost:3000/todos/' + e, {
+                //     method: 'DELETE'
+                // })
+                // .then(res => res.json())
                 .then(function (res) {
-                    self.form1 = res
-                    router.replace({path: '/'});
+                    // self.form1 = res
+                    self.dialogVisible = false
+                    self.dialogFormVisible1 = false
+                    // debugger
+                    // if (res.id > 0) {
+                        for (let i = 0; i < self.bos.length; i++) {
+                            if (self.bos[i].bid === e) {
+                                self.bos.splice(i, 1) // 根据下标删除当前对应的元素
+                                console.log(i)
+                            }
+                        }
+                    // }
+                    // self.bos.splice(e - 1, 1)
+                    // self.$router.push('/Bubble/boards');
                     // console.log(self.form1.bname)
                 // if (res.status >= 200) {
                 //     for (var i = self.todos.length - 1; i >= 0; i--) {
@@ -326,12 +422,18 @@
                 //     }
                 // }
                 })
-                console.log(e)
+                // console.log(e)
             }
+        },
+        watch: {
+        // 如果路由有变化，会再次执行该方法
+        // "$route": "fetchDate"
         },
         mounted() {
             document.title = this.$route.path   // 改变网页title
-            console.log(this.$route)
+            console.log(this.$route.path)
+            let strCookie = document.cookie;
+            let arrCookie = strCookie.split("=")
             setInterval(() => {
             // console.log('simulate async data')
             let swiperSlides = this.pinss
@@ -341,110 +443,151 @@
     }
 </script>
 
-<style lang="stylus" rel="stylesheet/stylus">
-    .pz3
-        font-size: 18px
-        font-weight: bold
-        color: #bcbcbc
-        letter-spacing: -0.25px
-        line-height: 18px
-        word-spacing: 0
-    .boards
-        margin: 20px auto
-        .boardsItems
-            margin: 0 auto
-            display: flex
-            flex-flow: row wrap
-            align-content: flex-start
-        .flex-wrap
-            flex-wrap: wrap
-            .ProfileBoardCard
+<style lang='scss'>
+    .pz3 {
+        font-size: 18px;
+        font-weight: bold;
+        color: #bcbcbc;
+        letter-spacing: -0.25px;
+        line-height: 18px;
+        word-spacing: 0;
+    }
+    .boards {
+        margin: 20px auto;
+        .boardsItems {
+            margin: 0 auto;
+            display: flex;
+            flex-flow: row wrap;
+            align-content: flex-start;
+        }
+        .flex-wrap {
+            flex-wrap: wrap;
+            .ProfileBoardCard {
                 /*float: left*/
-                .createCard
-                    .createRep
-                        width: 301px
-                        height: 200px
-                        background-color: #e4e4e4
-                        border-radius: 8px
-                        i
-                            margin: auto
-                            vertical-align: middle
-                        i::before
-                            width: 56px
-                            height: 56px
-                            background: url(../../common/images/w.png)-62px -234px no-repeat
-                            display: inline-block
-                            font: 0 / 0 serif
-                            text-shadow: none
-                            color: transparent
-                            content: " "
-                    .px1
-                        padding: 12px 8px
-                        text-align: left
-                        .pz4
-                            font-size: 12px
-                .pz5
-                    opacity: 0
-                    float: right
-                    background-color: #eee
-                    padding: 6px 8px
-                    border-radius: 4px
-                    margin-top: -37px
-    .boardsItems
-        & > .ProfileBoardCard:hover::before
-            position: absolute
-        & > .ProfileBoardCard:hover::before
-            background: rgba(0,0,0,0.05)
-            border-radius: 8px
-            content: " " !important
-            opacity: 1
-            width: 301px
-            height: 224px
-            pointer-events: none
-            -webkit-transform: scale(0.96)
-            -ms-transform: scale(0.96)
-            transform: scale(0.96)
-            z-index: 3
-            margin: -14px -18px
-            padding: 28px 18px
-        & > .ProfileBoardCard:hover .pz5
-            opacity: 1
-        & > .ProfileBoardCard
-            .pz5:hover
-                background: #d7d7d7
-    .el-dialog--small
-        width: 580px
-    .dialog-footer
-        text-align: right
-    .el-dialog__header span
-        display: inline
-        h1
-            font-size: 50px
-@media (min-width: 2275px)
-    .boardsItems
-        width: 2275px
-@media (max-width: 2274px) and (min-width: 1950px)
-    .boardsItems
-        width: 1950px
-@media (max-width: 1949px) and (min-width: 1625px)
-    .boardsItems
-        width: 1625px
-@media (max-width: 1624px) and (min-width: 1300px)
-    .boardsItems
-        width: 1300px
-@media (max-width: 1299px) and (min-width: 975px)
-    .boardsItems
-        width: 975px
-@media (max-width: 974px) and (min-width: 650px)
-    .boardsItems
-            width: 650px
-.swiper-container
-    width: 300px!important
-    height: 300px!important
-    label
-        width: 300px
-        height: 300px
-        background-position: 50%!important
-        background-size: cover!important
+                .createCard {
+                    .createRep {
+                        width: 301px;
+                        height: 200px;
+                        background-color: #e4e4e4;
+                        border-radius: 8px;
+                        i {
+                            margin: auto;
+                            vertical-align: middle;
+                        }
+                        i::before {
+                            width: 56px;
+                            height: 56px;
+                            background: url(../../common/images/w.png) -62px -234px no-repeat;
+                            display: inline-block;
+                            font: 0 / 0 serif;
+                            text-shadow: none;
+                            color: transparent;
+                            content: " ";
+                        }
+                    }
+                    .px1 {
+                        padding: 12px 8px;
+                        text-align: left;
+                        .pz4 {
+                            font-size: 12px;
+                        }
+                    }
+                }
+                .pz5 {
+                    opacity: 0;
+                    float: right;
+                    background-color: #eee;
+                    padding: 6px 8px;
+                    border-radius: 4px;
+                    margin-top: -37px;
+                }
+            }
+        }
+    }
+    .boardsItems {
+        & > .ProfileBoardCard:hover::before {
+            position: absolute;
+        }
+        & > .ProfileBoardCard:hover::before {
+            background: rgba(0,0,0,0.05);
+            border-radius: 8px;
+            content: " " !important;
+            opacity: 1;
+            width: 301px;
+            height: 224px;
+            pointer-events: none;
+            -webkit-transform: scale(0.96);
+            -ms-transform: scale(0.96);
+            transform: scale(0.96);
+            z-index: 3;
+            margin: -14px -18px;
+            padding: 28px 18px;
+        }
+        & > .ProfileBoardCard:hover .pz5 {
+            opacity: 1;
+        }
+        & > .ProfileBoardCard {
+            .pz5:hover {
+                background: #d7d7d7;
+            }
+        }
+    }
+    .el-dialog--small {
+        width: 580px;
+    }
+    .dialog-footer {
+        text-align: right;
+    }
+    .el-dialog__header span {
+        display: inline;
+        h1 {
+            font-size: 50px;
+        }
+    }
+@media (min-width: 2275px) {
+    .boardsItems {
+        width: 2275px;
+    }
+}
+@media (max-width: 2274px) and (min-width: 1950px) {
+    .boardsItems {
+        width: 1950px;
+    }
+}
+@media (max-width: 1949px) and (min-width: 1625px) {
+    .boardsItems {
+        width: 1625px;
+    }
+}
+@media (max-width: 1624px) and (min-width: 1300px) {
+    .boardsItems {
+        width: 1300px;
+    }
+}
+@media (max-width: 1299px) and (min-width: 975px) {
+    .boardsItems {
+        width: 975px;
+    }
+}
+@media (max-width: 974px) and (min-width: 650px) {
+    .boardsItems {
+            width: 650px;
+    }
+}
+@media (max-width: 650px) {
+    .boardsItems {
+            width: 650px;
+    }
+}
+.swiper-container {
+    width: 300px!important;
+    height: 300px!important;
+    label {
+        width: 300px;
+        height: 300px;
+        background-position: 50%!important;
+        background-size: cover!important;
+    }
+}
 
 </style>
