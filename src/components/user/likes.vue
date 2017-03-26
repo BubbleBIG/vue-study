@@ -1,9 +1,5 @@
 <template>
     <div class="user-routers">
-	<form name="form1" id="form12">
-        <input type="file" name="photo" id="photo" @change="uploadOne">
-        <p><input type="button" name="b1" value="submit" onclick="fsubmit()"></p>
-    </form>
     <waterfall :line-gap="260" :watch="pins">
     <!-- each component is wrapped by a waterfall slot -->
     <waterfall-slot
@@ -11,11 +7,11 @@
         :width="260"
         :height="pin.height + 100"
         :order="index"
-        :key="pin.id"
+        :key="pin.iid"
     >
-    <router-link :to="{ name: 'pin', params: { id: pin.id }}">
-    <div style="padding: 12px">
-        <div class="gradient-wrap" style="padding: 0px 16px;background-color:#ccc">
+    <router-link :to="{ name: 'pin', params: { id: pin.iid }}">
+    <div style="padding: 12px" class="gradient-wrap">
+        <div style="width: 210px" class="gradient-wrap">
         <img :src="pin.url" width="100%" class=""/>
         </div>
         <div>
@@ -43,24 +39,6 @@
     </waterfall-slot>
     </waterfall>
 		<!--<el-button type="text" @click="open4">点击打开 Message Box</el-button>-->
-        <!--<v-user></v-user>-->
-        <!--<ul class="userCommon">
-            <li><router-link to="/u/boards" class="userLink">
-                <div class="userLink boardsLink">Boards</div>
-            </router-link></li>
-            <li><router-link to="/u/pins" class="userLink">
-                <div class="userLink pinsLink">Pins</div>
-            </router-link></li>
-            <li><router-link to="/u/likes" class="userLink">
-                <div class="userLink likesLink">Likes</div>
-            </router-link></li>
-        </ul>-->
-        <!--<div class="wrap pins" style="width:100%">
-			<div v-for="pin in pins" class="item" style="position: absolute; width: 236px;
-			margin-left: 20px; margin-top: 10px; transition: all 1s; max-height: 800px;">
-				<img :src="pin.url" width="100%" class=""/>
-			</div>-->	
-		<!--</div>-->
         <div class="likes">
 			<!--<div class="wrap pins" style="width:100%">
 				<div v-for="pin in pins" class="item" style="position: absolute; width: 236px;
@@ -87,93 +65,75 @@ import WaterfallSlot from 'vue-waterfall/lib/waterfall-slot'
         },
         mounted: function () {
             document.title = this.$route.path   // 改变网页title
+            window.onload = function() {
+                Grade(document.querySelectorAll('.gradient-wrap'))
+            }
             Grade(document.querySelectorAll('.gradient-wrap'))
         },
         data () {
+            let strCookie = document.cookie;
+            let arr = strCookie.split(";")
+            let arrCookie = arr[0].split("=")
             return {
+                arrCookie: arrCookie[1],
                 pins: [],
-                align: 'center',
-                isBusy: false
+                align: 'center'
             }
         },
         created: function () {
-            this.getBoards()
+            this.getPins()
         },
         methods: {
-			uploadOne () {
-                var data = new FormData($('#form12')[0]);
-                $.ajax({
-                    url: 'http://localhost/camU/index/index/uploadPins.html',
-                    type: 'POST',
-                    data: data,
-                    dataType: 'JSON',
-                    cache: false,
-                    processData: false,
-                    contentType: false
-                }).done(function (ret) {
-                    if (ret['isSuccess']) {
-                        var result = '';
-                        result += '<img src="' + ret['photo'] + '"width="100">';
-                        $('#result').html(result);
-                    } else {
-                        alert('提交失敗');
-                    }
-                });
-                        console.log('test success!')
-                return false;
-            },
-    addFileAction (newFile, file) {
-        console.log('add', file)
-        let formData = new FormData()
-        formData.append('file', newFile.file, newFile.file.name)
-        this.$http.post('http://localhost:3000/test', formData)
-        .then(res => {
-            console.log('success')
-        })
-        .catch(console.log)
-    },
-    removeFileAction (item) {
-        console.log('remove', item)
-    },
-			open4 () {
-        this.$msgbox({
-          title: '消息',
-          message: '这是一段内容, 这是一段内容, 这是一段内容, 这是一段内容, 这是一段内容, 这是一段内容, 这是一段内容',
-          showCancelButton: true,
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
-          beforeClose: (action, instance, done) => {
-            if (action === 'confirm') {
-              instance.confirmButtonLoading = true;
-              instance.confirmButtonText = '执行中...';
-              setTimeout(() => {
-                done();
-                setTimeout(() => {
-                  instance.confirmButtonLoading = false;
-                }, 300);
-              }, 3000);
-            } else {
-              done();
-            }
-          }
-        }).then(action => {
-          this.$message({
-            type: 'info',
-            message: 'action: ' + action
-          });
-        });
-      },
-            getBoards () {
+			// uploadOne () {
+            //     var data = new FormData($('#form12')[0]);
+            //     $.ajax({
+            //         url: 'http://localhost/camU/index/index/uploadPins.html',
+            //         type: 'POST',
+            //         data: data,
+            //         dataType: 'JSON',
+            //         cache: false,
+            //         processData: false,
+            //         contentType: false
+            //     }).done(function (ret) {
+            //         if (ret['isSuccess']) {
+            //             var result = '';
+            //             result += '<img src="' + ret['photo'] + '"width="100">';
+            //             $('#result').html(result);
+            //         } else {
+            //             alert('提交失敗');
+            //         }
+            //     });
+            //             console.log('test success!')
+            //     return false;
+            // },
+            getPins () {
                 let self = this
-                fetch('http://localhost:3000/upload', {
-                // fetch('http://localhost/camU/index/index/getboards', {
-                    method: 'GET',
+                let formData = new FormData()
+                formData.append("id", self.arrCookie)
+                // formData.append("bid", e)
+                fetch('http://localhost/camU/index/index/getpins', {
+                    method: 'POST',
+                    body: formData
                     // mode: 'no-cors',
-                    headers: { 'Content-Type': 'application/json' },
-                    credentials: 'same-origin'
+                    // headers: { 'Content-Type': 'application/json' },
+                    // credentials: 'same-origin'
                 })
                 .then(res => res.json())
+                // fetch('http://localhost:3000/upload', {
+                // // fetch('http://localhost/camU/index/index/getboards', {
+                //     method: 'GET',
+                //     // mode: 'no-cors',
+                //     headers: { 'Content-Type': 'application/json' },
+                //     credentials: 'same-origin'
+                // })
+                // .then(res => res.json())
                 .then(function (pins) {
+                    for (let i = 0; i < pins.length; i++) {
+                        if (pins[i].iswebsite === 0) {
+                            pins[i].url = "http://localhost/camu" + pins[i].url
+                            // console.log(pins)
+                        }
+                    }
                     // console.log(pins)
                     self.pins = pins
                 })

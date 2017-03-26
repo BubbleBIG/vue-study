@@ -1,17 +1,5 @@
 <template>
     <div class="user-routers">
-        <!--<v-user></v-user>-->
-        <!--<ul class="userCommon">
-            <li><router-link to="/u/boards" class="userLink">
-                <div class="userLink boardsLink">Boards</div>
-            </router-link></li>
-            <li><router-link to="/u/pins" class="userLink">
-                <div class="userLink pinsLink">Pins</div>
-            </router-link></li>
-            <li><router-link to="/u/likes" class="userLink">
-                <div class="userLink likesLink">Likes</div>
-            </router-link></li>
-        </ul>-->
         <div class="boards">
             <div class="boardsItems flex-wrap">
                 <div class="ProfileBoardCard" style="margin:20px 0;padding: 0 12px">
@@ -28,11 +16,13 @@
                 </div>
                 <div v-for="bo in bos" class="ProfileBoardCard" style="margin:20px 0;padding: 0 12px">
                     <div class="createCard" type="text">
+                        <router-link :to="'/' + userName + '/' + bo.bname + '/'">
                         <div style="position: relative;width:301px;height:200px">
                             <div class="createRep flex ">
                                 <div></div>
                             </div>
                         </div>
+                        </router-link>
                         <div class="px1 py2">
                             <div class="pz3" style="color:#555">{{ bo.bname }}</div>
                             <div class="pz3 pz4">{{ bo.count }} Pins</div>
@@ -47,8 +37,8 @@
             </div>
         </div>
         <el-dialog title="Create board" v-model="dialogFormVisible2" top="25%">
-            <el-form :model="form2" ref="form2">
-                <el-form-item label="Name" :label-width="formLabelWidth">
+            <el-form :model="form2" :rules="rules2" ref="form2">
+                <el-form-item label="Name" prop="name" :label-width="formLabelWidth">
                 <el-input v-model="form2.name" auto-complete="off"></el-input>
                 </el-form-item>
                 <el-form-item label="Secret" :label-width="formLabelWidth">
@@ -65,8 +55,8 @@
                 </el-radio-group>-->
                 </el-form-item>
                 <div class="dialog-footer">
-                    <el-button @click="dialogFormVisible2 = false">Cancel</el-button>
-                    <el-button type="primary" @click="onSubmit">Create</el-button>
+                    <el-button @click="dialogFormVisible2 = false,resetForm('form2')">Cancel</el-button>
+                    <el-button type="primary" @click="createBoard('form2')">Create</el-button>
                 </div>
             </el-form>
         </el-dialog>
@@ -165,7 +155,25 @@
         // 'v-user': user
         // },
         data () {
+            var checkName = (rule, value, callback) => {
+                if (!value) {
+                return callback(new Error('board is not NULL'));
+                }
+                setTimeout(() => {
+                    if (value === 'boards' || value === 'pins' || value === 'likes' || value === 'pin') {
+                        callback(new Error('forbidden board name!'));
+                    } else {
+                        callback();
+                    }
+                }, 500);
+            }
+            let strCookie = document.cookie;
+            let arr = strCookie.split(";")
+            let arrCookie = arr[0].split("=")
+            let arrName = arr[1].split("=")
             return {
+                userName: arrName[1],
+                arrCookie: arrCookie[1],
                 radio1: false,
                 radio3: 1,
                 visible2: false,
@@ -178,7 +186,12 @@
                 formLabelWidth: '120px',
                 dialogFormVisible2: false,
                 form2: {
-                    name: '3'
+                    name: ''
+                },
+                rules2: {
+                    name: [
+                        { validator: checkName, trigger: 'blur' }
+                    ]
                 },
                 options: [{
                     value: '1',
@@ -205,10 +218,8 @@
         methods: {
             getBoards () {
                 let self = this
-                let strCookie = document.cookie;
-                let arrCookie = strCookie.split("=")
                 let formData = new FormData()
-                formData.append("id", arrCookie[1]);
+                formData.append("id", self.arrCookie);
                 // fetch('http://localhost:3000/todos', {
                 fetch('http://localhost/camU/index/index/getboards', {
                     method: 'POST',
@@ -223,53 +234,61 @@
                     self.bos = bos
                 })
             },
-            onSubmit () {
+            createBoard (formName) {
                 let self = this
                 var bname = this.form2.name.trim()
                 var secret = this.radio1
-                let strCookie = document.cookie;
-                let arrCookie = strCookie.split("=")
                 let formData = new FormData()
-                formData.append("id", arrCookie[1])
+                formData.append("id", self.arrCookie)
                 formData.append("bname", this.form2.name.trim())
                 formData.append('secret', this.radio1)
-                fetch('http://localhost/camU/index/index/createboard', {
-                    method: 'POST',
-                    body: formData
-                    // mode: 'no-cors',
-                    // headers: { 'Content-Type': 'application/json' },
-                    // credentials: 'same-origin'
+                this.$refs[formName].validate((valid) => {
+                if (bname === 'boards' || bname === 'pins' ||
+                bname === 'pin' || bname === 'likes') {
+                    // self.$message.error("name is used or can't be used")
+                } else {
+                    fetch('http://localhost/camU/index/index/createboard', {
+                        method: 'POST',
+                        body: formData
+                        // mode: 'no-cors',
+                        // headers: { 'Content-Type': 'application/json' },
+                        // credentials: 'same-origin'
+                    })
+                    .then(res => res.json())
+                    // fetch('http://localhost:3000/todos', {
+                    //     method: 'POST',
+                    //     body: JSON.stringify({ bname, secret }),
+                    //     headers: { 'Content-Type': 'application/json' },
+                    //     credentials: 'same-origin'
+                    // })
+                    // .then(res => res.json())
+                    .then(function (response) {
+                        if (response.status === 1) {
+                            self.bos.reverse() // array倒序
+                            // self.bos.unshift(response)
+                            self.bos.push(response)
+                            self.bos.reverse()
+                            self.$message.success('success')
+                            self.dialogFormVisible2 = false
+                            setTimeout(() => {
+                                // self.fullscreenLoading = false
+                                self.$router.push('/user/' + response.bname + '/')
+                            }, 2000);
+                        } else {
+                            self.$message.error("board name is used by yourself")
+                        }
+                    })
+                }
                 })
-                .then(res => res.json())
-                // fetch('http://localhost:3000/todos', {
-                //     method: 'POST',
-                //     body: JSON.stringify({ bname, secret }),
-                //     headers: { 'Content-Type': 'application/json' },
-                //     credentials: 'same-origin'
-                // })
-                // .then(res => res.json())
-                .then(function (response) {
-                    self.bos.unshift(response)
-                    self.dialogFormVisible2 = false
-                    debugger
-                    if (response.status >= 200) {
-                    //    return {dialogFormVisible: false}
-                    }
-                    // response.status
-                    // response.statusText
-                    // response.headers
-                    // response.url
-                    // return response.text()
-                }, function (error) {
-                    error.message
-                })
+            },
+            resetForm(formName) {
+                this.$refs[formName].resetFields()
+                console.log(formName)
             },
             changeBoard (e) {
                 let self = this
-                let strCookie = document.cookie;
-                let arrCookie = strCookie.split("=")
                 let formData = new FormData()
-                formData.append("id", arrCookie[1])
+                formData.append("id", self.arrCookie)
                 formData.append("bid", e)
                 fetch('http://localhost/camU/index/index/getboard', {
                     method: 'POST',
@@ -280,13 +299,15 @@
                 })
                 .then(res => res.json())
                 .then(function (res) {
+                    // debugger
                        if (res.secret === 'false') {
                            res.secret = false
                        } else {
                            res.secret = true
                        }
                     self.form1 = res
-                    // debugger
+                    // console.log(e)
+                    // console.log(res)
                 // fetch('http://localhost:3000/todos/' + 1, {
                 //     method: 'GET'
                 // })
@@ -308,10 +329,8 @@
             },
             changeCover (e) {
                 let self = this
-                let strCookie = document.cookie;
-                let arrCookie = strCookie.split("=")
                 let formData = new FormData()
-                formData.append("id", arrCookie[1])
+                formData.append("id", self.arrCookie)
                 formData.append("bid", e)
                 fetch('http://localhost/camU/index/index/changecover', {
                     method: 'POST',
@@ -379,10 +398,16 @@
             // }
             delBoard (e) {
                 let self = this
-                let strCookie = document.cookie;
-                let arrCookie = strCookie.split("=")
+                // for (let i = 0; i < this.bos.length; i++) {
+                // // for (let i = self.bos.length; i > 0; i--) {
+                //     if (this.bos[i].bid === e) {
+                //         this.bos.splice(i, 1) // 根据下标删除当前对应的元素
+                //         console.log(self.bos.splice(i, 1))
+                //         console.log(i)
+                //     }
+                // }
                 let formData = new FormData()
-                formData.append("id", arrCookie[1])
+                formData.append("id", self.arrCookie)
                 formData.append("bid", e)
                 fetch('http://localhost/camU/index/index/delboard', {
                     method: 'POST',
@@ -398,28 +423,27 @@
                 // .then(res => res.json())
                 .then(function (res) {
                     // self.form1 = res
-                    self.dialogVisible = false
-                    self.dialogFormVisible1 = false
-                    // debugger
-                    // if (res.id > 0) {
+                    if (res.status) {
                         for (let i = 0; i < self.bos.length; i++) {
                             if (self.bos[i].bid === e) {
                                 self.bos.splice(i, 1) // 根据下标删除当前对应的元素
                                 console.log(i)
                             }
                         }
-                    // }
+                        self.$message.success('delete success！')
+                    }
+                    // debugger
+                    self.dialogVisible = false
+                    self.dialogFormVisible1 = false
                     // self.bos.splice(e - 1, 1)
                     // self.$router.push('/Bubble/boards');
                     // console.log(self.form1.bname)
                 // if (res.status >= 200) {
-                //     for (var i = self.todos.length - 1; i >= 0; i--) {
-
-                //     if (self.todos[i].id === e) {
-                //         console.log(i)
-                //         // self.todos.splice(i,1)
-                //     }
-                //     }
+                    // for (let i = 0; i < this.bos.length; i++) {
+                    //     if (self.todos[i].id === e) {
+                    //         self.todos.splice(i, 1)
+                    //     }
+                    // }
                 // }
                 })
                 // console.log(e)
@@ -431,9 +455,7 @@
         },
         mounted() {
             document.title = this.$route.path   // 改变网页title
-            console.log(this.$route.path)
-            let strCookie = document.cookie;
-            let arrCookie = strCookie.split("=")
+            // console.log(this.arrCookie)
             setInterval(() => {
             // console.log('simulate async data')
             let swiperSlides = this.pinss

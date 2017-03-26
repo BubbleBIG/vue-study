@@ -1,35 +1,39 @@
 <template>
     <div class="settings" style="width:500px;margin: 0 auto">
     <v-header></v-header>
-        <el-form label-position="top" :model="formStacked" class="demo-form-stacked">
+        <el-form label-position="top" :model="form1" class="demo-form-stacked">
             <el-form-item label="Email Address" style="padding-top:20px">
-                <el-input v-model="formStacked.mail"></el-input>
+                <el-input v-model="form1.mail"></el-input>
             </el-form-item>
             <el-form-item label="Password">
                 <el-button type="text" @click="dialogFormVisible3 = true">Change your password...</el-button>
             </el-form-item>
             <el-form-item label="EGender">
-                <el-radio-group v-model="radio3">
+                <el-radio-group v-model="form1.gender">
                     <el-radio :label="0">Male</el-radio>
                     <el-radio :label="1">Female</el-radio>
                 </el-radio-group>
             </el-form-item>
             <el-form-item label="Name">
-                <el-input v-model="formStacked.name"></el-input>
+                <el-input v-model="form1.uname" id="checkInput"></el-input>
+                <span class="level" style="color:#999">
             </el-form-item>
             <el-form-item label="Picture">
-                <img src="../../common/images/person.png"  width="75" height="75"
+                <img :src="form1.uimg" v-if="form1.uimg" width="75" height="75"
+                style="vertical-align: middle"/>
+                <img v-else src="../../common/images/person.png" width="75" height="75"
                 style="vertical-align: middle"/>
                 <el-button @click="dialogFormVisible4 = true">Change picture</el-button>
             </el-form-item>
             <el-form-item label="UserName">
-                <el-input v-model="userName">
+                <el-input v-model="form1.wname">
                     <template slot="prepend">Http://localhost/</template>
                 </el-input>
+                <span class="level" style="color:#999">
             </el-form-item>
             <el-form-item label="About you">
                 <el-input type="textarea" :rows="4" placeholder="Type something"
-                v-model="formStacked.aboutyou">
+                v-model="form1.about">
                 </el-input>
             </el-form-item>
             <!--<el-form-item>-->
@@ -38,6 +42,7 @@
                 <el-button type="primary" @click="onSubmit">Save setting</el-button>
             </span>
             <!--</el-form-item>-->
+            <div style="height: 70px"></div>
         </el-form>
         <el-dialog title="Change your password" v-model="dialogFormVisible3" top="25%">
             <el-form :model="form3" ref="form3">
@@ -63,9 +68,7 @@
                 <!--<el-button type="primary" @click="">upload</el-button>-->
             </el-form>
         </el-dialog>
-        <div id="pinheight"><img src="../../common/images/person.png"  width="75" height="95"></div>
     </div>
-    
 </template>
 
 <script>
@@ -76,38 +79,30 @@ import header from '../header/header.vue'
         },
         mounted: function () {
             document.title = this.$route.path   // 改变网页title
-            var b = $("#pinheight").outerHeight(true)
-            var a = $('#pinheight')
-            // var h = window.offsetHeight
-            var o = document.getElementById("pinheight")
-            let c = document.getElementById("pinheight")
-            var h = o.offsetHeight;
-            var w = o.offsetWidth;
-            // debugger;
-            console.log(w)
-            console.log(h)
-            console.log(b)
-            console.log(a)
+    //         $('#checkInput input').bind('change keyup blur fucos', function() {
+    //     yzcode($(this).val);
+    // });
+        //     var b = $("#pinheight").outerHeight(true)
+        //     var a = $('#pinheight')
+        //     // var h = window.offsetHeight
+        //     var o = document.getElementById("pinheight")
+        //     let c = document.getElementById("pinheight")
+        //     var h = o.offsetHeight;
+        //     var w = o.offsetWidth;
+        //     // debugger;
+        //     console.log(w)
+        //     console.log(h)
+        //     console.log(b)
+        //     console.log(a)
         },
         data () {
-            var b = $("#pinheight").outerHeight(true)
-            var a = $('#pinheight')
-            // var h = window.offsetHeight
-            // var o = document.getElementById("pinheight")
-            // let c = document.getElementById("pinheight")
-            // var h = o.offsetHeight;
-            // var w = o.offsetWidth;
-            // debugger;
-            // console.log(w)
-            // console.log(h)
-            console.log(b)
+            let strCookie = document.cookie
+            let arr = strCookie.split(";")
+            let arrCookie = arr[0].split("=")
             return {
-                userName: 'Bubble',
-                radio3: 0,
-                formStacked: {
-                name: '',
-                region: '',
-                type: ''
+                arrCookie: arrCookie[1],
+                form1: {
+                    gender: 0
                 },
                 formLabelWidth: '120px',
                 form3: {
@@ -121,22 +116,21 @@ import header from '../header/header.vue'
             }
         },
         created: function () {
-            this.pinHeight()
+            this.getUserInfo()
         },
         methods: {
-            pinHeight () {
-                // var b = $("#pinheight").outerHeight(true)
-                // var a = $('#pinheight')
-                // // var h = window.offsetHeight
-                // var o = document.getElementById("pinheight")
-                // let c = document.getElementById("pinheight")
-                // var h = o.offsetHeight;
-                // var w = o.offsetWidth;
-                // // debugger;
-                // console.log(w)
-                // console.log(h)
-                // console.log(b)
-                // console.log(a)
+            getUserInfo () {
+                let self = this
+                let formData = new FormData()
+                formData.append("id", self.arrCookie)
+                fetch('http://localhost/camU/index/index/getuserinfo', {
+                    method: 'POST',
+                    body: formData
+                })
+                .then(res => res.json())
+                .then(function (res) {
+                    self.form1 = res
+                })
             },
             onSubmit () {
                 console.log('submit!')

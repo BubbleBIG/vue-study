@@ -46,21 +46,21 @@
                 <div class="user-info">
                     <div class="fontFamily"><h1>Bubble</h1></div>
                 </div>
-                <div class="user-info gradient-wrap" align="right">
+                <div class="user-info" align="right">
                     <div></div>
                     <img src="../../common/images/person.png" width="156" height="156" />
                 </div>
             </div>
         </div>
         <ul class="userCommon">
-            <li><router-link :to="'/' + userName + '/boards'" class="userLink">
+            <li><router-link :to="'/' + userName + '/boards/'" class="userLink">
                 <div class="userLink boardsLink">Boards</div>
             </router-link></li>
-            <li><router-link :to="'/' + userName + '/pins'" class="userLink" onclick="llk1()">
+            <li><router-link :to="'/' + userName + '/pins/'" class="userLink">
                 <div class="userLink pinsLink">Pins</div>
             </router-link></li>
-            <li><router-link :to="'/' + userName + '/likes'" class="userLink">
-                <div onclick="llk ()" class="userLink likesLink">Likes</div>
+            <li><router-link :to="'/' + userName + '/likes/'" class="userLink">
+                <div class="userLink likesLink">Likes</div>
             </router-link></li>
         </ul>
         <router-view></router-view>
@@ -75,21 +75,25 @@ import header from '../header/header.vue'
         },
         mounted: function () {
             document.title = this.$route.path   // 改变网页title
-            window.onscroll = function () {     // 滑动条触发动画
-                var scrollTop = document.documentElement.scrollTop || window.pageYOffset || document.body.scrollTop;
-                var bName = document.getElementById('boardName');
-                if (scrollTop >= 50) {
-                    bName.classList.add("transitionIn");
-                    bName.classList.remove("transitionOut");
-                } else {
-                    bName.classList.remove("transitionIn");
-                    bName.classList.add("transitionOut");
-                }
-            }
+            // window.onscroll = function () {     // 滑动条触发动画
+            //     var scrollTop = document.documentElement.scrollTop || window.pageYOffset || document.body.scrollTop;
+            //     var bName = document.getElementById('boardName');
+            //     if (scrollTop >= 50) {
+            //         bName.classList.add("transitionIn");
+            //         bName.classList.remove("transitionOut");
+            //     } else {
+            //         bName.classList.remove("transitionIn");
+            //         bName.classList.add("transitionOut");
+            //     }
+            // }
         },
         data () {
+            let strCookie = document.cookie;
+            let arr = strCookie.split(";")
+            let arrCookie = arr[0].split("=")
+            let arrName = arr[1].split("=")
             return {
-                userName: 'Bubble'
+                userName: arrName[1]
             }
         },
         // mounted: function () {
@@ -100,6 +104,7 @@ import header from '../header/header.vue'
                 let self = this
                 var date = new Date()
                 date.setTime(date.getTime() - 10000)
+                document.cookie = 'id' + " = v; expires = " + date.toGMTString()
                 document.cookie = 'name' + " = v; expires = " + date.toGMTString()
                 setTimeout(() => {
                     self.$router.push('/log')

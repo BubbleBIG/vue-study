@@ -1,9 +1,9 @@
 <template>
     <div class="user-routers">
-        <div class="loginCard">
+        <div class="signUpCard">
         <el-card class="box-card">
           <div slot="header" class="clearfix">
-            <span style="">Log In</span>
+            <span style="">Login</span>
           </div>
             <el-form :model="ruleForm1" :rules="rules1" ref="ruleForm1">
             <el-form-item prop="name">
@@ -15,14 +15,17 @@
                 auto-complete="off" placeholder="Password"></el-input>
             </el-form-item>
             <el-form-item>
-                <el-button type="primary" @click="loginForm(ruleForm1)">
-                    Log in</el-button>
+                <!--<el-button type="primary" @click="loginForm('ruleForm1')"
+                v-loading.fullscreen.lock="fullscreenLoading"
+                element-loading-text="登陆中..."
+                >Sign Up</el-button>-->
+                <el-button type="primary" @click="loginForm('ruleForm1')">Log in</el-button>
                 <el-button @click="resetForm('ruleForm1')">Reset</el-button>
             </el-form-item>
             <el-form-item style="text-align:center">
                 <span class="demonstration">Need an account?
                   <router-link to="/reg" style="display:inline;padding: 0px 10px;
-                  font-weight:bold">Sign Up</router-link></span>
+                  font-weight:bold">Sign up</router-link></span>
             </el-form-item>
             </el-form>
         </el-card>
@@ -34,19 +37,23 @@
   export default {
     mounted: function () {
             document.title = this.$route.path   // 改变网页title
+            // let strCookie = document.cookie;
+            // let arrCookie = strCookie.split("=")
+            // console.log(arrCookie[1])
         },
     data() {
       var checkName = (rule, value, callback) => {
         if (!value) {
           return callback(new Error('用户名不能为空'));
         }
+        value = value.match(/^[a-zA-Z0-9_]{3,16}$/)
         setTimeout(() => {
-            if (value.length < 3 || value.length > 32) {
-                callback(new Error('输入3-32个字符'));
+            if (!value) {
+                callback(new Error('请输入3-16个数字或英文字母'));
             } else {
                 callback();
             }
-        }, 800);
+        }, 100);
       };
       var validatePass = (rule, value, callback) => {
         if (value === '') {
@@ -59,11 +66,11 @@
         }
       }
       return {
+        url: this.$route.path,
         ruleForm1: {
           pass: '',
           name: ''
         },
-        url: this.$route.path,
         rules1: {
           pass: [
             { validator: validatePass, trigger: 'blur' }
@@ -74,15 +81,27 @@
         }
       };
     },
+    created: function () {
+        this.getId()
+    },
     methods: {
-      loginForm(formName) {
-        // console.log(this.$route.path)
-        // this.$refs[formName].validate((valid) => {
-          console.log(formName)
+        getId () {
+        },
+        loginForm (formName) {
+          this.$refs[formName].validate((valid) => {
           let self = this
+          let value = self.ruleForm1.name.match(/^[a-zA-Z0-9_]{3,16}$/)
+          if (!value) {
+            self.$message.error('无效用户名')
+          } else {
           let formData = new FormData();
-          formData.append("name", formName.name);
-          formData.append("pwd", formName.pass);
+          formData.append("name", self.ruleForm1.name);
+          formData.append("pwd", self.ruleForm1.pass);
+        // console.log(this.$route.path)
+          // let self = this
+          // let formData = new FormData();
+          // formData.append("name", formName.name);
+          // formData.append("pwd", formName.pass);
           // fetch('http://localhost:3000/login', {
           //   method: 'GET',
           //   headers: { 'Content-Type': 'application/json' },
@@ -98,20 +117,26 @@
           //     return false;
           //   }
           // })
-          fetch('http://localhost/camU/index/login/login.html', {
+          fetch('http://localhost/camU/index/login/login', {
             method: 'POST',
             // headers: { 'Content-Type': 'application/json' },
             body: formData
           })
           .then(res => res.json())
-          .then(function (id) {
-            console.log(id)
-            if (id.status === 1) {
+          .then(function (res) {
+            // console.log(res)
+            if (res.status === 1) {
               // console.log(self.$route.path)
-              document.cookie = "name = " + id.uid;
+              document.cookie = "id = " + res.id
+              document.cookie = 'name = ' + res.name
+              // self.fullscreenLoading = true;
               setTimeout(() => {
+                // self.fullscreenLoading = false
                 self.$router.push('/')
-              }, 800)
+              }, 3000);
+              // setTimeout(() => {
+              //   self.$router.push('/')
+              // }, 800)
               // console.log(self.$route)
               // alert('submit!');
             } else {
@@ -119,7 +144,8 @@
               return false;
             }
           })
-        // });
+          }
+        });
       },
       resetForm(formName) {
         this.$refs[formName].resetFields()
@@ -132,7 +158,7 @@
   }
 </script>
 
-<style lang='scss' scope>
+<style lang='scss' scoped>
     .loginCard, .signUpCard {
         display: flex;
         justify-content: center;

@@ -19,14 +19,14 @@
               auto-complete="off" placeholder="Type again"></el-input>
             </el-form-item>
             <el-form-item>
-                <el-button type="primary" @click="signupForm('ruleForm2')">
+                <el-button type="primary" @click="signForm('ruleForm2')">
                     Sign Up</el-button>
                 <el-button @click="resetForm('ruleForm2')">Reset</el-button>
             </el-form-item>
             <el-form-item style="text-align:center">
                 <span class="demonstration">Already a member?
                   <router-link to="/log" style="display:inline;padding: 0px 10px;
-                  font-weight:bold">Log In</router-link></span>
+                  font-weight:bold">Log in</router-link></span>
             </el-form-item>
             </el-form>
         </el-card>
@@ -47,20 +47,21 @@
         if (!value) {
           return callback(new Error('用户名不能为空'));
         }
+        value = value.match(/^[a-zA-Z0-9_]{3,16}$/)
         setTimeout(() => {
-            if (value.length < 3 || value.length > 32) {
+            if (!value) {
                 callback(new Error('输入3-32个字符'));
             } else {
                 callback();
             }
-        }, 800);
+        }, 200);
       };
       var validatePass1 = (rule, value, callback) => {
         if (value === '') {
           callback(new Error('请输入密码'));
         } else {
-          if (value.length < 2) {
-            callback(new Error('请输入至少2个字符'));
+          if (value.length < 6) {
+            callback(new Error('请输入至少6个字符'));
           }
           callback();
         }
@@ -110,9 +111,54 @@
         },
         signForm(formName) {
         // console.log(this.$route.path)
-        // this.$refs[formName].validate((valid) => {
-          console.log(formName)
+        this.$refs[formName].validate((valid) => {
+          // console.log(formName)
           let self = this
+          let value = self.ruleForm2.name.match(/^[a-zA-Z0-9_]{3,16}$/)
+          if (!value) {
+            self.$message.error('无效用户名')
+          } else {
+          let formData = new FormData();
+          formData.append("name", self.ruleForm2.name);
+          formData.append("pwd", self.ruleForm2.pass);
+          // fetch('http://localhost:3000/login', {
+          //   method: 'GET',
+          //   headers: { 'Content-Type': 'application/json' },
+          //   credentials: 'same-origin'
+          // })
+          // .then(res => res.json())
+          // .then(function (id) {
+          //   console.log(id)
+          //   if (id) {
+          //     alert('submit!');
+          //   } else {
+          //     console.log('error login!!');
+          //     return false;
+          //   }
+          // })
+          fetch('http://localhost/camU/index/login/sign', {
+            method: 'POST',
+            // headers: { 'Content-Type': 'application/json' },
+            body: formData
+          })
+          .then(res => res.json())
+          .then(function (res) {
+            console.log(res)
+            if (res.status) {
+              // console.log(self.$route.path)
+              self.$router.push('/log')
+              console.log(self.$route)
+              // alert('submit!');
+            } else {
+              console.log('signUp error!!');
+              return false;
+            }
+          })
+          }
+        });
+      },
+      lo() {
+        let self = this
           let formData = new FormData();
           formData.append("name", formName.name);
           formData.append("pwd", formName.pass);
@@ -131,25 +177,33 @@
           //     return false;
           //   }
           // })
-          fetch('http://localhost/camU/index/login/login.html', {
+          fetch('http://localhost/camU/index/login/login', {
             method: 'POST',
             // headers: { 'Content-Type': 'application/json' },
             body: formData
           })
           .then(res => res.json())
-          .then(function (id) {
-            console.log(id)
-            if (id) {
+          .then(function (res) {
+            // console.log(res)
+            if (res.status === 1) {
               // console.log(self.$route.path)
-              self.$router.push('/')
-              console.log(self.$route)
+              document.cookie = "id = " + res.id
+              document.cookie = 'name = ' + res.name
+              this.fullscreenLoading = true;
+              setTimeout(() => {
+                this.fullscreenLoading = false
+                self.$router.push('/log')
+              }, 3000);
+              // setTimeout(() => {
+              //   self.$router.push('/')
+              // }, 800)
+              // console.log(self.$route)
               // alert('submit!');
             } else {
-              console.log('error login!!');
+              console.log('error reg!!');
               return false;
             }
           })
-        // });
       },
       resetForm(formName) {
         this.$refs[formName].resetFields()

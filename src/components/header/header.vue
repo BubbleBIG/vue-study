@@ -27,7 +27,7 @@
         <a v-popover:popover1 class=""><div class="categoriesHeader"></div></a>
         </span>
         <span class="navb-group navb-g" style="width:px;padding:4px 0;vertical-align: middles">
-        <router-link :to="'/' + userName" class="userimg"><div class="userImg"></div>
+        <router-link :to="'/' + userName + '/'" class="userimg"><div class="userImg"></div>
         </router-link>
         </span>
         <span class="navb-group navb-g" style="width:px;padding:4px 0;margin-right:4px;">
@@ -45,8 +45,12 @@
 <script>
     export default {
         data () {
+            let strCookie = document.cookie;
+            let arr = strCookie.split(";")
+            let arrCookie = arr[0].split("=")
+            let arrName = arr[1].split("=")
             return {
-                userName: 'Bubble',
+                userName: arrName[1],
                 restaurants: [],
                 state4: '',
                 timeout: null

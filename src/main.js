@@ -16,6 +16,7 @@ import pins from './components/user/pins'
 import likes from './components/user/likes'
 import settings from './components/user/settings'
 import pin from './components/user/pin'
+import board from './components/user/board'
 import test from './components/user/test'
 import VueAwesomeSwiper from 'vue-awesome-swiper'
 // import '../static/js/test.js'
@@ -36,13 +37,13 @@ Vue.use(VueAwesomeSwiper)
 //     </div>
 //   `
 // }
-function guardRoute (to, from, next) {
-  if (window.confirm('Navigate to ?')) {
-    next()
-  } else {
-    next('/log')
-  }
-}
+// function guardRoute (to, from, next) {
+//   if (window.confirm('Navigate to ?')) {
+//     next()
+//   } else {
+//     next('/log')
+//   }
+// }
 
  const router = new VueRouter({
   linkActiveClass: 'active',
@@ -64,6 +65,12 @@ function guardRoute (to, from, next) {
         { path: 'pins', component: pins },
         { path: 'likes', component: likes }
       ]
+    },
+    { path: '/:id/:id',
+      component: board,
+      children: [
+        { path: '', component: board }
+      ]
     }
   ]
 })
@@ -83,8 +90,9 @@ router.beforeEach((to, from, next) => {
   // })
   // .then(res => res.json())
   // .then(function (id) {
-    let strCookie = document.cookie;
-    let arrCookie = strCookie.split("=")
+    let strCookie = document.cookie
+    let arr = strCookie.split(";")
+    let arrCookie = arr[0].split("=")
     // console.log(arrCookie[1]) //cookie
     const {auth = true} = to.meta      // meta代表的是to中的meta对象，path代表的是to中的path对象
     var isLogin = Boolean(arrCookie[1])    // true用户已登录,false用户未登录

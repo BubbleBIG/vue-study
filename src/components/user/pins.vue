@@ -1,16 +1,18 @@
 <template>
     <div class="user-routers">
         <div class="boards pins">
-            <div v-for="pinBtn in savepinbtn" class="pinsItemsClass pinsItem">
+            <!--<div v-for="pinBtn in savepinbtn" class="pinsItemsClass pinsItem">-->
+            <div class="pinsItemsClass pinsItem">
                 <div class="pinsCard" style="height: 284px">
                     <a class="AddPinRep ModalTrigger" style="height: 284px"
-                    @click="dialogVisible2 = true">
+                    @click="dialogVisible3 = true">
                         <i></i>
-                        <span>{{ pinBtn.name }}</span>
+                        <span>save Pin</span>
+                        <!--<span>{{ pinBtn.name }}</span>-->
                     </a>
                 </div>
             </div>
-            <div v-for="pin in pins" class="pinsItemsClass pinsItem" align="center">
+            <div v-for="pin in pins" class="item pinsItem" align="center">
                 <div class="">
                 <div class="pinsCard pinsCard2 gradient-wrap">
                     <div class="">
@@ -30,35 +32,134 @@
                     </a>
                 </div>
             </div>
-            <el-dialog title="Upload a Pin" v-model="dialogVisible2">
-                <!--<el-upload
-                name="photo"
-                action="http://localhost:3000/test"
-                :thumbnail-mode="true"
-                :on-preview="handlePreview"
+            <el-dialog title="Save from" v-model="dialogVisible3" size="tiny">
+                <div>
+                    <el-row style="width:320px">
+                    <el-col :span="12"><button class="grid-content bg-purple"
+                    @click="dialogVisible4 = true,dialogVisible3 = false">
+                        <em></em>
+                        <span>The web</span>
+                        </button>
+                    </el-col>
+                    <el-col :span="12"><button class="grid-content bg-purple-light"
+                    @click="dialogVisible2 = true,dialogVisible3 = false">
+                        <em></em>
+                        <span>Your device</span>
+                        </button>
+                    </el-col>
+                    </el-row>
+                    <!--<el-button>The web</el-button>
+                    <button>The web</button>-->
+                </div>
+            </el-dialog>
+            <el-dialog title="Upload a Pin" v-model="dialogVisible2" size="tiny">
+                <el-upload name="photo"
+                style="padding: 18px;background:#ededed;"
+                action="http://localhost/camU/index/index/uploadpintmp"
+                :on-change="handleResponse"
                 :on-remove="handleRemove"
-                :default-file-list="fileList"
-                :show-upload-list="true"
-                >
-                <i class="el-icon-upload"></i>
-                <div class="el-dragger__text">将文件拖到此处，或<em>点击上传</em></div>
-                <div class="el-upload__tip" slot="tip">只能上传jpg/png文件，且不超过500kb</div>
-                </el-upload>-->
-                <el-upload
-                class="avatar-uploader"
-                action="http://localhost/camU/index/index/uploadPins.html"
-                :show-file-list="false" name="photo"
-                :on-success="handleAvatarScucess"
-                :before-upload="beforeAvatarUpload">
-                <img v-if="imageUrl" :src="imageUrl" class="avatar">
-                <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+                :before-upload="beforeAvatarUpload"
+                :show-file-list="false">
+                <el-button size="small" type="primary">Choose image</el-button>
+                <div slot="tip" class="el-upload__tip">只能上传jpeg/jpg/png/gif文件，且不超过2M</div>
                 </el-upload>
+                <!--<el-upload
+                action="http://localhost/camU/index/index/uploadPins.html"
+                list-type="picture-card" name="photo"
+                :on-change="handleResponse"
+                :on-preview="handlePictureCardPreview"
+                :on-remove="handleRemove">
+                <i class="el-icon-plus"></i>
+                </el-upload>-->
                 <!--<span>
                     <form name="form1" id="form12" class="formUploadPin">  
                         <input type="file" name="photo" id="photo" accept="image/gif,
                         image/png, image/jpeg, image/bmp, image/webp" @change="uploadOne1">
                     </form>
                 </span>-->
+            </el-dialog>
+            <!--<el-dialog v-model="dialogImgVisible">
+                <div>
+                    <img width="100%" :src="dialogImageUrl" alt="">
+                </div>
+            </el-dialog>-->
+            <el-dialog title="Save from a website" v-model="dialogVisible4">
+                <el-form :model="formInline" :rules="rules3" ref="formInline">
+                <el-form-item prop="url">
+                    <el-input v-model="formInline.url" placeholder="http://..." auto-complete="off"
+                    style="width:464px;margin-right:10px"></el-input>
+                    <el-button v-if="!formInline.url" type="primary" :disabled="true">Next</el-button>
+                    <el-button v-else type="info" @click="urlForm('formInline')">Next</el-button>
+                </el-form-item>
+                </el-form>
+                <!--<el-input v-model="input" placeholder="请输入内容"></el-input>
+                <el-button type="info">信息按钮</el-button>-->
+            </el-dialog>
+            <el-dialog title="" v-model="dialogVisible5">
+                <el-form>
+                    <el-row>
+                    <el-col :span="12" style="border-right: 1px solid #efefef;background-color:#fdfdfd">
+                        <div style="width:200px;min-height: 410px;max-height:480px;margin:auto;padding-top:2px">
+                            <div style="margin-bottom: 5px;">
+                            <img :src="webUrl" width="100%" id="imgData" style="border-radius: 4px;">
+                            </div>
+                            <el-input v-model="ImageUrl" style="display:none"></el-input>
+                            <el-input v-model="iswebsite" style="display:none"></el-input>
+                            <div style="padding-bottom: 20px">
+                                <el-input
+                                type="textarea"
+                                :rows="2"
+                                placeholder="Tell us about this Pin.."
+                                v-model="textarea">
+                                </el-input>
+                            </div>
+                        </div>
+                    </el-col>
+                    <el-col :span="12" style="padding-left: 20px">
+                        <div>
+                            <div style="padding-bottom: 10px;border-bottom: 1px solid #efefef">
+                                <div class="title" style="font-size: 18px;font-weight: bold;
+                                padding-bottom: 8px;">Choose board</div>
+                                <el-input
+                                icon="search"
+                                placeholder="search"
+                                v-model="input2"
+                                :on-icon-click="handleIconClick">
+                                </el-input>
+                            </div>
+                            <div>
+                                <div style="padding: 8px 0px">All boards</div>
+                                <!--<el-button-group v-for="bo in bos">
+                                    <el-button type="text">{{ bo.bname }}</el-button>
+                                    <el-button type="primary" icon="share">Save</el-button>
+                                </el-button-group>-->
+                                <div class="choose-board">
+                                    <div v-for="bo in bos">
+                                        <div class="board-list">
+                                            <div>
+                                                <el-button type="text" class="board-list-btn">
+                                                <img src="../../common/images/pg.png" style="vertical-align:middle">
+                                                <span style="display:inline">{{ bo.bname }}</span></el-button>
+                                                <el-button type="primary" class="board-list-save"
+                                                @click="pinSave(bo.bid)">Save</el-button>
+                                            </div>
+                                        </div>
+                                        <!--<div>
+                                            <div>{{ bo.bname }}</div>
+                                            <div><el-button type="primary">Save</el-button></div>
+                                        </div>-->
+                                    </div>
+                                </div>
+                                <div>
+                                    <div class="creat-board">
+                                        <el-button><i></i><em>Create board</em></el-button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </el-col>
+                    </el-row>
+                </el-form>
             </el-dialog>
             <div id="result"></div>
             <h1 style="height:1000px"></h1>
@@ -69,7 +170,7 @@
                 <p>photo:<input type="file" name="photo" id="photo"></p>  
                 <p><input type="button" name="b1" value="submit" onclick="fsubmit()"></p>  
             </form>  -->
-        </div>
+        </img>
     </div>
 </template>
 <script src="/static/js/grade.js"></script>
@@ -80,164 +181,323 @@
         // 'v-user': user
         },
         data () {
+            let strCookie = document.cookie
+            let arr = strCookie.split(";")
+            let arrCookie = arr[0].split("=")
+            var checkUrl = (rule, value, callback) => {
+                // var ImgObj = new Image()
+                // ImgObj.src = value
+                // if (ImgObj.fileSize > 0 || (ImgObj.width > 0 && ImgObj.height > 0)) {
+                //     callback();
+                // } else {
+                //     callback(new Error('请输入图片链接'));
+                // }
+                // value = value.match(/http:\/\/.+/)
+                if (value === null) {
+                callback(new Error('请输入图片链接'));
+                } else {
+                callback();
+                }
+            }
             return {
+                textarea: '',
+                input2: '',
+                arrCookie: arrCookie[1],
                 dialogVisible2: false,
+                dialogVisible3: false,
+                dialogVisible4: false,
+                dialogVisible5: false,
                 savepinbtn: [],
                 pins: [],
-                fileList: [],
-                imageUrl: ''
+                bos: [],
+                dialogImageUrl: '',
+                ImageUrl: '',
+                webUrl: '',
+                iswebsite: '',
+                dialogImgVisible: false,
+                formInline: {
+                    url: ''
+                },
+                rules3: {
+                    url: [
+                        { validator: checkUrl, trigger: 'blur' }
+                    ]
+                }
             }
-        },
-        mounted: function () {
-            document.title = this.$route.path   // 改变网页title
-            window.onload = function() {
-            Grade(document.querySelectorAll('.gradient-wrap'))
-        }
-        Grade(document.querySelectorAll('.gradient-wrap'))
-        function getViewSize () {
-return {"width": window['innerWidth'] || document.documentElement.clientWidth,
-"height": window['innerHeight'] || document.documentElement.clientHeight}
-}
-function getFullSize () {
-let w = Math.max(document.documentElement.clientWidth, document.body.clientWidth) +
-
-Math.max(document.documentElement.scrollLeft, document.body.scrollLeft);
-let h = Math.max(document.documentElement.clientHeight, document.body.clientHeight) +
-
-Math.max(document.documentElement.scrollTop, document.body.scrollTop);
-w = Math.max(document.documentElement.scrollWidth, w);
-h = Math.max(document.documentElement.scrollHeight, h);
-return {"width": w, "height": h};
-}
-
-function setContainerSize () {
-    var size = getViewSize();
-// console.log(size["width"]);
-// console.log(size["height"]);
-}
-
-setContainerSize();
-// waterfall();
-window.onresize = setContainerSize;
-window.onresize = waterfall;
-function waterfall () {
-    var size = getViewSize();
-    // console.log(size["width"]);
-    var itemW = $('.item').outerWidth(true)
-    // windowW = $(window).width(),
-    // var windowW = size["width"]
-    var windowW = window.innerWidth
-    var colNum = Math.floor(windowW / itemW)  //    有多少列
-        // colNum = 4;
-        var colNowHeight = [];//    存放每一列当前总的高度
-        //  console.log(windowW);
-    for (let i = 0; i < colNum; i++) {
-        colNowHeight.push(0);// 初始化数组，每列当前总的高度0
-    }
-    //  遍历每个item选择他们的归属
-    $('.item').each(function () {
-        var $this = $(this);
-        //  遍历找出高度最短的列及其对应的高度
-        let minColNowHeight = colNowHeight[0]
-        var minCol = 0;//   最小总高度的列
-        for (let i = 0; i < colNowHeight.length; i++) {
-            if (colNowHeight[i] < minColNowHeight) {
-                minColNowHeight = colNowHeight[i];
-                minCol = i;
-            }
-        }
-        $this.css({
-            left: itemW * minCol,
-            top: minColNowHeight
-        });
-        colNowHeight[minCol] += $this.outerHeight(true);
-    });
-}
-$(function () {
-   waterfall();
-})
         },
         created: function () {
             this.pin()
             this.getpins()
         },
         methods: {
-            uploadOne1 () {
-                var data = new FormData($('#form12')[0]);
-                $.ajax({
-                    url: 'http://localhost/camU/index/index/uploadPins.html',
-                    type: 'POST',
-                    data: data,
-                    dataType: 'JSON',
-                    cache: false,
-                    processData: false,
-                    contentType: false
-                }).done(function (ret) {
-                    if (ret['isSuccess']) {
-                        var result = '';
-                        result += 'name=' + ret['name'] + '<br>';
-                        result += 'gender=' + ret['gender'] + '<br>';
-                        result += '<img src="' + ret['photo'] + '"width="100">';
-                        $('#result').html(result);
-                    } else {
-                        alert('提交失敗');
-                    }
-                });
-                        console.log('test success!')
-                return false;
-            },
+            // uploadOne1 () {
+            //     var data = new FormData($('#form12')[0]);
+            //     $.ajax({
+            //         url: 'http://localhost/camU/index/index/uploadPins.html',
+            //         type: 'POST',
+            //         data: data,
+            //         dataType: 'JSON',
+            //         cache: false,
+            //         processData: false,
+            //         contentType: false
+            //     }).done(function (ret) {
+            //         if (ret['isSuccess']) {
+            //             var result = '';
+            //             result += 'name=' + ret['name'] + '<br>';
+            //             result += 'gender=' + ret['gender'] + '<br>';
+            //             result += '<img src="' + ret['photo'] + '"width="100">';
+            //             $('#result').html(result);
+            //         } else {
+            //             alert('提交失敗');
+            //         }
+            //     });
+            //             console.log('test success!')
+            //     return false;
+            // },
             pin () {
-                let self = this
-                fetch('http://localhost:3000/savepin', {
-                // fetch('http://localhost/camU/index/index/getboards', {
-                    method: 'GET',
-                    // mode: 'no-cors',
-                    headers: { 'Content-Type': 'application/json' },
-                    credentials: 'same-origin'
-                })
-                .then(res => res.json())
-                .then(function (pin) {
-                    // console.log(pins)
-                    self.savepinbtn = pin
-                })
+                // let self = this
+                // fetch('http://localhost:3000/savepin', {
+                // // fetch('http://localhost/camU/index/index/getboards', {
+                //     method: 'GET',
+                //     // mode: 'no-cors',
+                //     headers: { 'Content-Type': 'application/json' },
+                //     credentials: 'same-origin'
+                // })
+                // .then(res => res.json())
+                // .then(function (pin) {
+                //     // console.log(pins)
+                //     self.savepinbtn = pin
+                // })
             },
             getpins () {
                 let self = this
-                fetch('http://localhost:3000/upload', {
-                // fetch('http://localhost/camU/index/index/getpins', {
-                    method: 'GET'
+                let formData = new FormData()
+                formData.append("id", self.arrCookie)
+                // formData.append("bid", e)
+                fetch('http://localhost/camU/index/index/getpins', {
+                    method: 'POST',
+                    body: formData
                     // mode: 'no-cors',
                     // headers: { 'Content-Type': 'application/json' },
                     // credentials: 'same-origin'
                 })
                 .then(res => res.json())
+                // fetch('http://localhost:3000/upload', {
+                // // fetch('http://localhost/camU/index/index/getpins', {
+                //     method: 'GET'
+                //     // mode: 'no-cors',
+                //     // headers: { 'Content-Type': 'application/json' },
+                //     // credentials: 'same-origin'
+                // })
+                // .then(res => res.json())
                 .then(function (pins) {
+                    for (let i = 0; i < pins.length; i++) {
+                        if (pins[i].iswebsite === 0) {
+                            pins[i].url = "http://localhost/camu" + pins[i].url
+                            // console.log(pins)
+                        }
+                    }
+                    // debugger
                     // console.log(pins)
                     self.pins = pins
                 })
             },
-            handleRemove (file, fileList) {
-                console.log(file, fileList);
-            },
-            handlePreview (fileList) {
+            handleResponse(file, fileList) {
                 let self = this
-                console.log(fileList.url)
+                if (file.response.status === 1) {
+                let formData = new FormData()
+                formData.append("id", self.arrCookie);
+                // fetch('http://localhost:3000/todos', {
+                fetch('http://localhost/camU/index/index/getboards', {
+                    method: 'POST',
+                    body: formData
+                    // mode: 'no-cors',
+                    // headers: { 'Content-Type': 'application/json' },
+                    // credentials: 'same-origin'
+                })
+                .then(res => res.json())
+                .then(function (bos) {
+                    // console.log(bos)
+                    self.bos = bos
+                })
+                this.webUrl = file.url
+                this.ImageUrl = file.response.url
+                this.iswebsite = 0
+                this.dialogVisible5 = true
+                this.dialogVisible2 = false
+                } else {
+                    console.log('error')
+                }
+                console.log(file)
             },
-            handleAvatarScucess(res, file) {
-                this.imageUrl = URL.createObjectURL(file.raw);
+            handleRemove(file, fileList) {
+                console.log(file, fileList);
             },
             beforeAvatarUpload(file) {
                 const isJPG = file.type === 'image/jpeg';
+                const isJPG1 = file.type === 'image/png';
+                const isJPG2 = file.type === 'image/gif';
                 const isLt2M = file.size / 1024 / 1024 < 2;
 
-                if (!isJPG) {
-                this.$message.error('上传头像图片只能是 JPG 格式!');
+                if (!isJPG && !isJPG1 && !isJPG2) {
+                this.$message.error('上传头像图片只能是 jpeg/JPG/png/gif 格式!');
                 }
                 if (!isLt2M) {
                 this.$message.error('上传头像图片大小不能超过 2MB!');
                 }
-                return isJPG && isLt2M;
+                return isJPG1 || isJPG2 || isJPG && isLt2M;
+            },
+            // handlePictureCardPreview(file) {
+            //     this.dialogImageUrl = file.url
+            //     this.dialogImgVisible = true
+            //     console.log(file);
+            // },
+            urlForm (e) {
+                let self = this
+                let ImgObj = new Image()
+                ImgObj.src = self.formInline.url
+                // debugger
+                if (ImgObj.width > 0 && ImgObj.height > 0) {
+                let formData = new FormData()
+                formData.append("id", self.arrCookie);
+                // fetch('http://localhost:3000/todos', {
+                fetch('http://localhost/camU/index/index/getboards', {
+                    method: 'POST',
+                    body: formData
+                    // mode: 'no-cors',
+                    // headers: { 'Content-Type': 'application/json' },
+                    // credentials: 'same-origin'
+                })
+                .then(res => res.json())
+                .then(function (bos) {
+                    // console.log(bos)
+                    self.bos = bos
+                })
+                this.webUrl = self.formInline.url
+                this.ImageUrl = self.formInline.url
+                this.iswebsite = 1
+                this.dialogVisible5 = true
+                this.dialogVisible4 = false
+                } else {
+                    this.$message.error('无法识别图片,请重试或更换图片链接');
+                }
+                this.$refs[e].resetFields()
+                // console.log('kk')
+            },
+            pinSave (e) {
+                let h = document.getElementById("imgData")
+                let height = h.offsetHeight
+                let self = this
+                let ImgObj = new Image()
+                ImgObj.src = this.webUrl
+                if (ImgObj.width > 0 && ImgObj.height > 0) {
+                    let formData = new FormData()
+                    formData.append("id", self.arrCookie)
+                    formData.append("height", height)
+                    formData.append("url", self.ImageUrl)
+                    formData.append("idescription", self.textarea)
+                    formData.append("bid", e)
+                    formData.append("iswebsite", self.iswebsite)
+                    // fetch('http://localhost:3000/todos', {
+                    fetch('http://localhost/camU/index/index/uploadpin', {
+                        method: 'POST',
+                        body: formData
+                        // mode: 'no-cors',
+                        // headers: { 'Content-Type': 'application/json' },
+                        // credentials: 'same-origin'
+                    })
+                    .then(res => res.json())
+                    .then(function (res) {
+                        // console.log(res)
+                        if (res.status === 1) {
+                            self.$message.success('数据保存成功')
+                            self.dialogVisible5 = false
+                        }
+                    })
+                    // console.log('success')
+                } else {
+                    this.$message.error('无法识别或保存图片');
+                    // console.log('error')
+                }
+                // console.log(height)
+                // console.log(e)
+                // console.log(this.textarea)
+                // console.log(this.iswebsite)
+                // console.log(this.ImageUrl)
+                // console.log(self.ImageUrl)
+            },
+            handleIconClick () {}
+        },
+        mounted: function () {
+            let self = this
+            document.title = this.$route.path   // 改变网页title
+            window.onload = function() {
+                Grade(document.querySelectorAll('.gradient-wrap'))
             }
+            Grade(document.querySelectorAll('.gradient-wrap'))
+        // function getViewSize () {
+        // return {"width": window['innerWidth'] || document.documentElement.clientWidth,
+        // "height": window['innerHeight'] || document.documentElement.clientHeight}
+        // }
+        // function getFullSize () {
+        // let w = Math.max(document.documentElement.clientWidth, document.body.clientWidth) +
+
+        // Math.max(document.documentElement.scrollLeft, document.body.scrollLeft);
+        // let h = Math.max(document.documentElement.clientHeight, document.body.clientHeight) +
+
+        // Math.max(document.documentElement.scrollTop, document.body.scrollTop);
+        // w = Math.max(document.documentElement.scrollWidth, w);
+        // h = Math.max(document.documentElement.scrollHeight, h);
+        // return {"width": w, "height": h};
+        // }
+
+        // function setContainerSize () {
+        //     var size = getViewSize();
+        // // console.log(size["width"]);
+        // // console.log(size["height"]);
+        // }
+
+        // setContainerSize();
+        // waterfall();
+        // window.onresize = setContainerSize;
+        // window.onresize = waterfall;
+        // function waterfall () {
+        //     var size = getViewSize();
+        //     // console.log(size["width"]);
+        //     var itemW = $('.item').outerWidth(true)
+        //     // windowW = $(window).width(),
+        //     // var windowW = size["width"]
+        //     var windowW = window.innerWidth
+        //     var colNum = Math.floor(windowW / itemW)  //    有多少列
+        //         // colNum = 4;
+        //         var colNowHeight = [];//    存放每一列当前总的高度
+        //         //  console.log(windowW);
+        //     for (let i = 0; i < colNum; i++) {
+        //         colNowHeight.push(0);// 初始化数组，每列当前总的高度0
+        //     }
+        //     //  遍历每个item选择他们的归属
+        //     $('.item').each(function () {
+        //         var $this = $(this);
+        //         //  遍历找出高度最短的列及其对应的高度
+        //         let minColNowHeight = colNowHeight[0]
+        //         var minCol = 0;//   最小总高度的列
+        //         for (let i = 0; i < colNowHeight.length; i++) {
+        //             if (colNowHeight[i] < minColNowHeight) {
+        //                 minColNowHeight = colNowHeight[i];
+        //                 minCol = i;
+        //             }
+        //         }
+        //         $this.css({
+        //             left: itemW * minCol,
+        //             top: minColNowHeight
+        //         });
+        //         colNowHeight[minCol] += $this.outerHeight(true);
+        //     });
+        // }
+        // $(function () {
+        //     waterfall();
+        // })
+        // waterfall();
         }
     }
     
@@ -390,12 +650,103 @@ window.addEventListener('load', function () {
 
     .item {
         border-radius: 8px;
-        position: absolute;
+        // position: absolute;
         width: 236px;
         margin-left: 2px;
         margin-top: 10px;
         transition: all 0.5s;
         overflow: hidden;
+    }
+    .boards {
+        .el-dialog--tiny {
+            width: 320px;
+            .el-dialog__body {
+                padding: 14px 0px 0px 0px;
+            }
+        }
+    }
+    .grid-content {
+        width: 160px;
+        height: 210px;
+        border-top: 2px solid #ccc;
+        span {
+            font-weight: bold;
+            color: #666;
+            margin-top: 32px;
+        }
+    }
+    .bg-purple {
+        background: #e0e0e0;
+        em {
+            width: 84px;
+            height: 84px;
+            margin: auto;
+            background: url(../../common/images/m.png) -129px 0 no-repeat;
+            // margin-bottom: 36px;
+        }
+    }
+    .bg-purple:hover {
+        background: #fafafa;
+    }
+    .bg-purple-light {
+        background: #f0f0f0;
+        em {
+            width: 72px;
+            height: 77px;
+            margin: auto;
+            background: url(../../common/images/m.png) 0 -97px no-repeat;
+            // margin-bottom: 43px;
+        }
+    }
+    .bg-purple-light:hover {
+        background: #fafafa;
+    }
+    .creat-board {
+        padding-top: 15px;
+        margin-bottom: -10px;
+        button {
+            border: none;
+        }
+        em {
+            float: right;
+            margin: 14px 8px 0px;
+            font-weight: bold;
+        }
+        i::before {
+            width: 40px;
+            height: 40px;
+            background: url(../../common/images/w.png) -124px -110px no-repeat;
+            display: inline-block;
+            font: 0 / 0 serif;
+            text-shadow: none;
+            color: transparent;
+            content: " ";
+        }
+    }
+    .choose-board {
+        max-height: 245px;
+        overflow: auto;
+        border-bottom: 1px solid #eee;
+        .board-list {
+            padding: 0px;
+            vertical-align: middle;
+            .board-list-btn {
+                color: #666;
+                vertical-align: middle;
+            }
+            .board-list-save {
+                float: right;
+                margin: 9px 2px 0px 0px;
+                // visibility: hidden;
+                display: none;
+            }
+        }
+        .board-list:hover {
+            background-color: #efefef;
+            .board-list-save {
+                display: block;
+            }
+        }
     }
 @media (min-width: 2079px) {
     .pins {
