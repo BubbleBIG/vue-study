@@ -1,7 +1,7 @@
 <template>
     <div class="user-routers">
     <v-header></v-header>
-    <h1>this board name: {{ bName }}</h1>
+    <h1>this board name: {{ bName.bname }}</h1>
     </div>
 </template>
 
@@ -14,11 +14,11 @@ import header from '../header/header.vue'
         mounted: function () {
             document.title = this.$route.path   // 改变网页title
             // debugger;
-            let a = this.$route.params.id
+            let a = this.$route.params
             console.log(a)
         },
         data () {
-          let a = this.$route.params.id
+          let a = this.$route.params
             return {
                 bName: a
             }

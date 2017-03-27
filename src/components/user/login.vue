@@ -90,8 +90,8 @@
         loginForm (formName) {
           this.$refs[formName].validate((valid) => {
           let self = this
-          let value = self.ruleForm1.name.match(/^[a-zA-Z0-9_]{3,16}$/)
-          if (!value) {
+          // let value = self.ruleForm1.name.match(/^[a-zA-Z0-9_]{3,16}$/)
+          if (!valid) {
             self.$message.error('无效用户名')
           } else {
           let formData = new FormData();

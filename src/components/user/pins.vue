@@ -431,6 +431,8 @@
         mounted: function () {
             let self = this
             document.title = this.$route.path   // 改变网页title
+            let a = this.$route.params
+            console.log(a)
             window.onload = function() {
                 Grade(document.querySelectorAll('.gradient-wrap'))
             }

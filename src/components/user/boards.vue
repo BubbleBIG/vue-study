@@ -243,8 +243,7 @@
                 formData.append("bname", this.form2.name.trim())
                 formData.append('secret', this.radio1)
                 this.$refs[formName].validate((valid) => {
-                if (bname === 'boards' || bname === 'pins' ||
-                bname === 'pin' || bname === 'likes') {
+                if (!valid) {
                     // self.$message.error("name is used or can't be used")
                 } else {
                     fetch('http://localhost/camU/index/index/createboard', {
@@ -455,12 +454,14 @@
         },
         mounted() {
             document.title = this.$route.path   // 改变网页title
+            let a = this.$route.params
+            console.log(a)
             // console.log(this.arrCookie)
-            setInterval(() => {
-            // console.log('simulate async data')
-            let swiperSlides = this.pinss
-            if (swiperSlides.length < 2) swiperSlides.push(swiperSlides.length + 1)
-            }, 3000)
+            // setInterval(() => {
+            // // console.log('simulate async data')
+            // let swiperSlides = this.pinss
+            // if (swiperSlides.length < 2) swiperSlides.push(swiperSlides.length + 1)
+            // }, 3000)
         }
     }
 </script>

@@ -50,12 +50,12 @@
         value = value.match(/^[a-zA-Z0-9_]{3,16}$/)
         setTimeout(() => {
             if (!value) {
-                callback(new Error('输入3-32个字符'));
+                callback(new Error('输入3-16个字符'));
             } else {
                 callback();
             }
-        }, 200);
-      };
+        }, 200)
+      }
       var validatePass1 = (rule, value, callback) => {
         if (value === '') {
           callback(new Error('请输入密码'));
@@ -65,7 +65,7 @@
           }
           callback();
         }
-      };
+      }
       var validatePass2 = (rule, value, callback) => {
         if (value === '') {
           callback(new Error('请再次输入密码'));
@@ -114,8 +114,8 @@
         this.$refs[formName].validate((valid) => {
           // console.log(formName)
           let self = this
-          let value = self.ruleForm2.name.match(/^[a-zA-Z0-9_]{3,16}$/)
-          if (!value) {
+          // let value = self.ruleForm2.name.match(/^[a-zA-Z0-9_]{3,16}$/)
+          if (!valid) {
             self.$message.error('无效用户名')
           } else {
           let formData = new FormData();
@@ -144,7 +144,7 @@
           .then(res => res.json())
           .then(function (res) {
             console.log(res)
-            if (res.status) {
+            if (res.status === 1) {
               // console.log(self.$route.path)
               self.$router.push('/log')
               console.log(self.$route)
@@ -156,54 +156,6 @@
           })
           }
         });
-      },
-      lo() {
-        let self = this
-          let formData = new FormData();
-          formData.append("name", formName.name);
-          formData.append("pwd", formName.pass);
-          // fetch('http://localhost:3000/login', {
-          //   method: 'GET',
-          //   headers: { 'Content-Type': 'application/json' },
-          //   credentials: 'same-origin'
-          // })
-          // .then(res => res.json())
-          // .then(function (id) {
-          //   console.log(id)
-          //   if (id) {
-          //     alert('submit!');
-          //   } else {
-          //     console.log('error login!!');
-          //     return false;
-          //   }
-          // })
-          fetch('http://localhost/camU/index/login/login', {
-            method: 'POST',
-            // headers: { 'Content-Type': 'application/json' },
-            body: formData
-          })
-          .then(res => res.json())
-          .then(function (res) {
-            // console.log(res)
-            if (res.status === 1) {
-              // console.log(self.$route.path)
-              document.cookie = "id = " + res.id
-              document.cookie = 'name = ' + res.name
-              this.fullscreenLoading = true;
-              setTimeout(() => {
-                this.fullscreenLoading = false
-                self.$router.push('/log')
-              }, 3000);
-              // setTimeout(() => {
-              //   self.$router.push('/')
-              // }, 800)
-              // console.log(self.$route)
-              // alert('submit!');
-            } else {
-              console.log('error reg!!');
-              return false;
-            }
-          })
       },
       resetForm(formName) {
         this.$refs[formName].resetFields()
