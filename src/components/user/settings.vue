@@ -378,7 +378,7 @@ import header from '../header/header.vue'
     }
 </script>
 
-<style lang='scss' scope>
+<style lang='scss' scoped>
 // $a = #f1b1c1
   .avatar-uploader .el-upload:hover {
     border-color: #20a0ff;

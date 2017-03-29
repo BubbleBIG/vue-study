@@ -11,8 +11,8 @@
                         </div>
                         <div class="px1 py2">
                             <div  class="pz3">Create board</div>
-                        </button>
-                    </di>
+                        </div>
+                    </button>
                 </div>
                 <div v-for="bo in bos" class="ProfileBoardCard" style="margin:20px 0;padding: 0 12px">
                     <div class="createCard" type="text">
@@ -147,7 +147,6 @@
     //     databaseURL: 'https://vuestudy.firebaseio.com/'
     // }
     // firebase.initializeApp(config)
-
     // var usersRef = firebase.database().ref('users')
     // import user from './user.vue'
     export default {
@@ -317,7 +316,6 @@
                     // console.log(self.form1.bname)
                 // if (res.status >= 200) {
                 //     for (var i = self.todos.length - 1; i >= 0; i--) {
-
                 //     if (self.todos[i].id === e) {
                 //         console.log(i)
                 //         // self.todos.splice(i,1)
@@ -363,7 +361,6 @@
             //         // console.log(self.form1.bname)
             //     // if (res.status >= 200) {
             //     //     for (var i = self.todos.length - 1; i >= 0; i--) {
-
             //     //     if (self.todos[i].id === e) {
             //     //         console.log(i)
             //     //         // self.todos.splice(i,1)
@@ -612,5 +609,4 @@
         background-size: cover!important;
     }
 }
-
 </style>

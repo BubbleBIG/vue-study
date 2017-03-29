@@ -5,13 +5,13 @@
     <waterfall-slot
         v-for="(pin, index) in pins"
         :width="260"
-        :height="pin.height + 100"
+        :height="pin.height + 95"
         :order="index"
         :key="pin.iid"
     >
     <router-link :to="{ name: 'pin', params: { id: pin.iid }}">
-    <div style="padding: 12px" class="gradient-wrap">
-        <div style="width: 210px" class="gradient-wrap">
+    <div style="padding: 12px">
+        <div>
         <img :src="pin.url" width="100%" class=""/>
         </div>
         <div>
@@ -46,7 +46,7 @@
 					<img :src="pin.url" width="100%" class=""/>
 				</div>
 			</div>-->
-			<h1 style="height:1000px">++Likes++</h1>
+			<!--<h1 style="height:1000px">++Likes++</h1>-->
 		</div>
     </div>
 </template>
@@ -144,7 +144,7 @@ import WaterfallSlot from 'vue-waterfall/lib/waterfall-slot'
     }
 </script>
 
-<style lang='scss' scope>
+<style lang='scss' scoped>
 
 	.wrap{
 		position: relative;

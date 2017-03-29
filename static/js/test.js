@@ -73,17 +73,17 @@ $(function() {
 //     //     el.className = el.className.replace(new RegExp ('(^|\\b)' + className.split(' ').join('|') + '(\\b|$)', 'gi'), ' ');
 //     // }
 //     // // toggle class
-//     // function toggleClass(el,className){  
-//     //     if(hasClass(el,className)){  
-//     //         removeClass(el,className);  
-//     //     }else{  
-//     //         addClass(el,className);  
-//     //     }  
-//     // } 
+//     // function toggleClass(el,className){
+//     //     if(hasClass(el,className)){
+//     //         removeClass(el,className);
+//     //     }else{
+//     //         addClass(el,className);
+//     //     }
+//     // }
 //     // function addClass (el,className){
 //     //         add (el,className);
 //     // }
-//     // function removeClass (el,className){ 
+//     // function removeClass (el,className){
 //     //         remove (el,className);
 //     // }
 //     if(scrollTop >= 50){
@@ -123,13 +123,13 @@ $(function() {
     //     });
     //     return false;
     // }
-    // waterfall(); 
+    // waterfall();
     //     //resize 侦测浏览器窗口变化，有变化重新计算和布局
     //      $(window).on('resize',function () {
-    //          waterfall(); 
+    //          waterfall();
     //     })
 //     waterfall();
-        
+
 // function getViewSize () {
 // return {"width": window['innerWidth'] || document.documentElement.clientWidth,
 // "height": window['innerHeight'] || document.documentElement.clientHeight}
@@ -157,21 +157,21 @@ $(function() {
 // window.onresize=setContainerSize;
 // window.onresize=waterfall;
 // function waterfall () {
-//     size=getViewSize (); 
+//     size=getViewSize ();
 //     // console.log(size["width"]);
 //     let itemW = $('.item').outerWidth(true),
 //     // windowW = window.outerWidth
 //         windowW = window.innerWidth
 //         // windowW = size["width"],
 //         colNum = Math.floor(windowW/itemW),//有多少列
-//         // colNum = 4; 
+//         // colNum = 4;
 //         colNowHeight = [];//存放每一列当前总的高度
 //         // console.log(colNum);
-    
+
 //     for(let i = 0;i < colNum;i++){
 //         colNowHeight.push(0);//初始化数组，每列当前总的高度0
 //     }
-    
+
 //     //遍历每个item选择他们的归属
 //     $('.item').each(function () {
 //         $this = $(this);
@@ -193,11 +193,11 @@ $(function() {
 // }
 // $(function () {
 //    waterfall ();
-// })     
+// })
 // function llk () {
 //     waterfall ();
 // }
-         
+
 // function llk1 () {
 //     $('.pinsItem').addClass('item');
 //     $('.pinsItem').removeClass('pinsItemsClass');

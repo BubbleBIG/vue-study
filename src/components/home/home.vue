@@ -1,45 +1,56 @@
 <template>
     <div class="user-routers">
     <v-header></v-header>
-    <waterfall :line-gap="260" :watch="pins">
-    <!-- each component is wrapped by a waterfall slot -->
-    <waterfall-slot
-        v-for="(pin, index) in pins"
-        :width="260"
-        :height="pin.height + 133"
-        :order="index"
-        :key="pin.iid"
-    >
-    <router-link :to="{ name: 'pin', params: { id: pin.iid }}">
-    <div style="padding: 12px" class="gradient-wrap">
-        <div class="gradient-wrap">
-        <img :src="pin.url" width="100%" class=""/>
-        </div>
-        <div>
-            <div class="pinMetaWrapper">
+    <div class="homePins">
+        <waterfall :line-gap="260" :watch="pins">
+        <!-- each component is wrapped by a waterfall slot -->
+        <waterfall-slot class="waterfall-img"
+            v-for="(pin, index) in pins"
+            :width="260"
+            :height="pin.height + 114"
+            :order="index"
+            :key="pin.iid"
+        >
+        <div style="padding: 12px">
+            <div class="pin-img">
+                <div class="pin-btn" style="padding:4px 0px 0px 4px;">
+                    <div class="btn"><el-button :plain="true" type="danger" icon="share"></el-button></div>
+                    <div class="btn"><el-button :plain="true" type="danger" icon="star-on"></el-button></div>
+                    <div style="margin-left: 72px;" class="btn"><el-button type="primary">save</el-button></div>
+                </div>
+                <router-link :to="{ name: 'pin', params: { id: pin.iid }}">
+                    <img :src="pin.url" width="100%" class=""/>
+                </router-link>
+            </div>
+            <div>
+                <div class="pinMetaWrapper">
                     <div style="width: 150px;height:29px;line-height:14px;font-size:14px;
                     word-break:break-all;float:left;overflow:hidden">
-                        我qwqwqwqdjasdnassadasdsadsad是我qwqwqwqdjasdnassadasdsadsad是</div>
+                    Nothing</div>
                     <a href="###" align="right"><em class="repinIconSmall"></em>
                     <em class="repinCountSmall">111111</em></a>
                 </div>
-                <div style="height: 50px;clear:both" align="left">
+                <div style="clear: both;padding-top: 5px;color:#aaa;">Picked for you</div>
+                <div style="padding:8px 0px;clear:both" align="left">
                     <a href="####" style="height: 30px;color: #a8a8a8">
-                        <div class="userPic"><img src="../../common/images/person.png"
-                        style="vertical-align: middle;width:24px;height:24px"></div>
-                        <div class="creditName">Saved to</div>
-                        <div class="creditTitle">first</div>
+                        <div class="userPic" style="float:left">
+                            <!--<img src="../../common/images/person.png"
+                        style="vertical-align: middle;width:24px;height:24px">-->
+                        </div>
+                        <div style="padding:0px 32px;" class="creditName">Saved to</div>
+                        <div style="padding:0px 32px;" class="creditTitle">first</div>
                     </a>
                 </div>
+            </div>
         </div>
-    </div>
-    </router-link>
-        <!--
-        your component
-        -->
-    </waterfall-slot>
-    </waterfall>
+            <!--
+            your component
+            -->
+        </waterfall-slot>
+        </waterfall>
+        <!--<router-view></router-view>-->
 		<!--<el-button type="text" @click="open4">点击打开 Message Box</el-button>-->
+    </div>
     </div>
 </template>
 
@@ -58,10 +69,10 @@ import WaterfallSlot from 'vue-waterfall/lib/waterfall-slot'
         },
         mounted: function () {
             document.title = this.$route.path   // 改变网页title
-            Grade(document.querySelectorAll('.gradient-wrap'))
+            // Grade(document.querySelectorAll('.gradient-wrap'))
         },
         data () {
-            let strCookie = document.cookie;
+            let strCookie = document.cookie
             let arr = strCookie.split(";")
             let arrCookie = arr[0].split("=")
             return {
@@ -132,50 +143,106 @@ import WaterfallSlot from 'vue-waterfall/lib/waterfall-slot'
     }
 </script>
 
-<style lang='scss' scope>
-.uploadInfo {
-    img { vertical-align: middle; }
-    ul li { display: inline-block; vertical-align: middle;}
+<style lang='scss'>
+.waterfall-img {
+    .pin-img {
+        max-height: 1111px;
+        overflow: hidden;
+    }
 }
-.piclist{margin:auto;position:relative}.piclist li{width:180px;padding:10px;border-radius:5px;box-shadow:0 0 4px #ddd;position:absolute}.piclist img{display:block;width:180px}.piclist span{display:block;text-align:center;height:26px;overflow:hidden;line-height:26px}
-
-.piclist {
-    margin: auto;position: relative;
-    li {width: 180px;padding: 10px;border-radius: 5px;box-shadow: 0 0 4px #ddd;position: absolute;}
-    img {display: block;width: 180px;}
-    span {display: block;text-align: center;height: 26px;overflow: hidden;line-height: 26px;}
-}
-
-	.wrap{
-		position: relative;
-		margin: 0 auto 14px;
-	}
-	.item{
-	}
-	.h1{
-		height: 300px;
-		background-color: #79C40E;
-	}
-	.h2{
-		height: 500px;
-		background-color: #FBA20E;
-	}
-	.h3{
-		height: 700px;
-		background-color: #0ACBB6;
-	}
-	.h4{
-		height: 400px;
-		background-color: #820F6E;
-	}
-	.h5{
-		height: 200px;
-		background-color: #E45555;
-	}
-    .likes {
-		position: relative;
-        h1 {
-            font-size: 50px
+.homePins {
+    margin: 10px auto 14px;
+    .waterfall-img {
+        margin: 10px auto;
+        .pin-img {
+            margin-bottom: 6px;
+            .pin-btn {
+                position: absolute;
+                .btn {
+                    display: inline-block;
+                    button {
+                        border: none;
+                    }
+                }
+            }
+            img {
+                border-radius: 8px;
+            }
+        }
+        .pin-btn {
+            display: none;
+        }
+        :hover {
+            .pin-btn {
+                display: block;
+            }
         }
     }
+}
+.homePins {
+    .waterfall-img:hover {
+        background: rgba(0,0,0,0.05);
+        border-radius: 8px;
+        // opacity: 1;
+        // pointer-events: none;
+        // -webkit-transform: scale(0.994);
+        // -ms-transform: scale(0.994);
+        // transform: scale(0.994);
+    }
+    & > .waterfall-img:hover .pz5 {
+        opacity: 1;
+    }
+    & > .waterfall-img {
+        .pz5:hover {
+            background: #d7d7d7;
+        }
+    }
+}
+@media (min-width: 2079px) {
+    .homePins {
+        width: 2079px;
+    }
+}
+@media (max-width: 2079px) and (min-width: 1820px) {
+    .homePins {
+        width: 1820px;
+    }
+}
+@media (max-width: 1819px) and (min-width: 1560px) {
+    .homePins {
+        width: 1560px;
+    }
+}
+@media (max-width: 1559px) and (min-width: 1300px) {
+    .homePins {
+        width: 1300px;
+    }
+}
+@media (max-width: 1299px) and (min-width: 1040px) {
+    .homePins {
+        width: 1040px;
+    }
+}
+@media (max-width: 1039px) and (min-width: 780px) {
+    .homePins {
+        width: 780px;
+    }
+}
+@media (max-width: 780px) {
+    .homePins {
+        width: 520px;
+    }
+}
+// .uploadInfo {
+//     img { vertical-align: middle; }
+//     ul li { display: inline-block; vertical-align: middle;}
+// }
+// .piclist{margin:auto;position:relative}.piclist li{width:180px;padding:10px;border-radius:5px;box-shadow:0 0 4px #ddd;position:absolute}.piclist img{display:block;width:180px}.piclist span{display:block;text-align:center;height:26px;overflow:hidden;line-height:26px}
+
+// .piclist {
+//     margin: auto;position: relative;
+//     li {width: 180px;padding: 10px;border-radius: 5px;box-shadow: 0 0 4px #ddd;position: absolute;}
+//     img {display: block;width: 180px;}
+//     span {display: block;text-align: center;height: 26px;overflow: hidden;line-height: 26px;}
+// }
 </style>

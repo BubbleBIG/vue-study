@@ -47,7 +47,7 @@ Vue.use(VueAwesomeSwiper)
  const router = new VueRouter({
   linkActiveClass: 'active',
   // mode: 'history',
-  base: __dirname,
+  // base: __dirname,
    routes: [
     // { path: '/', component: home, beforeEnter: guardRoute },
     { path: '/', component: home },
