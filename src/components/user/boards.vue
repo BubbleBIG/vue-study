@@ -120,8 +120,8 @@
             </swiper>-->
                 <!--<el-carousel type="card" indicator-position="none"
                 height="300px" :autoplay="false">-->
-                    <div>
-                    <img :src="'http://localhost' + pinss.url" width="100%">
+                    <div style="width: 220px;">
+                        <img :src="'' + pinss.url" width="100%">
                     </div>
                 <!--</el-carousel>-->
             <span slot="footer" class="dialog-footer">
@@ -171,6 +171,7 @@
             let arrCookie = arr[0].split("=")
             let arrName = arr[1].split("=")
             return {
+                http: 'http://localhost',
                 userName: arrName[1],
                 arrCookie: arrCookie[1],
                 radio1: false,
@@ -219,8 +220,8 @@
                 let self = this
                 let formData = new FormData()
                 formData.append("id", self.arrCookie);
-                // fetch('http://localhost:3000/todos', {
-                fetch('http://localhost/camU/index/index/getboards', {
+                // fetch(':3000/todos', {
+                fetch(self.http + '/camU/index/index/getboards', {
                     method: 'POST',
                     body: formData
                     // mode: 'no-cors',
@@ -245,7 +246,7 @@
                 if (!valid) {
                     // self.$message.error("name is used or can't be used")
                 } else {
-                    fetch('http://localhost/camU/index/index/createboard', {
+                    fetch(self.http + '/camU/index/index/createboard', {
                         method: 'POST',
                         body: formData
                         // mode: 'no-cors',
@@ -253,7 +254,7 @@
                         // credentials: 'same-origin'
                     })
                     .then(res => res.json())
-                    // fetch('http://localhost:3000/todos', {
+                    // fetch(':3000/todos', {
                     //     method: 'POST',
                     //     body: JSON.stringify({ bname, secret }),
                     //     headers: { 'Content-Type': 'application/json' },
@@ -288,7 +289,7 @@
                 let formData = new FormData()
                 formData.append("id", self.arrCookie)
                 formData.append("bid", e)
-                fetch('http://localhost/camU/index/index/getboard', {
+                fetch(self.http + '/camU/index/index/getboard', {
                     method: 'POST',
                     body: formData
                     // mode: 'no-cors',
@@ -306,7 +307,7 @@
                     self.form1 = res
                     // console.log(e)
                     // console.log(res)
-                // fetch('http://localhost:3000/todos/' + 1, {
+                // fetch(':3000/todos/' + 1, {
                 //     method: 'GET'
                 // })
                 // .then(res => res.json())
@@ -329,7 +330,7 @@
                 let formData = new FormData()
                 formData.append("id", self.arrCookie)
                 formData.append("bid", e)
-                fetch('http://localhost/camU/index/index/changecover', {
+                fetch(self.http + '/camU/index/index/changecover', {
                     method: 'POST',
                     body: formData
                     // mode: 'no-cors',
@@ -337,8 +338,8 @@
                     // credentials: 'same-origin'
                 })
                 .then(res => res.json())
-                // fetch('http://localhost:3000/upload', {
-                // // fetch('http://localhost/camU/index/index/getpins', {
+                // fetch(':3000/upload', {
+                // // fetch('/camU/index/index/getpins', {
                 //     method: 'GET',
                 //     // mode: 'no-cors',
                 //     headers: { 'Content-Type': 'application/json' },
@@ -346,13 +347,14 @@
                 // })
                 // .then(res => res.json())
                 .then(function (pins) {
+                    pins.url = self.http + "/camu" + pins.url
                     self.pinss = pins
                 })
                 console.log(e + 'hhhh')
             },
             // delb (e) {
             //     let self = this
-            //     fetch('http://localhost:3000/todos/' + e, {
+            //     fetch(':3000/todos/' + e, {
             //         method: 'GET'
             //     })
             //     .then(res => res.json())
@@ -405,7 +407,7 @@
                 let formData = new FormData()
                 formData.append("id", self.arrCookie)
                 formData.append("bid", e)
-                fetch('http://localhost/camU/index/index/delboard', {
+                fetch(self.http + '/camU/index/index/delboard', {
                     method: 'POST',
                     body: formData
                     // mode: 'no-cors',
@@ -413,14 +415,15 @@
                     // credentials: 'same-origin'
                 })
                 .then(res => res.json())
-                // fetch('http://localhost:3000/todos/' + e, {
+                // fetch(':3000/todos/' + e, {
                 //     method: 'DELETE'
                 // })
                 // .then(res => res.json())
                 .then(function (res) {
                     // self.form1 = res
                     if (res.status) {
-                        for (let i = 0; i < self.bos.length; i++) {
+                        let length = self.bos.length
+                        for (let i = 0; i < length; i++) {
                             if (self.bos[i].bid === e) {
                                 self.bos.splice(i, 1) // 根据下标删除当前对应的元素
                                 console.log(i)

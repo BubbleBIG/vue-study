@@ -56,7 +56,7 @@
         <el-dialog title="Upload a Pin" v-model="dialogVisible2" size="tiny">
             <el-upload name="photo"
             style="padding: 18px;background:#ededed;"
-            action="http://localhost/camU/index/index/uploadpintmp"
+            action="/camU/index/index/uploadpintmp"
             :on-change="handleResponse"
             :on-remove="handleRemove"
             :before-upload="beforeAvatarUpload"
@@ -65,7 +65,7 @@
             <div slot="tip" class="el-upload__tip">只能上传jpeg/jpg/png/gif文件，且不超过2M</div>
             </el-upload>
             <!--<el-upload
-            action="http://localhost/camU/index/index/uploadPins.html"
+            action="/camU/index/index/uploadPins.html"
             list-type="picture-card" name="photo"
             :on-change="handleResponse"
             :on-preview="handlePictureCardPreview"
@@ -200,6 +200,7 @@
                 }
             }
             return {
+                http: 'http://localhost',
                 textarea: '',
                 input2: '',
                 arrCookie: arrCookie[1],
@@ -233,7 +234,7 @@
             // uploadOne1 () {
             //     var data = new FormData($('#form12')[0]);
             //     $.ajax({
-            //         url: 'http://localhost/camU/index/index/uploadPins.html',
+            //         url: '/camU/index/index/uploadPins.html',
             //         type: 'POST',
             //         data: data,
             //         dataType: 'JSON',
@@ -256,8 +257,8 @@
             // },
             pin () {
                 // let self = this
-                // fetch('http://localhost:3000/savepin', {
-                // // fetch('http://localhost/camU/index/index/getboards', {
+                // fetch(':3000/savepin', {
+                // // fetch('/camU/index/index/getboards', {
                 //     method: 'GET',
                 //     // mode: 'no-cors',
                 //     headers: { 'Content-Type': 'application/json' },
@@ -274,7 +275,7 @@
                 let formData = new FormData()
                 formData.append("id", self.arrCookie)
                 // formData.append("bid", e)
-                fetch('http://localhost/camU/index/index/getpins', {
+                fetch(self.http + '/camU/index/index/getpins', {
                     method: 'POST',
                     body: formData
                     // mode: 'no-cors',
@@ -282,8 +283,8 @@
                     // credentials: 'same-origin'
                 })
                 .then(res => res.json())
-                // fetch('http://localhost:3000/upload', {
-                // // fetch('http://localhost/camU/index/index/getpins', {
+                // fetch(':3000/upload', {
+                // // fetch('/camU/index/index/getpins', {
                 //     method: 'GET'
                 //     // mode: 'no-cors',
                 //     // headers: { 'Content-Type': 'application/json' },
@@ -291,9 +292,10 @@
                 // })
                 // .then(res => res.json())
                 .then(function (pins) {
-                    for (let i = 0; i < pins.length; i++) {
+                    let length = pins.length
+                    for (let i = 0; i < length; i++) {
                         if (pins[i].iswebsite === 0) {
-                            pins[i].url = "http://localhost/camu" + pins[i].url
+                            pins[i].url = self.http + "/camu" + pins[i].url
                             // console.log(pins)
                         }
                     }
@@ -307,8 +309,8 @@
                 if (file.response.status === 1) {
                 let formData = new FormData()
                 formData.append("id", self.arrCookie);
-                // fetch('http://localhost:3000/todos', {
-                fetch('http://localhost/camU/index/index/getboards', {
+                // fetch(':3000/todos', {
+                fetch(self.http + '/camU/index/index/getboards', {
                     method: 'POST',
                     body: formData
                     // mode: 'no-cors',
@@ -360,8 +362,8 @@
                 if (ImgObj.width > 0 && ImgObj.height > 0) {
                 let formData = new FormData()
                 formData.append("id", self.arrCookie);
-                // fetch('http://localhost:3000/todos', {
-                fetch('http://localhost/camU/index/index/getboards', {
+                // fetch(':3000/todos', {
+                fetch(self.http + '/camU/index/index/getboards', {
                     method: 'POST',
                     body: formData
                     // mode: 'no-cors',
@@ -404,8 +406,8 @@
                     formData.append("bid", e.bid)
                     formData.append("bname", e.bname)
                     formData.append("iswebsite", self.iswebsite)
-                    // fetch('http://localhost:3000/todos', {
-                    fetch('http://localhost/camU/index/index/uploadpin', {
+                    // fetch(':3000/todos', {
+                    fetch(self.http + '/camU/index/index/uploadpin', {
                         method: 'POST',
                         body: formData
                         // mode: 'no-cors',
@@ -439,10 +441,10 @@
             document.title = this.$route.path   // 改变网页title
             let a = this.$route.params
             console.log(a)
-            window.onload = function() {
-                Grade(document.querySelectorAll('.gradient-wrap'))
-            }
-            Grade(document.querySelectorAll('.gradient-wrap'))
+            // window.onload = function() {
+            //     Grade(document.querySelectorAll('.gradient-wrap'))
+            // }
+            // Grade(document.querySelectorAll('.gradient-wrap'))
         // function getViewSize () {
         // return {"width": window['innerWidth'] || document.documentElement.clientWidth,
         // "height": window['innerHeight'] || document.documentElement.clientHeight}
@@ -509,9 +511,9 @@
         }
     }
     
-window.addEventListener('load', function () {
-    Grade(document.querySelectorAll('.gradient-wrap'))
-})
+// window.addEventListener('load', function () {
+//     Grade(document.querySelectorAll('.gradient-wrap'))
+// })
 </script>
 
 <style lang='scss'>

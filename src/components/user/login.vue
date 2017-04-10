@@ -66,6 +66,7 @@
         }
       }
       return {
+        http: 'http://localhost',
         url: this.$route.path,
         ruleForm1: {
           pass: '',
@@ -102,7 +103,7 @@
           // let formData = new FormData();
           // formData.append("name", formName.name);
           // formData.append("pwd", formName.pass);
-          // fetch('http://localhost:3000/login', {
+          // fetch(':3000/login', {
           //   method: 'GET',
           //   headers: { 'Content-Type': 'application/json' },
           //   credentials: 'same-origin'
@@ -117,7 +118,7 @@
           //     return false;
           //   }
           // })
-          fetch('http://localhost/camU/index/login/login', {
+          fetch(self.http + '/camU/index/login/login', {
             method: 'POST',
             // headers: { 'Content-Type': 'application/json' },
             body: formData
@@ -130,6 +131,7 @@
               document.cookie = "id = " + res.id
               document.cookie = 'name = ' + res.name
               // self.fullscreenLoading = true;
+              self.$message.success('登陆成功，正在跳转...')
               setTimeout(() => {
                 // self.fullscreenLoading = false
                 self.$router.push('/')

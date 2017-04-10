@@ -41,7 +41,7 @@
                 <waterfall-slot class="waterfall-img"
                     v-for="(pin, index) in pins"
                     :width="260"
-                    :height="pin.height + 114"
+                    :height="pin.height"
                     :order="index"
                     :key="pin.iid"
                 >
@@ -119,6 +119,7 @@ import WaterfallSlot from 'vue-waterfall/lib/waterfall-slot'
             let arr = strCookie.split(";")
             let arrCookie = arr[0].split("=")
             return {
+                http: 'http://localhost',
                 width: width,
                 dialogPin: true,
                 id: a.id,
@@ -132,6 +133,9 @@ import WaterfallSlot from 'vue-waterfall/lib/waterfall-slot'
             dialogPin: function () {
                 this.$router.go(-1)
                 console.log('kkk')
+            },
+            "$route": function () {
+                location.reload('/pin/' + this.pin.iid)
             }
         },
         created: function () {
@@ -144,7 +148,7 @@ import WaterfallSlot from 'vue-waterfall/lib/waterfall-slot'
                 let formData = new FormData()
                 // formData.append("id", self.arrCookie)
                 formData.append("iid", self.id)
-                fetch('http://localhost/camU/index/index/getpin', {
+                fetch(self.http + '/camU/index/index/getpin', {
                     method: 'POST',
                     body: formData
                     // mode: 'no-cors',
@@ -152,8 +156,8 @@ import WaterfallSlot from 'vue-waterfall/lib/waterfall-slot'
                     // credentials: 'same-origin'
                 })
                 .then(res => res.json())
-                // fetch('http://localhost:3000/upload', {
-                // // fetch('http://localhost/camU/index/index/getboards', {
+                // fetch(':3000/upload', {
+                // // fetch('/camU/index/index/getboards', {
                 //     method: 'GET',
                 //     // mode: 'no-cors',
                 //     headers: { 'Content-Type': 'application/json' },
@@ -162,11 +166,12 @@ import WaterfallSlot from 'vue-waterfall/lib/waterfall-slot'
                 // .then(res => res.json())
                 .then(function (pin) {
                     if (pin.iswebsite === 0) {
-                        pin.url = "http://localhost/camu" + pin.url
+                        pin.url = self.http + "/camu" + pin.url
                         // console.log(pins)
                     }
                     // console.log(pins)
                     self.pin = pin
+                    // location.reload('/pin/' + pin.iid)
                 })
             },
             getPins () {
@@ -174,7 +179,7 @@ import WaterfallSlot from 'vue-waterfall/lib/waterfall-slot'
                 let formData = new FormData()
                 formData.append("id", self.arrCookie)
                 // formData.append("bid", e)
-                fetch('http://localhost/camU/index/index/getpins', {
+                fetch(self.http + '/camU/index/index/getpins', {
                     method: 'POST',
                     body: formData
                     // mode: 'no-cors',
@@ -182,8 +187,8 @@ import WaterfallSlot from 'vue-waterfall/lib/waterfall-slot'
                     // credentials: 'same-origin'
                 })
                 .then(res => res.json())
-                // fetch('http://localhost:3000/upload', {
-                // // fetch('http://localhost/camU/index/index/getboards', {
+                // fetch(':3000/upload', {
+                // // fetch('/camU/index/index/getboards', {
                 //     method: 'GET',
                 //     // mode: 'no-cors',
                 //     headers: { 'Content-Type': 'application/json' },
@@ -191,9 +196,11 @@ import WaterfallSlot from 'vue-waterfall/lib/waterfall-slot'
                 // })
                 // .then(res => res.json())
                 .then(function (pins) {
-                    for (let i = 0; i < pins.length; i++) {
+                    let length = pins.length
+                    for (let i = 0; i < length; i++) {
+                        pins[i].height = 114 + parseInt(pins[i].height)
                         if (pins[i].iswebsite === 0) {
-                            pins[i].url = "http://localhost/camu" + pins[i].url
+                            pins[i].url = self.http + "/camu" + pins[i].url
                             // console.log(pins)
                         }
                     }

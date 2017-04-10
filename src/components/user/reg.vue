@@ -76,6 +76,7 @@
         }
       }
       return {
+        http: 'http://localhost',
         url: this.$route.path,
         ruleForm2: {
           pass: '',
@@ -101,7 +102,7 @@
     methods: {
         getId () {
             // let self = this
-            // fetch('http://localhost/camU/index/index/test3.html', {
+            // fetch('/camU/index/index/test3.html', {
             //     method: 'GET'
             // })
             // .then(res => res.json())
@@ -121,7 +122,7 @@
           let formData = new FormData();
           formData.append("name", self.ruleForm2.name);
           formData.append("pwd", self.ruleForm2.pass);
-          // fetch('http://localhost:3000/login', {
+          // fetch(':3000/login', {
           //   method: 'GET',
           //   headers: { 'Content-Type': 'application/json' },
           //   credentials: 'same-origin'
@@ -136,7 +137,7 @@
           //     return false;
           //   }
           // })
-          fetch('http://localhost/camU/index/login/sign', {
+          fetch(self.http + '/camU/index/login/sign', {
             method: 'POST',
             // headers: { 'Content-Type': 'application/json' },
             body: formData

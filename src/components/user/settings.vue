@@ -28,7 +28,7 @@
                 <el-input v-model="form1.wname" style="float:right">
                 </el-input>
                 <div style="background: #efefef;padding: 0px 10px;font-weight:bold">
-                    http://localhost/{{ form1.wname }}</div>
+                    /{{ form1.wname }}</div>
             </el-form-item>
             <el-form-item label="About you">
                 <el-input type="textarea" :rows="4" placeholder="Type something"
@@ -63,7 +63,7 @@
                 <img :src="imageUrl" class="avatar" style="float:right">
                 <el-upload name="photo"
                 class="avatar-uploader"
-                action="http://localhost/camU/index/index/uploadpintmp"
+                action="/camU/index/index/uploadpintmp"
                 :show-file-list="false"
                 :on-success="handleAvatarScucess"
                 :before-upload="beforeAvatarUpload">
@@ -121,7 +121,7 @@ import header from '../header/header.vue'
                     } else {
                         formData.append("name", value)
                         formData.append("id", arrCookie[1])
-                        fetch('http://localhost/camU/index/index/checkuname', {
+                        fetch(this.http + '/camU/index/index/checkuname', {
                             method: 'POST',
                             body: formData
                         })
@@ -153,7 +153,7 @@ import header from '../header/header.vue'
                         } else {
                             formData.append("name", value)
                             formData.append("id", arrCookie[1])
-                            fetch('http://localhost/camU/index/index/checkwname', {
+                            fetch(this.http + '/camU/index/index/checkwname', {
                                 method: 'POST',
                                 body: formData
                             })
@@ -202,6 +202,7 @@ import header from '../header/header.vue'
                 }
             }
             return {
+                http: 'http://localhost',
                 arrCookie: arrCookie[1],
                 imageUrl: '',
                 userImg: '',
@@ -248,14 +249,14 @@ import header from '../header/header.vue'
                 let self = this
                 let formData = new FormData()
                 formData.append("id", self.arrCookie)
-                fetch('http://localhost/camU/index/index/getuserinfo', {
+                fetch(self.http + '/camU/index/index/getuserinfo', {
                     method: 'POST',
                     body: formData
                 })
                 .then(res => res.json())
                 .then(function (res) {
                     // let value = res.uimg.match(/http:\/\/.+/)
-                    res.uimg = 'http://localhost/camu' + res.uimg
+                    res.uimg = self.http + '/camu' + res.uimg
                     self.form1 = res
                 })
             },
@@ -271,7 +272,7 @@ import header from '../header/header.vue'
                 formData.append('mail', self.form1.mail)
                 formData.append('gender', self.form1.gender)
                 formData.append('about', self.form1.about)
-                fetch('http://localhost/camU/index/index/updateinfo', {
+                fetch(self.http + '/camU/index/index/updateinfo', {
                     method: 'POST',
                     body: formData
                 })
@@ -299,7 +300,7 @@ import header from '../header/header.vue'
                         formData.append('id', self.arrCookie)
                         formData.append('pw', self.form3.pass)
                         formData.append("newpw", self.form3.newpass)
-                        fetch('http://localhost/camU/index/index/changepw', {
+                        fetch(self.http + '/camU/index/index/changepw', {
                             method: 'POST',
                             body: formData
                         })
@@ -324,8 +325,8 @@ import header from '../header/header.vue'
                     let formData = new FormData()
                     formData.append("id", self.arrCookie)
                     formData.append("img", self.userImg)
-                    // fetch('http://localhost:3000/todos', {
-                    fetch('http://localhost/camU/index/index/changeuserimg', {
+                    // fetch(':3000/todos', {
+                    fetch(self.http + '/camU/index/index/changeuserimg', {
                         method: 'POST',
                         body: formData
                         // mode: 'no-cors',

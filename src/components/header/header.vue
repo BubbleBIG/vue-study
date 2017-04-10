@@ -45,7 +45,7 @@
 <script>
     export default {
         data () {
-            let strCookie = document.cookie;
+            let strCookie = document.cookie
             let arr = strCookie.split(";")
             let arrCookie = arr[0].split("=")
             let arrName = arr[1].split("=")
