@@ -21,7 +21,6 @@
                 <router-link @click="dialogVisible = true" :to="'/pin/' + pin.iid ">
                     <img :src="pin.url" width="100%" class=""/>
                 </router-link>
-                <router-view></router-view>
             </div>
             <div>
                 <div class="pinMetaWrapper">
@@ -43,6 +42,7 @@
                     </a>
                 </div>
             </div>
+            <router-view></router-view>
         </div>
             <!--
             your component

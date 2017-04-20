@@ -1,17 +1,15 @@
 <template>
-  <div id="app">
-    <!--<div v-if="">-->
-    <!--<v-header></v-header>-->
-    <!--</div>-->
-    <div style="margin-top: 65px"></div>
-    <router-view></router-view>
+  <div>
+      <v-header></v-header>
+      <div style="margin-top: 65px"></div>
+        hhhh
   </div>
 </template>
 <script>
-  // import header from './components/header/header.vue'
+  import header from '../header/header.vue'
   export default {
     components: {
-      // 'v-header': header
+      'v-header': header
     }
   }
 </script>
@@ -74,8 +72,5 @@
         color: #333;
       }
     }
-  }
-  a.active {
-    color: #333;
   }
 </style>

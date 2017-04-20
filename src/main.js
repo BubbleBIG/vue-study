@@ -17,6 +17,7 @@ import likes from './components/user/likes'
 import settings from './components/user/settings'
 import pin from './components/user/pin'
 import board from './components/user/board'
+import category from './components/user/category'
 import VueAwesomeSwiper from 'vue-awesome-swiper'
 // import '../static/js/test.js'
 // require('es6-promise').polyfill()
@@ -55,6 +56,7 @@ Vue.use(VueAwesomeSwiper)
     { path: '/reg', component: reg },
     { path: '/settings', component: settings },
     { path: '/pin/:id', name: 'pin', component: pin },
+    { path: '/category/:name', name: 'category', component: category },
     { path: '/:username',
       component: user,
       children: [

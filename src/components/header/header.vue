@@ -20,9 +20,17 @@
             @select="handleSelect"
             ></el-autocomplete>
         </form>
-        <span class="navb-group navb-g categoriesheader" style="width:px;padding:4px 0;">
+        <span class="navb-group navb-g categoriesheader" style="width:px;padding:4px 0;" @click="category">
             <el-popover ref="popover1" placement="bottom" width="300" trigger="click">
-            <div style="height:300px"></div>
+            <div id="category-link" style="height:283px;padding:16px 0px 0px 0px;border-bottom:1px solid #eee">
+                <router-link  style="width:150px;float:left;font-size:14px;font-weight:600;line-height: 18px;"
+                :to="'/category/' + item.label" v-for="item in categoryLists">
+                    {{ item.value }}
+                </router-link>
+            </div>
+            <div style="padding-top: 10px;">
+                <router-link :to="'/'">Home</router-link>
+            </div>
             </el-popover>
         <a v-popover:popover1 class=""><div class="categoriesHeader"></div></a>
         </span>
@@ -50,40 +58,58 @@
             let arrCookie = arr[0].split("=")
             let arrName = arr[1].split("=")
             return {
+                http: 'http://localhost',
+                categoryLists: '',
                 userName: arrName[1],
                 restaurants: [],
                 state4: '',
                 timeout: null
             }
         },
+        created: function () {
+            // this.getCategory()
+        },
         methods: {
-        loadAll() {
-            return [
-            { "value": "test" },
-            { "value": "hh", "word": "fff" }
-            ];
-        },
-        querySearchAsync(queryString, cb) {
-            var restaurants = this.restaurants;
-            var results = queryString ? restaurants.filter(this.createStateFilter(queryString)) : restaurants;
+            category () {
+                let self = this
+                fetch(self.http + '/camU/index/index/getcategory', {
+                    method: 'POST'
+                    // mode: 'no-cors',
+                    // headers: { 'Content-Type': 'application/json' },
+                    // credentials: 'same-origin'
+                })
+                .then(res => res.json())
+                .then(function (res) {
+                    self.categoryLists = res
+                })
+            },
+            loadAll() {
+                return [
+                { "value": "test" },
+                { "value": "hh", "word": "fff" }
+                ];
+            },
+            querySearchAsync(queryString, cb) {
+                var restaurants = this.restaurants;
+                var results = queryString ? restaurants.filter(this.createStateFilter(queryString)) : restaurants;
 
-            clearTimeout(this.timeout);
-            this.timeout = setTimeout(() => {
-            cb(results);
-            }, 1000);
-            // }, 8000 * Math.random());
-        },
-        createStateFilter(queryString) {
-            return (state) => {
-            return (state.value.indexOf(queryString.toLowerCase()) === 0);
-            };
-        },
-        handleSelect(item) {
-            console.log(item);
-        }
+                clearTimeout(this.timeout);
+                this.timeout = setTimeout(() => {
+                cb(results);
+                }, 1000);
+                // }, 8000 * Math.random());
+            },
+            createStateFilter(queryString) {
+                return (state) => {
+                return (state.value.indexOf(queryString.toLowerCase()) === 0);
+                };
+            },
+            handleSelect(item) {
+                console.log(item);
+            }
         },
         mounted() {
-        this.restaurants = this.loadAll();
+            this.restaurants = this.loadAll();
         }
     }
 </script>

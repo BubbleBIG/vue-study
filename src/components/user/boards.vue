@@ -14,12 +14,13 @@
                         </div>
                     </button>
                 </div>
-                <div v-for="bo in bos" class="ProfileBoardCard" style="margin:20px 0;padding: 0 12px">
+                <div v-for="bo in bos" v-if="bo.secret === 'false'" class="ProfileBoardCard" style="margin:20px 0;padding: 0 12px">
                     <div class="createCard" type="text">
                         <router-link :to="'/' + userName + '/' + bo.bname + '/'">
                         <div style="position: relative;width:301px;height:200px">
                             <div class="createRep flex ">
-                                <div></div>
+                                <img v-if="bo.cover" :src="bo.cover" width="100%" style="width: 301px;
+                        height: 200px;object-fit: cover;max-width:100%;border-radius: 8px;border:1px solid #eee">
                             </div>
                         </div>
                         </router-link>
@@ -33,8 +34,64 @@
                 </div>
             </div>
             <div style="clear:both;">
-            <h1 style="height:500px">boards==</h1>
             </div>
+        </div>
+        <div class="secretBoard">
+        <div class="sBoardsHeader">
+        <div class="userCommon flex">
+            <ul class="" style=";padding: 7px 2px">
+                <li class="">
+                    <svg height="32" width="32" viewBox="0 0 16 16">
+                    <path d="M12.8 6.791h-.04V4.566C12.76 2.048 10.625 0 8 0S3.24 2.048 3.24 4.566v2.225H3.2c-.777.984-1.2 2.2-1.2 
+                    3.454C2 13.423 4.686 16 8 16s6-2.577 6-5.755c0-1.253-.423-2.47-1.2-3.454zm-2.36 0H5.56V4.566c0-1.29 1.095-2.34 
+                    2.44-2.34s2.44 1.05 2.44 2.34v2.225z"></path></svg>
+                </li>
+                <li>
+                    <div class="title">Secret boards</div>
+                    <div class="text">
+                        Only you (and people you invite) can see these boards.
+                    </div>
+                </li>
+            </ul>
+        </div>
+        </div>
+        <div class="boards">
+            <div class="boardsItems flex-wrap">
+                <div class="ProfileBoardCard" style="margin:20px 0;padding: 0 12px">
+                    <button style="background:#f7f7f7" class="createCard" type="text" @click="dialogFV = true">
+                        <div style="position: relative;width:301px;height:200px">
+                            <div class="createRep flex ">
+                                <i></i>
+                            </div>
+                        </div>
+                        <div class="px1 py2">
+                            <div  class="pz3">Create board</div>
+                        </div>
+                    </button>
+                </div>
+                <div v-for="bo in bos" v-if="bo.secret === 'true'" class="ProfileBoardCard" style="margin:20px 0;padding: 0 12px">
+                    <div class="createCard" type="text">
+                        <router-link :to="'/' + userName + '/' + bo.bname + '/'">
+                        <div style="position: relative;width:301px;height:200px">
+                            <div class="createRep flex ">
+                                <img v-if="bo.cover" :src="bo.cover" width="100%" style="width: 301px;
+                        height: 200px;object-fit: cover;max-width:100%;border-radius: 8px;border:1px solid #eee">
+                            </div>
+                        </div>
+                        </router-link>
+                        <div class="px1 py2">
+                            <div class="pz3" style="color:#555">{{ bo.bname }}</div>
+                            <div class="pz3 pz4">{{ bo.count }} Pins</div>
+                            <button class="pz3 pz5" style="color: #555" @click="changeBoard(bo.bid),
+                                dialogFormVisible1 = true">Edit</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div style="clear:both;">
+            <h1 style="height:50px"></h1>
+            </div>
+        </div>
         </div>
         <el-dialog title="Create board" v-model="dialogFormVisible2" top="25%">
             <el-form :model="form2" :rules="rules2" ref="form2">
@@ -60,20 +117,43 @@
                 </div>
             </el-form>
         </el-dialog>
+        <el-dialog title="Create board" v-model="dialogFV" top="25%">
+            <el-form :model="form2" :rules="rules2" ref="form2">
+                <el-form-item label="Name" prop="name" :label-width="formLabelWidth">
+                <el-input v-model="form2.name" auto-complete="off"></el-input>
+                </el-form-item>
+                <el-form-item label="Secret" :label-width="formLabelWidth">
+                    <el-switch
+                    v-model="radio2"
+                    on-text="Yes"
+                    off-text="No"
+                    on-color="#13ce66"
+                    off-color="#ff4949">
+                    </el-switch>
+                <!--<el-radio-group v-model="radio1">
+                    <el-radio-button label="Yes"></el-radio-button>
+                    <el-radio-button label="No"></el-radio-button>>
+                </el-radio-group>-->
+                </el-form-item>
+                <div class="dialog-footer">
+                    <el-button @click="dialogFV = false,resetForm('form2')">Cancel</el-button>
+                    <el-button type="primary" @click="createBoard1('form2')">Create</el-button>
+                </div>
+            </el-form>
+        </el-dialog>
         <el-dialog :title="'Edit your board : ' + form1.bname" v-model="dialogFormVisible1" top="18%">
-            <el-form :model="form1" ref="form1" label-position="left">
-                <el-form-item label="Name" :label-width="formLabelWidth">
+            <el-form :model="form1" :rules="rules1" ref="form1" label-position="left">
+                <el-form-item label="Name" prop="bname" :label-width="formLabelWidth">
                 <el-input v-model="form1.bname" auto-complete="off"></el-input>
                 </el-form-item>
                 <el-form-item label="Description" :label-width="formLabelWidth">
-                <el-input type="textarea" v-model="form2.description" placeholder="What's yours board about?"
+                <el-input type="textarea" v-model="form1.bdescription" placeholder="What's yours board about?"
                 auto-complete="off"></el-input>
                 </el-form-item>
                 <el-form-item label="Category" :label-width="formLabelWidth">
-                    <el-select v-model="value" placeholder="What kind of board is it?" clearable>
+                    <el-select v-model="form1.category" placeholder="What kind of board is it?" clearable>
                         <el-option
                         v-for="item in options"
-                        :label="item.label"
                         :value="item.value">
                         </el-option>
                     </el-select>
@@ -102,7 +182,7 @@
                 <div class="dialog-footer">
                     <el-button class="pz3" :plain="true" type="danger" @click="dialogVisible = true" style="float:left">Delete board</el-button>
                     <el-button class="pz3" @click="dialogFormVisible1 = false">Cancel</el-button>
-                    <el-button class="pz3" style="color: #fff" type="primary" @click="">Save</el-button>
+                    <el-button class="pz3" style="color: #fff" type="primary" @click="saveChange('form1')">Save</el-button>
                 </div>
             </el-form>
         </el-dialog>
@@ -120,13 +200,24 @@
             </swiper>-->
                 <!--<el-carousel type="card" indicator-position="none"
                 height="300px" :autoplay="false">-->
-                    <div style="width: 220px;">
-                        <img :src="'' + pinss.url" width="100%">
+                <div>
+                    <div style="width: 301px;height:200px;margin-left:120px;">
+                        <el-button v-if="pinss.status > 1" size="large" type="text" icon="arrow-left" style="position: absolute;
+                        top:40%;left:120px;" @click="coverImg(0)"></el-button>
+                        <el-button v-else  :disabled="true" size="large" type="text" icon="arrow-left" style="position: absolute;
+                        top:40%;left:120px;"></el-button>
+                        <el-button v-if="pinss.status > 0 && pinss.status < 3" size="large" type="text" icon="arrow-right" style="position: absolute;
+                        top:40%;right: 120px" @click="coverImg(1)"></el-button>
+                        <el-button v-else  :disabled="true" size="large" type="text" icon="arrow-right" style="position: absolute;
+                        top:40%;right: 120px"></el-button>
+                        <img :src="'' + pinss.url" width="100%" style="width: 301px;
+                        height: 200px;object-fit: cover;max-width:100%;border:1px solid #eee">
                     </div>
+                </div>
                 <!--</el-carousel>-->
             <span slot="footer" class="dialog-footer">
                 <el-button @click="dialogVisible2 = false">Cancel</el-button>
-                <el-button type="primary" @click="">Save Changes</el-button>
+                <el-button type="primary" @click="saveCover(pinss)">Save Changes</el-button>
             </span>
         </el-dialog>
         <el-dialog title="Are you sure?" v-model="dialogVisible" top="35%">
@@ -177,14 +268,16 @@
                 radio1: false,
                 radio3: 1,
                 visible2: false,
-                // radio2: '',
+                radio2: true,
                 dialogVisible: false,
                 dialogVisible2: false,
                 dialogFormVisible1: false,
                 form1: {
+                    // bname: ''
                 },
                 formLabelWidth: '120px',
                 dialogFormVisible2: false,
+                dialogFV: false,
                 form2: {
                     name: ''
                 },
@@ -193,11 +286,14 @@
                         { validator: checkName, trigger: 'blur' }
                     ]
                 },
-                options: [{
-                    value: '1',
-                    label: 'Other'
-                    }],
+                rules1: {
+                    bname: [
+                        { validator: checkName, trigger: 'blur' }
+                    ]
+                },
+                options: '',
                 value: '',
+                boardchange: '',
                 bos: [],
                 swiperOption: {
                     pagination: '.swiper-pagination',
@@ -280,6 +376,52 @@
                 }
                 })
             },
+            createBoard1 (formName) {
+                let self = this
+                var bname = this.form2.name.trim()
+                var secret = this.radio1
+                let formData = new FormData()
+                formData.append("id", self.arrCookie)
+                formData.append("bname", this.form2.name.trim())
+                formData.append('secret', this.radio2)
+                this.$refs[formName].validate((valid) => {
+                if (!valid) {
+                    // self.$message.error("name is used or can't be used")
+                } else {
+                    fetch(self.http + '/camU/index/index/createboard', {
+                        method: 'POST',
+                        body: formData
+                        // mode: 'no-cors',
+                        // headers: { 'Content-Type': 'application/json' },
+                        // credentials: 'same-origin'
+                    })
+                    .then(res => res.json())
+                    // fetch(':3000/todos', {
+                    //     method: 'POST',
+                    //     body: JSON.stringify({ bname, secret }),
+                    //     headers: { 'Content-Type': 'application/json' },
+                    //     credentials: 'same-origin'
+                    // })
+                    // .then(res => res.json())
+                    .then(function (response) {
+                        if (response.status === 1) {
+                            self.bos.reverse() // array倒序
+                            // self.bos.unshift(response)
+                            self.bos.push(response)
+                            self.bos.reverse()
+                            self.$message.success('success')
+                            self.dialogFormVisible2 = false
+                            setTimeout(() => {
+                                // self.fullscreenLoading = false
+                                self.$router.push('/user/' + response.bname + '/')
+                            }, 2000);
+                        } else {
+                            self.$message.error("board name is used by yourself")
+                        }
+                    })
+                }
+                })
+            },
             resetForm(formName) {
                 this.$refs[formName].resetFields()
                 console.log(formName)
@@ -324,6 +466,16 @@
                 //     }
                 // }
                 })
+                fetch(self.http + '/camU/index/index/getcategory', {
+                    method: 'POST'
+                    // mode: 'no-cors',
+                    // headers: { 'Content-Type': 'application/json' },
+                    // credentials: 'same-origin'
+                })
+                .then(res => res.json())
+                .then(function (res) {
+                    self.options = res
+                })
             },
             changeCover (e) {
                 let self = this
@@ -351,6 +503,114 @@
                     self.pinss = pins
                 })
                 console.log(e + 'hhhh')
+            },
+            coverImg (e) {
+                let self = this
+                let formData = new FormData()
+                formData.append("id", self.arrCookie)
+                formData.append("iid", self.pinss.iid)
+                formData.append("bid", self.pinss.bid)
+                formData.append('status', e)
+                fetch(self.http + '/camU/index/index/coverimg', {
+                    method: 'POST',
+                    body: formData
+                    // mode: 'no-cors',
+                    // headers: { 'Content-Type': 'application/json' },
+                    // credentials: 'same-origin'
+                })
+                .then(res => res.json())
+                // fetch(':3000/upload', {
+                // // fetch('/camU/index/index/getpins', {
+                //     method: 'GET',
+                //     // mode: 'no-cors',
+                //     headers: { 'Content-Type': 'application/json' },
+                //     credentials: 'same-origin'
+                // })
+                // .then(res => res.json())
+                .then(function (pins) {
+                    pins.url = self.http + "/camu" + pins.url
+                    self.pinss = pins
+                })
+                console.log(this.pinss.bid)
+            },
+            saveCover (e) {
+                let self = this
+                let formData = new FormData()
+                formData.append("id", self.arrCookie)
+                formData.append("url", self.pinss.url)
+                formData.append("bid", self.pinss.bid)
+                fetch(self.http + '/camU/index/index/savecover', {
+                    method: 'POST',
+                    body: formData
+                    // mode: 'no-cors',
+                    // headers: { 'Content-Type': 'application/json' },
+                    // credentials: 'same-origin'
+                })
+                .then(res => res.json())
+                .then(function (res) {
+                    if (res.status === 1) {
+                        self.$message.success('success!')
+                        setTimeout(() => {
+                            location.reload('/settings') // 重新加载页面
+                        }, 600)
+                    } else {
+                        self.$message.error('update error!')
+                    }
+                })
+            },
+            saveChange (formName) {
+                let self = this
+                // var bname = this.form1.bname.trim()
+                // var description = this.form1.description
+                // var secret = this.form1.secret
+                let formData = new FormData()
+                formData.append("id", self.arrCookie)
+                formData.append("bid", self.form1.bid)
+                formData.append("bname", this.form1.bname.trim())
+                formData.append('description', this.form1.bdescription)
+                formData.append('category', this.form1.category)
+                formData.append('secret', this.form1.secret)
+                this.$refs[formName].validate((valid) => {
+                if (!valid) {
+                    // self.$message.error("name is used or can't be used")
+                } else {
+                    fetch(self.http + '/camU/index/index/saveboardchange', {
+                        method: 'POST',
+                        body: formData
+                        // mode: 'no-cors',
+                        // headers: { 'Content-Type': 'application/json' },
+                        // credentials: 'same-origin'
+                    })
+                    .then(res => res.json())
+                    // fetch(':3000/todos', {
+                    //     method: 'POST',
+                    //     body: JSON.stringify({ bname, secret }),
+                    //     headers: { 'Content-Type': 'application/json' },
+                    //     credentials: 'same-origin'
+                    // })
+                    // .then(res => res.json())
+                    .then(function (response) {
+                        if (response.status === 1 && response.info === 1) {
+                            // self.bos.reverse() // array倒序
+                            // // self.bos.unshift(response)
+                            // self.bos.push(response)
+                            // self.bos.reverse()
+                            self.$message.success('success!')
+                            self.dialogFormVisible1 = false
+                            self.boardchange += 1
+                        } else if (response.status === 1 && response.info === 0) {
+                            // self.bos.reverse() // array倒序
+                            // // self.bos.unshift(response)
+                            // self.bos.push(response)
+                            // self.bos.reverse()
+                            self.$message.success('you have change nothing!')
+                            self.dialogFormVisible1 = false
+                        } else {
+                            self.$message.error("board name is used by yourself")
+                        }
+                    })
+                }
+                })
             },
             // delb (e) {
             //     let self = this
@@ -451,6 +711,7 @@
         watch: {
         // 如果路由有变化，会再次执行该方法
         // "$route": "fetchDate"
+            boardchange: 'getBoards'
         },
         mounted() {
             document.title = this.$route.path   // 改变网页title
@@ -565,6 +826,23 @@
         display: inline;
         h1 {
             font-size: 50px;
+        }
+    }
+    .secretBoard {
+        background: #f7f7f7;
+        padding-top: 20px;
+    }
+    .sBoardsHeader {
+        width: 100%;
+        opacity: 0.95;
+        font-size: 14px;
+        .title {
+            line-height: 16px;
+            font-weight: bold;
+        }
+        .text {
+            font-weight: bold;
+            color: #bbb;
         }
     }
 @media (min-width: 2275px) {
