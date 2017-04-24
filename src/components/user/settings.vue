@@ -28,7 +28,7 @@
                 <el-input v-model="form1.wname" style="float:right">
                 </el-input>
                 <div style="background: #efefef;padding: 0px 10px;font-weight:bold">
-                    /{{ form1.wname }}</div>
+                   {{ http }}/{{ form1.wname }}</div>
             </el-form-item>
             <el-form-item label="About you">
                 <el-input type="textarea" :rows="4" placeholder="Type something"
@@ -256,7 +256,9 @@ import header from '../header/header.vue'
                 .then(res => res.json())
                 .then(function (res) {
                     // let value = res.uimg.match(/http:\/\/.+/)
-                    res.uimg = self.http + '/camu' + res.uimg
+                    if (res.uimg) {
+                        res.uimg = self.http + '/camu' + res.uimg
+                    }
                     self.form1 = res
                 })
             },

@@ -63,7 +63,7 @@
         <div class="userCommon flex">
             <ul class="" style=";padding: 7px 2px">
                 <li class="">
-                    <svg height="32" width="32" viewBox="0 0 16 16">
+                    <svg height="32" width="32" viewBox="0 0 16 16" style="fill:#555">
                     <path d="M12.8 6.791h-.04V4.566C12.76 2.048 10.625 0 8 0S3.24 2.048 3.24 4.566v2.225H3.2c-.777.984-1.2 2.2-1.2 
                     3.454C2 13.423 4.686 16 8 16s6-2.577 6-5.755c0-1.253-.423-2.47-1.2-3.454zm-2.36 0H5.56V4.566c0-1.29 1.095-2.34 
                     2.44-2.34s2.44 1.05 2.44 2.34v2.225z"></path></svg>
@@ -347,16 +347,17 @@
                 value: '',
                 boardchange: '',
                 bos: [],
-                swiperOption: {
-                    pagination: '.swiper-pagination',
-                    effect: 'cube',
-                    // effect: 'flip',
-                    grabCursor: true,
-                    mousewheelControl: true,
-                    nextButton: '.swiper-button-next',
-                    prevButton: '.swiper-button-prev'
-                },
-                pinss: {}
+                // swiperOption: {
+                //     pagination: '.swiper-pagination',
+                //     effect: 'cube',
+                //     // effect: 'flip',
+                //     grabCursor: true,
+                //     mousewheelControl: true,
+                //     nextButton: '.swiper-button-next',
+                //     prevButton: '.swiper-button-prev'
+                // },
+                pinss: {},
+                saveCovertag: 0
             }
         },
         created: function () {
@@ -602,9 +603,9 @@
                 .then(function (res) {
                     if (res.status === 1) {
                         self.$message.success('success!')
-                        setTimeout(() => {
-                            location.reload('/settings') // 重新加载页面
-                        }, 600)
+                        self.saveCovertag += 1
+                        self.dialogFormVisible1 = false
+                        self.dialogVisible2 = false
                     } else {
                         self.$message.error('update error!')
                     }
@@ -763,7 +764,8 @@
         watch: {
         // 如果路由有变化，会再次执行该方法
         // "$route": "fetchDate"
-            boardchange: 'getBoards'
+            boardchange: 'getBoards',
+            saveCovertag: 'getBoards'
         },
         mounted() {
             document.title = this.$route.path   // 改变网页title

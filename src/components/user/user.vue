@@ -38,15 +38,35 @@
             <div style="width:50%;vertical-align: middle">
                 <div align="center" id="boardName" class="boardName"><h1>Bubble</h1></div>
             </div>
-            <div style="width:25%"></div>
+            <div style="width:25%">
+                
+            </div>
         </div>
         </div>
         <div class="userCommon">
             <div class="flex" style="padding-top:64px">
                 <div class="user-info">
-                    <div class="fontFamily"><h1>Bubble</h1></div>
+                    <div class="fontFamily dp1"><h1>Bubble</h1></div>
+                    <div class="flex follow dp1">
+                        <div class="px1">
+                            <a  rel="">
+                            <div class="text-left bold">
+                                <span><span class="value block dark-gray">0</span>
+                                <span class="label ">Followers</span></span>
+                            </div>
+                            </a>
+                        </div>
+                        <div class="px1">
+                            <a rel="">
+                            <div class="text-left bold">
+                                <span><span class="value block dark-gray">0</span>
+                                <span class="label ">Following</span></span>
+                            </div>
+                            </a>
+                        </div>
+                    </div>
                 </div>
-                <div class="user-info" align="right">
+                <div class="user-info1" align="right">
                     <div></div>
                     <img src="../../common/images/person.png" width="156" height="156" />
                 </div>
@@ -170,7 +190,23 @@ import header from '../header/header.vue'
             }
         }
         .user-info {
-            width: 50%;
+            width: 75%;
+            .bold {
+                margin: 8px 16px 0px 3px;
+                span {
+                    font-size: 14px;
+                    font-weight: bold;
+                }
+            }
+            .label {
+                color: #b5b5b5;
+            }
+            .fontFamily {
+                width: 66%;
+            }
+            .follow {
+                width: 32%;
+            }
             h1 {
                 font-size: 36px;
                 font-weight: bold;
@@ -178,6 +214,9 @@ import header from '../header/header.vue'
                 line-height: 42px;
                 word-spacing: -2.25px;
             }
+        }
+        .user-info1 {
+            width: 25%;
         }
     }
     .editSettingsButton {

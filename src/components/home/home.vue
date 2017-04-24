@@ -40,7 +40,7 @@
                         style="vertical-align: middle;width:24px;height:24px">-->
                         </div>
                         <div style="padding:0px 32px;" class="creditName">Saved to</div>
-                        <div style="padding:0px 32px;" class="creditTitle">first</div>
+                        <div style="padding:0px 32px;" class="creditTitle">{{ pin.bname }}</div>
                     </a>
                 </div>
             </div>
@@ -169,6 +169,14 @@
                         <div style="padding-bottom: 10px;border-bottom: 1px solid #efefef">
                             <div class="title" style="font-size: 18px;font-weight: bold;
                             padding-bottom: 8px;">Choose board</div>
+                            <div v-for="bo in bos">
+                                <div v-if="bo.bid === bosave.bid" style="margin-bottom:8px;background-color:#ffe581;font-size:12px;padding:2px;">
+                                    Pssst! Looks like you've already <span style="display:inline;width；100%;color:#bd081c;font-weight:600;">saved this Pin to {{ bo.bname }}.</span>
+                                </div>
+                            </div>
+                            <div v-if="bosave.iid === saveimg.oiid" style="margin-bottom:8px;background-color:#ffe581;font-size:12px;padding:2px;">
+                                Pssst! Looks like you've already <span style="display:inline;width；100%;color:#bd081c;font-weight:600;">saved this Pin to {{ saveimg.bname }}.</span>
+                            </div>
                             <el-input
                             icon="search"
                             placeholder="search"
@@ -191,6 +199,10 @@
                                                 height:34px;object-fit: cover;border-radius:3px;">
                                                 <img v-else src="../../common/images/pg.png" style="vertical-align:middle">
                                                 <span style="display:inline">{{ bo.bname }}</span></el-button>
+                                                <svg v-if="bo.secret === 'true'" style="width: 14px;align:right;fill: #b5b5b5" viewBox="0 0 16 16">
+                                                    <path d="M12.8 6.791h-.04V4.566C12.76 2.048 10.625 0 8 0S3.24 2.048 3.24 4.566v2.225H3.2A5.577 5.577 0 0 0 2 10.245C2 
+                                                    13.423 4.686 16 8 16s6-2.577 6-5.755a5.579 5.579 0 0 0-1.2-3.454zm-2.36 0H5.56V4.566c0-1.29 1.095-2.34
+                                                    2.44-2.34s2.44 1.05 2.44 2.34v2.225z" fill-rule="evenodd"></path></svg>
                                             <el-button type="primary" class="board-list-save"
                                             @click="pinSave(bo)">Save</el-button>
                                         </div>
@@ -253,6 +265,8 @@ import WaterfallSlot from 'vue-waterfall/lib/waterfall-slot'
                 pins: [],
                 pin: '',
                 likes: '',
+                bosave: '',
+                saveimg: '',
                 align: 'center'
             }
         },
@@ -370,6 +384,7 @@ import WaterfallSlot from 'vue-waterfall/lib/waterfall-slot'
                 let self = this
                 self.webUrl = e.url
                 self.iswebsite = e.iswebsite
+                self.bosave = e
                 let formData = new FormData()
                 formData.append("id", self.arrCookie);
                 // fetch(':3000/todos', {
@@ -384,6 +399,20 @@ import WaterfallSlot from 'vue-waterfall/lib/waterfall-slot'
                 .then(function (bos) {
                     // console.log(bos)
                     self.bos = bos
+                })
+                formData.append("iid", self.bosave.iid);
+                fetch(self.http + '/camU/index/index/getsave', {
+                    method: 'POST',
+                    body: formData
+                    // mode: 'no-cors',
+                    // headers: { 'Content-Type': 'application/json' },
+                    // credentials: 'same-origin'
+                })
+                .then(res => res.json())
+                .then(function (res) {
+                    self.saveimg = res
+                    // debugger
+                    // console.log(bos)
                 })
             },
             pinSave (e) {
@@ -406,8 +435,9 @@ import WaterfallSlot from 'vue-waterfall/lib/waterfall-slot'
                     formData.append("bid", e.bid)
                     formData.append("bname", e.bname)
                     formData.append("iswebsite", self.iswebsite)
+                    formData.append("iid", self.bosave.iid)
                     // fetch(':3000/todos', {
-                    fetch(self.http + '/camU/index/index/test', {
+                    fetch(self.http + '/camU/index/index/uploadpin2', {
                         method: 'POST',
                         body: formData
                         // mode: 'no-cors',
@@ -536,7 +566,10 @@ import WaterfallSlot from 'vue-waterfall/lib/waterfall-slot'
 //     img { vertical-align: middle; }
 //     ul li { display: inline-block; vertical-align: middle;}
 // }
-// .piclist{margin:auto;position:relative}.piclist li{width:180px;padding:10px;border-radius:5px;box-shadow:0 0 4px #ddd;position:absolute}.piclist img{display:block;width:180px}.piclist span{display:block;text-align:center;height:26px;overflow:hidden;line-height:26px}
+// .piclist{margin:auto;position:relative}
+// .piclist li{width:180px;padding:10px;border-radius:5px;box-shadow:0 0 4px #ddd;position:absolute}
+// .piclist img{display:block;width:180px}
+// .piclist span{display:block;text-align:center;height:26px;overflow:hidden;line-height:26px}
 
 // .piclist {
 //     margin: auto;position: relative;

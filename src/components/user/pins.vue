@@ -206,6 +206,7 @@
                 textarea: '',
                 input2: '',
                 arrCookie: arrCookie[1],
+                dialogVisible: false,
                 dialogVisible2: false,
                 dialogVisible3: false,
                 dialogVisible4: false,
