@@ -17,10 +17,32 @@
                 <div v-for="bo in bos" v-if="bo.secret === 'false'" class="ProfileBoardCard" style="margin:20px 0;padding: 0 12px">
                     <div class="createCard" type="text">
                         <router-link :to="'/' + userName + '/' + bo.bname + '/'">
-                        <div style="position: relative;width:301px;height:200px">
-                            <div class="createRep flex ">
-                                <img v-if="bo.cover" :src="bo.cover" width="100%" style="width: 301px;
-                        height: 200px;object-fit: cover;max-width:100%;border-radius: 8px;border:1px solid #eee">
+                        <div style="position: relative;width:301px;height:200px;">
+                            <div class="createRep" style="border-raduis:9px;overflow:hidden;">
+                                <ul v-if="bo.cover">
+                                <li>
+                                    <img :src="bo.cover" width="100%" style="width: 199px;
+                                    height: 200px;object-fit: cover;max-width:100%;border:1px solid #eee">
+                                </li>
+                                <!--{{ bo.img.length }}-->
+                                <li v-if="bo.count !== 0" v-for="item in bo.img" style="width:98px;height:99px;padding:1px 1px;">
+                                    <img :src="http+'/camU'+item.url" style="width:100px;height:100px;object-fit: cover;">
+                                </li>
+                                <!--{{ bo.img.length }}-->
+                                <li v-if="bo.count !== 0" v-for="item in 2-bo.img.length" style="width:98px;height:99px;padding:1px 1px;">
+                                    <div style="width:100%;height:100%;border:1px solid #eee"></div>
+                                </li>
+                                </ul>
+                                <ul v-else>
+                                <!--{{ bo.img.length }}-->
+                                <li v-if="bo.count !== 0" v-for="item in bo.img" style="width:98px;height:99px;padding:1px 1px;">
+                                    <img :src="http+'/camU'+item.url" style="width:99px;height:100px;object-fit: cover;">
+                                </li>
+                                <!--{{ bo.img.length }}-->
+                                <li v-for="item in 6-bo.img.length" style="width:98px;height:99px;padding:1px 1px;">
+                                    <div style="width:100%;height:100%;border:1px solid #eee"></div>
+                                </li>
+                                </ul>
                             </div>
                         </div>
                         </router-link>
@@ -72,10 +94,32 @@
                 <div v-for="bo in bos" v-if="bo.secret === 'true'" class="ProfileBoardCard" style="margin:20px 0;padding: 0 12px">
                     <div class="createCard" type="text">
                         <router-link :to="'/' + userName + '/' + bo.bname + '/'">
-                        <div style="position: relative;width:301px;height:200px">
-                            <div class="createRep flex ">
-                                <img v-if="bo.cover" :src="bo.cover" width="100%" style="width: 301px;
-                        height: 200px;object-fit: cover;max-width:100%;border-radius: 8px;border:1px solid #eee">
+                        <div style="position: relative;width:301px;height:200px;">
+                            <div class="createRep" style="border-raduis:9px;overflow:hidden;">
+                                <ul v-if="bo.cover">
+                                <li>
+                                    <img :src="bo.cover" width="100%" style="width: 199px;
+                                    height: 200px;object-fit: cover;max-width:100%;border:1px solid #eee">
+                                </li>
+                                <!--{{ bo.img.length }}-->
+                                <li v-if="bo.count !== 0" v-for="item in bo.img" style="width:98px;height:99px;padding:1px 1px;">
+                                    <img :src="http+'/camU'+item.url" style="width:100px;height:100px;object-fit: cover;">
+                                </li>
+                                <!--{{ bo.img.length }}-->
+                                <li v-if="bo.count !== 0" v-for="item in 2-bo.img.length" style="width:98px;height:99px;padding:1px 1px;">
+                                    <div style="width:100%;height:100%;border:1px solid #eee"></div>
+                                </li>
+                                </ul>
+                                <ul v-else>
+                                <!--{{ bo.img.length }}-->
+                                <li v-if="bo.count !== 0" v-for="item in bo.img" style="width:98px;height:99px;padding:1px 1px;">
+                                    <img :src="http+'/camU'+item.url" style="width:99px;height:100px;object-fit: cover;">
+                                </li>
+                                <!--{{ bo.img.length }}-->
+                                <li v-for="item in 6-bo.img.length" style="width:98px;height:99px;padding:1px 1px;">
+                                    <div style="width:100%;height:100%;border:1px solid #eee"></div>
+                                </li>
+                                </ul>
                             </div>
                         </div>
                         </router-link>
@@ -173,6 +217,14 @@
                     on-color="#13ce66"
                     off-color="#ff4949">
                     </el-switch>
+                <!--<el-radio-group v-model="form1.secret">
+                    <el-radio-button label="Yes"></el-radio-button>
+                    <el-radio-button label="No"></el-radio-button>>
+                </el-radio-group>-->
+                </el-form-item>
+                <el-form-item label="Collaborators" :label-width="formLabelWidth">
+                    <el-input auto-complete="off" style="width:350px"></el-input>
+                    <el-button>Invite</el-button>
                 <!--<el-radio-group v-model="form1.secret">
                     <el-radio-button label="Yes"></el-radio-button>
                     <el-radio-button label="No"></el-radio-button>>
@@ -814,6 +866,12 @@
             .pz5:hover {
                 background: #d7d7d7;
             }
+        }
+    }
+    .createRep {
+        ul li {
+            // display: inline-block;
+            float: left;
         }
     }
     .el-dialog--small {

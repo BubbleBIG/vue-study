@@ -56,7 +56,7 @@
         <el-dialog title="Upload a Pin" v-model="dialogVisible2" size="tiny">
             <el-upload name="photo"
             style="padding: 18px;background:#ededed;"
-            action="/camU/index/index/uploadpintmp"
+            :action="http + '/camU/index/index/uploadpintmp'"
             :on-change="handleResponse"
             :on-remove="handleRemove"
             :before-upload="beforeAvatarUpload"
@@ -139,8 +139,10 @@
                                     <div class="board-list">
                                         <div>
                                             <el-button type="text" class="board-list-btn">
-                                            <img src="../../common/images/pg.png" style="vertical-align:middle">
-                                            <span style="display:inline">{{ bo.bname }}</span></el-button>
+                                                <img v-if="bo.cover" :src="bo.cover" style="vertical-align:middle;width:35px;
+                                                height:34px;object-fit: cover;border-radius:3px;">
+                                                <img v-else src="../../common/images/pg.png" style="vertical-align:middle">
+                                                <span style="display:inline">{{ bo.bname }}</span></el-button>
                                             <el-button type="primary" class="board-list-save"
                                             @click="pinSave(bo)">Save</el-button>
                                         </div>
@@ -163,7 +165,7 @@
             </el-form>
         </el-dialog>
         <div id="result"></div>
-        <h1 style="height:1000px"></h1>
+        <h1 style="height:30px"></h1>
             <!--<form name="form1" id="form1">  
                 <p>name:<input type="text" name="name" ></p>  
                 <p>gender:<input type="radio" name="gender" value="1">male
@@ -435,6 +437,9 @@
                 // console.log(self.ImageUrl)
             },
             handleIconClick () {}
+        },
+        watch: {
+            dialogVisible5: 'getpins'
         },
         mounted: function () {
             let self = this

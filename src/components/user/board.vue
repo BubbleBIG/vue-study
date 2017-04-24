@@ -60,7 +60,8 @@
                     <div class="btn"><el-button :plain="true" type="danger" icon="star-on"></el-button></div>
                     <div style="margin-left: 72px;" class="btn"><el-button type="primary">save</el-button></div>
                 </div>
-                <router-link :to="{ name: 'pin', params: { id: pin.iid }}">
+                <!--<router-link :to="{ name: 'pin', params: { id: pin.iid }}">-->
+                <router-link :to="'/pin/' + pin.iid">
                     <img :src="pin.url" width="100%" class=""/>
                 </router-link>
             </div>

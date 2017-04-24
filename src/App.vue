@@ -5,6 +5,7 @@
     <!--</div>-->
     <div style="margin-top: 65px"></div>
     <router-view></router-view>
+    <!--<router-view name="pin"></router-view>-->
   </div>
 </template>
 <script>

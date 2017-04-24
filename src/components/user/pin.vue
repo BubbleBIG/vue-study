@@ -11,7 +11,7 @@
                         <div style="margin-left: 355px;" class="btn"><el-button type="primary">save</el-button></div>
                     </div>
                     <div>
-                        <img :src="pin.url" width="100%" class=""/>
+                        <img :src="pin.url" width="100%" class="">
                     </div>
                 </div>
                 <div>
@@ -33,8 +33,9 @@
                     </div>
                 </div>
             </div>
-        <div :style="{width: width + 'px',marginLeft:-(width-540)/2 + 'px',background:'#fff'}">
-            <div class="homePins">
+        <!--<div :style="{width: width + 'px',marginLeft:-(width-540)/2 + 'px',background:'#fff'}">-->
+        <div :style="{width: '1050px',marginLeft:'-250px',background:'#fff'}">
+            <div class="homePins" style="width: 1050px">
                 <div>Related Pins</div>
                 <waterfall :line-gap="260" :watch="pins">
                 <!-- each component is wrapped by a waterfall slot -->
@@ -52,7 +53,8 @@
                             <div class="btn"><el-button :plain="true" type="danger" icon="star-on"></el-button></div>
                             <div style="margin-left: 72px;" class="btn"><el-button type="primary">save</el-button></div>
                         </div>
-                        <router-link :to="{ name: 'pin', params: { id: pin.iid }}">
+                        <!--<router-link :to="{ name: 'pin', params: { id: pin.iid }}">-->
+                        <router-link :to="'/pin/' + pin.iid">
                             <img :src="pin.url" width="100%" class=""/>
                         </router-link>
                     </div>

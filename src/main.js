@@ -52,10 +52,12 @@ Vue.use(VueAwesomeSwiper)
    routes: [
     // { path: '/', component: home, beforeEnter: guardRoute },
     { path: '/', component: home },
+    // { path: '/', redirect: { name: '/lfq/' } },
     { path: '/log', component: login },
     { path: '/reg', component: reg },
     { path: '/settings', component: settings },
-    { path: '/pin/:id', name: 'pin', component: pin },
+    // { path: '/pin/:id', name: 'pin', component: pin },
+    { path: '/pin/:id', component: pin },
     { path: '/category/:name', name: 'category', component: category },
     { path: '/:username',
       component: user,
@@ -64,6 +66,7 @@ Vue.use(VueAwesomeSwiper)
         { path: 'boards', component: boards },
         { path: 'pins', component: pins },
         { path: 'likes', component: likes }
+        // { path: '*', component: board }
         // { path: '/:username/:bname', component: board }
       ]
     },

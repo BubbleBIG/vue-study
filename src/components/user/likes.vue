@@ -9,7 +9,8 @@
         :order="index"
         :key="pin.iid"
     >
-    <router-link :to="{ name: 'pin', params: { id: pin.iid }}">
+    <!--<router-link :to="{ name: 'pin', params: { id: pin.iid }}">-->
+    <a @click="click(pin.iid)">
     <div style="padding: 12px">
         <div>
         <img :src="pin.url" width="100%" class=""/>
@@ -32,7 +33,7 @@
                 </div>
         </div>
     </div>
-    </router-link>
+    </a>
         <!--
         your component
         -->
@@ -54,8 +55,6 @@
 <script>
 import Waterfall from 'vue-waterfall/lib/waterfall'
 import WaterfallSlot from 'vue-waterfall/lib/waterfall-slot'
-    // import user from './user.vue'
-	// import { rdUpload } from 'radon-ui'
     export default {
         components: {
 			// rdUpload
@@ -67,10 +66,10 @@ import WaterfallSlot from 'vue-waterfall/lib/waterfall-slot'
             let a = this.$route.params
             console.log(a)
             document.title = this.$route.path   // 改变网页title
-            window.onload = function() {
-                Grade(document.querySelectorAll('.gradient-wrap'))
-            }
-            Grade(document.querySelectorAll('.gradient-wrap'))
+            // window.onload = function() {
+            //     Grade(document.querySelectorAll('.gradient-wrap'))
+            // }
+            // Grade(document.querySelectorAll('.gradient-wrap'))
         },
         data () {
             let strCookie = document.cookie;
@@ -83,6 +82,16 @@ import WaterfallSlot from 'vue-waterfall/lib/waterfall-slot'
                 align: 'center'
             }
         },
+        // beforeRouteEnter (to, from, next) {
+        //     if (to.path === '/pin/100') {
+        //        return next({ path: '/log' })
+        //     } else {
+        //         next(vm => {
+        //             console.log(to)
+        //             console.log(from)
+        //         })
+        //     }
+        // },
         created: function () {
             this.getPins()
         },
@@ -109,6 +118,26 @@ import WaterfallSlot from 'vue-waterfall/lib/waterfall-slot'
             //             console.log('test success!')
             //     return false;
             // },
+            click (e) {
+                let self = this
+                console.log(e)
+                if (e === 100) {
+                    console.log(e)
+                    setTimeout(function() {
+                        self.$router.push('/pin/100')
+                    }, 3000)
+                }
+                // beforeRouteEnter (to, from, next) {
+                //     if (to.path === '/pin/100') {
+                //     return next({ path: '/log' })
+                //     } else {
+                //         next(vm => {
+                //             console.log(to)
+                //             console.log(from)
+                //         })
+                //     }
+                // }
+            },
             getPins () {
                 let self = this
                 let formData = new FormData()
