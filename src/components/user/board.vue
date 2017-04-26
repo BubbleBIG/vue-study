@@ -1,39 +1,46 @@
 <template>
     <div class="user-routers">
     <v-header></v-header>
+    <div>
     <div class="fixedHeader">
         <div class="userCommon flex">
             <ul class="" style="width:25%;padding: 7px 2px;fill:#b5b5b5;">
                 <li class="" >
                     <div class="iconButton">
-                        <button class="Button sendProfileButton mr2" @click="dialogFormVisible1 = true">
+                        <el-button v-if="board.invited===0" type="text" class="Button sendProfileButton mr2" @click="dialogFormVisible1 = true">
                             <svg style="fill:#b5b5b5" height="24" width="24" viewBox="0 0 16 16" aria-label="" role="img"><title></title><path d="M8.917 3.368L1.67 10.577a.664.664 0 0 0-.154.253l-.005-.002L.03 
                             15.13h.007a.659.659 0 0 0 .154.68c.185.185.451.232.684.154v.007L5.2 14.495l-.001-.005a.642.642 0 0 0 .254-.152l7.245-7.209-3.78-3.76zm6.3-2.507c-1.26-1.253-2.736-1.038-3.78 
                             0l-1.26 1.254 3.78 3.76 1.26-1.253a2.65 2.65 0 0 0 0-3.76"></path></svg>
                             <span class="accessibilityText">Edit</span>
-                        </button>
+                        </el-button>
+                        <el-button v-else :disabled="true" type="text" class="Button sendProfileButton mr2">
+                            <svg style="fill:#b5b5b5" height="24" width="24" viewBox="0 0 16 16" aria-label="" role="img"><title></title><path d="M8.917 3.368L1.67 10.577a.664.664 0 0 0-.154.253l-.005-.002L.03 
+                            15.13h.007a.659.659 0 0 0 .154.68c.185.185.451.232.684.154v.007L5.2 14.495l-.001-.005a.642.642 0 0 0 .254-.152l7.245-7.209-3.78-3.76zm6.3-2.507c-1.26-1.253-2.736-1.038-3.78 
+                            0l-1.26 1.254 3.78 3.76 1.26-1.253a2.65 2.65 0 0 0 0-3.76"></path></svg>
+                            <span class="accessibilityText">Edit</span>
+                        </el-button>
                     </div>
                 </li>
-                <li class="" >
+                <li v-if="board.invited===0" class="" >
                     <div class="iconButton">
-                        <button class="Button sendProfileButton mr2">
-                            <em style="margin: 10px"></em>
+                        <el-button type="text" class="Button sendProfileButton mr2">
+                            <em style="margin-left: 10px"></em>
                             <span class="accessibilityText">Send Profile</span>
-                        </button>
+                        </el-button>
                     </div>
                 </li>
-                <li class="" id="userInfo">
+                <li v-if="board.invited===0" class="" id="userInfo">
                     <div class="iconButton">
                          <el-popover ref="popover3" placement="bottom" width="100" trigger="click">
                             <div style="height:130px;text-align:center">
                                 <el-button style="display: inline;" type="text" @click="">sth.</el-button>
                             </div>
                         </el-popover>
-                        <button v-popover:popover3 class="Button userMenuButton">
+                        <el-button type="text" v-popover:popover3 class="Button userMenuButton">
                             <svg height="24" width="24" viewBox="0 0 16 16" aria-label="" role="img"><title></title><path d="M14 10a2 2 0 1 1 0-3.999A2 
                             2 0 0 1 14 10zm-6 0a2 2 0 1 1 0-4 2 2 0 0 1 0 4zm-6 0a2 2 0 1 1 0-4 2 2 0 0 1 0 4z"></path></svg>
                             <span class="accessibilityText">User menu</span>
-                        </button>
+                        </el-button>
                     </div>
                 </li>
             </ul>
@@ -50,10 +57,11 @@
                         <h1>{{ bName.bname }}</h1>
                     </div>
                     <div v-if="board.count>0" class="_sp _sp2">
-                        <el-button style="display: inline;" icon="plus" type="danger" @click="dialogVisible3 = true">Save pin</el-button>
+                        <el-button v-if="board.invited===0" style="display: inline;" icon="plus" type="danger" @click="dialogVisible3 = true">Save pin</el-button>
                     </div>
                 </div>
                 <div style="clear:both;" class="fontFamily"><span class="pins-count">{{ board.count }} Pins</span></div>
+                <div style="" class="fontFamily"><span class="pins-count">{{ inviters.count }} Followers</span></div>
             </div>
             <div class="user-info-board" align="right">
                 <div v-if="board.secret===true" class="user-info-li" style="background:#555;">
@@ -62,10 +70,20 @@
                     6-5.755c0-1.253-.423-2.47-1.2-3.454zm-2.36 0H5.56V4.566c0-1.29 1.095-2.34 2.44-2.34s2.44 1.05 2.44 2.34v2.225z"></path></svg>
                 </div>
                 <div class="user-info-li">
-                    <el-button type="text" @click="dialogVisible6=true" class="hasIcon borderless"><i style="font-size:36px;font-weight:bold;" class="el-icon-plus"></i></el-button>
+                    <el-button type="text" @click="dialogVisible6=true,getInvite()" class="hasIcon borderless"><i style="font-size:36px;font-weight:bold;" class="el-icon-plus"></i></el-button>
+                    <!--<el-button v-else :disabled="true" type="text" class="hasIcon borderless"><i style="font-size:36px;font-weight:bold;" class="el-icon-plus"></i></el-button>-->
+                </div>
+                <div v-for="inviter in inviters.mess" v-if="inviter.status===1" class="user-info-li">
+                    <el-tooltip class="" effect="light" :content="inviter.inviteduname+' invited by '+board.name" placement="top">
+                        <img v-if="inviter.img" :src="http+'/camu'+inviter.img" width="56" height="56">
+                        <img v-else src="../../common/images/person.png" width="56" height="56" />
+                    </el-tooltip>
                 </div>
                 <div class="user-info-li">
-                    <img src="../../common/images/person.png" width="56" height="56" />
+                    <el-tooltip class="" effect="light" :content="board.name+', the Owner'" placement="top">
+                        <img v-if="board.img" :src="http+'/camu'+board.img" width="56" height="56">
+                        <img v-else src="../../common/images/person.png" width="56" height="56" >
+                    </el-tooltip>
                 </div>
             </div>
         </div>
@@ -103,8 +121,11 @@
                 <!--<div style="clear: both;padding-top: 5px;color:#aaa;">Picked for you</div>-->
                 <div style="padding:8px 0px;clear:both" align="left">
                     <a href="####" style="height: 30px;color: #a8a8a8">
-                        <div class="userPic" style="float:left"><img src="../../common/images/person.png"
-                        style="vertical-align: middle;width:24px;height:24px"></div>
+                        <div class="userPic" style="float:left">
+                            <img v-if="board.img" :src="http+'/camu'+board.img"
+                            style="vertical-align: middle;width:24px;height:24px;border-radius:50%;">
+                            <img v-else src="../../common/images/person.png"
+                            style="vertical-align: middle;width:24px;height:24px"></div>
                         <div style="padding:0px 32px;" class="creditName">Saved to</div>
                         <div style="padding:0px 32px;" class="creditTitle">{{ pin.bname }}</div>
                     </a>
@@ -387,14 +408,31 @@
                                 <el-button type="primary" icon="share">Save</el-button>
                             </el-button-group>-->
                             <div class="choose-board">
-                                <div v-for="bo in 1">
+                                <div>
                                     <div class="board-list">
                                         <div>
                                             <el-button type="text" class="board-list-btn">
-                                                <img v-if="bo" :src="bo" style="vertical-align:middle;width:35px;
+                                                <img v-if="inviters" :src="inviters" style="vertical-align:middle;width:35px;
                                                 height:34px;object-fit: cover;border-radius:3px;">
                                                 <img v-else src="../../common/images/pg.png" style="vertical-align:middle">
-                                                <span style="display:inline">{{ bo }}</span></el-button>
+                                                <span style="display:inline">hh</span></el-button>
+                                            <!--<el-button type="primary" class="board-list-save"
+                                            @click="">Remove</el-button>-->
+                                        </div>
+                                    </div>
+                                    <!--<div>
+                                        <div>{{ bo.bname }}</div>
+                                        <div><el-button type="primary">Save</el-button></div>
+                                    </div>-->
+                                </div>
+                                <div v-if="inviters.status===1" v-for="inviter in inviters.mess">
+                                    <div class="board-list">
+                                        <div>
+                                            <el-button type="text" class="board-list-btn">
+                                                <img v-if="inviter" :src="inviter" style="vertical-align:middle;width:35px;
+                                                height:34px;object-fit: cover;border-radius:3px;">
+                                                <!--<img v-else src="../../common/images/pg.png" style="vertical-align:middle">-->
+                                                <span style="display:inline">{{ inviter.status }}</span></el-button>
                                             <el-button type="primary" class="board-list-save"
                                             @click="">Remove</el-button>
                                         </div>
@@ -410,11 +448,12 @@
                 </el-col>
                 </el-row>
                 <div align="right">
-                    <el-button type="primary">Done</el-button>
+                    <el-button type="primary" @click="dialogVisible6 = false">Done</el-button>
                 </div>
             </el-form>
         </el-dialog>
     <!--<h1>this board name: {{ bName.bname }}</h1>-->
+    </div>
     </div>
 </template>
 
@@ -439,6 +478,7 @@ import WaterfallSlot from 'vue-waterfall/lib/waterfall-slot'
             let strCookie = document.cookie;
             let arr = strCookie.split(";")
             let arrCookie = arr[0].split("=")
+            let arrCookie2 = arr[1].split("=")
             var checkUrl = (rule, value, callback) => {
                 // var ImgObj = new Image()
                 // ImgObj.src = value
@@ -470,6 +510,7 @@ import WaterfallSlot from 'vue-waterfall/lib/waterfall-slot'
                 http: 'http://localhost',
                 bName: bname,
                 arrCookie: arrCookie[1],
+                arrname: arrCookie2[1],
                 pins: [],
                 board: '',
                 align: 'center',
@@ -515,21 +556,25 @@ import WaterfallSlot from 'vue-waterfall/lib/waterfall-slot'
                         { validator: checkUrl, trigger: 'blur' }
                     ]
                 },
-                invites: '',
-                invitedname: 1
+                inviters: '',
+                invitedname: 1,
+                inviterlist: '',
+                username: this.$route.params.username
             }
         },
         created: function () {
             this.pinHeight()
             this.getPins()
-            this.getInvite()
         },
         methods: {
             getPins () {
                 let self = this
                 let formData = new FormData()
+                self.bname = self.$route.params.bname
+                self.username = self.$route.params.username
                 formData.append("id", self.arrCookie)
-                formData.append("bname", self.bName.bname)
+                formData.append("bname", self.$route.params.bname)
+                formData.append("uname", self.$route.params.username)
                 fetch(self.http + '/camU/index/index/getboardpins', {
                     method: 'POST',
                     body: formData
@@ -547,44 +592,115 @@ import WaterfallSlot from 'vue-waterfall/lib/waterfall-slot'
                 // })
                 // .then(res => res.json())
                 .then(function (pins) {
-                    let length = pins.pins.length
-                    for (let i = 0; i < length; i++) {
-                        pins.pins[i].height = 114 + parseInt(pins.pins[i].height)
-                        if (pins.pins[i].iswebsite === 0) {
-                            pins.pins[i].url = self.http + "/camu" + pins.pins[i].url
-                            // console.log(pins)
+                    if (pins.status === 1) {
+                        let length = pins.pins.length
+                        for (let i = 0; i < length; i++) {
+                            pins.pins[i].height = 114 + parseInt(pins.pins[i].height)
+                            if (pins.pins[i].iswebsite === 0) {
+                                pins.pins[i].url = self.http + "/camu" + pins.pins[i].url
+                                // console.log(pins)
+                            }
                         }
+                        if (pins.board.secret === 'false') {
+                            pins.board.secret = false
+                        } else {
+                            pins.board.secret = true
+                        }
+                        // console.log(pins)
+                        self.pins = pins.pins
+                        self.board = pins.board
+                        formData.append("bid", pins.board.bid)
+                        fetch(self.http + '/camU/index/index/getinvite', {
+                            method: 'POST',
+                            body: formData
+                            // mode: 'no-cors',
+                            // headers: { 'Content-Type': 'application/json' },
+                            // credentials: 'same-origin'
+                        })
+                        .then(res => res.json())
+                        .then(function (res) {
+                            if (res.status === 1) {
+                                self.inviters = res
+                            }
+                            // if (res.status === 1) {
+                            //     if (res.mess === 'already') {
+                            //         self.$message.error('you have invited this name to this board!')
+                            //     } else {
+                            //         self.$message.success('invited is send!')
+                            //     }
+                            //     self.invitedname += 1
+                            // } else {
+                            //     self.$message.error('don`t have this name!')
+                            // }
+                        })
+                    } else if (pins.status === 2) {
+                        let length = pins.pins.length
+                        for (let i = 0; i < length; i++) {
+                            pins.pins[i].height = 114 + parseInt(pins.pins[i].height)
+                            if (pins.pins[i].iswebsite === 0) {
+                                pins.pins[i].url = self.http + "/camu" + pins.pins[i].url
+                                // console.log(pins)
+                            }
+                        }
+                        if (pins.board.secret === 'false') {
+                            pins.board.secret = false
+                        } else {
+                            pins.board.secret = true
+                        }
+                        // console.log(pins)
+                        self.pins = pins.pins
+                        self.board = pins.board
+                        formData.append("bid", pins.board.bid)
+                        fetch(self.http + '/camU/index/index/getinvite', {
+                            method: 'POST',
+                            body: formData
+                            // mode: 'no-cors',
+                            // headers: { 'Content-Type': 'application/json' },
+                            // credentials: 'same-origin'
+                        })
+                        .then(res => res.json())
+                        .then(function (res) {
+                            if (res.status === 1) {
+                                self.inviters = res
+                            }
+                        })
+                    } else if (pins.status === 0 && pins.pins === 2) {
+                        self.$message.error('the page not found!')
+                        setTimeout(() => {
+                            self.$router.replace('/404/')
+                        }, 2000);
+                    } else {
+                        let length = pins.pins.length
+                        for (let i = 0; i < length; i++) {
+                            pins.pins[i].height = 114 + parseInt(pins.pins[i].height)
+                            if (pins.pins[i].iswebsite === 0) {
+                                pins.pins[i].url = self.http + "/camu" + pins.pins[i].url
+                                // console.log(pins)
+                            }
+                        }
+                        if (pins.board.secret === 'false') {
+                            pins.board.secret = false
+                        } else {
+                            pins.board.secret = true
+                        }
+                        // console.log(pins)
+                        self.pins = pins.pins
+                        self.board = pins.board
+                        formData.append("bid", pins.board.bid)
+                        fetch(self.http + '/camU/index/index/getinvite', {
+                            method: 'POST',
+                            body: formData
+                            // mode: 'no-cors',
+                            // headers: { 'Content-Type': 'application/json' },
+                            // credentials: 'same-origin'
+                        })
+                        .then(res => res.json())
+                        .then(function (res) {
+                            if (res.status === 1) {
+                                self.inviters = res
+                            }
+                        })
                     }
-                    if (pins.board.secret === 'false') {
-                           pins.board.secret = false
-                       } else {
-                           pins.board.secret = true
-                       }
-                    // console.log(pins)
-                    self.pins = pins.pins
-                    self.board = pins.board
-                    formData.append("bid", pins.board.bid)
-                    fetch(self.http + '/camU/index/index/getinvite', {
-                        method: 'POST',
-                        body: formData
-                        // mode: 'no-cors',
-                        // headers: { 'Content-Type': 'application/json' },
-                        // credentials: 'same-origin'
-                    })
-                    .then(res => res.json())
-                    .then(function (res) {
-                        self.invites = res
-                        // if (res.status === 1) {
-                        //     if (res.mess === 'already') {
-                        //         self.$message.error('you have invited this name to this board!')
-                        //     } else {
-                        //         self.$message.success('invited is send!')
-                        //     }
-                        //     self.invitedname += 1
-                        // } else {
-                        //     self.$message.error('don`t have this name!')
-                        // }
-                    })
                 })
                 fetch(self.http + '/camU/index/index/getcategory', {
                     method: 'POST'
@@ -598,6 +714,8 @@ import WaterfallSlot from 'vue-waterfall/lib/waterfall-slot'
                 })
             },
             pinHeight () {
+                let url = this.$route.params
+                console.log(url.bname, url.username)
                 // var b = $("#pinheight").outerHeight(true)
                 // var a = $('#pinheight')
                 // // var h = window.offsetHeight
@@ -978,7 +1096,41 @@ import WaterfallSlot from 'vue-waterfall/lib/waterfall-slot'
                 formData.append("id", self.arrCookie)
                 formData.append("bid", self.board.bid)
                 formData.append("name", self.input3)
-                fetch(self.http + '/camU/index/index/invite', {
+                if (self.input3 === self.arrname) {
+                    self.$message.error('not allow to invite yourself!')
+                } else {
+                    fetch(self.http + '/camU/index/index/invite', {
+                        method: 'POST',
+                        body: formData
+                        // mode: 'no-cors',
+                        // headers: { 'Content-Type': 'application/json' },
+                        // credentials: 'same-origin'
+                    })
+                    .then(res => res.json())
+                    .then(function (res) {
+                        if (res.status === 1) {
+                            if (res.mess === 'already') {
+                                self.$message.error('This name have invited to this board!')
+                            } else {
+                                self.$message.success('Invited is send!')
+                            }
+                            self.invitedname += 1
+                        } else if (res.status === 2) {
+                            self.$message.error('Not allow to invite the Owner!')
+                        } else {
+                            self.$message.error('Unfind this name!')
+                        }
+                    })
+                }
+                // console.log(self.input3)
+            },
+            getInvite () {
+                let self = this
+                let formData = new FormData()
+                formData.append("id", self.arrCookie)
+                formData.append("bid", self.board.bid)
+                formData.append("uname", self.username)
+                fetch(self.http + '/camU/index/index/getinvite', {
                     method: 'POST',
                     body: formData
                     // mode: 'no-cors',
@@ -988,49 +1140,27 @@ import WaterfallSlot from 'vue-waterfall/lib/waterfall-slot'
                 .then(res => res.json())
                 .then(function (res) {
                     if (res.status === 1) {
-                        if (res.mess === 'already') {
-                            self.$message.error('you have invited this name to this board!')
-                        } else {
-                            self.$message.success('invited is send!')
-                        }
-                        self.invitedname += 1
-                    } else {
-                        self.$message.error('don`t have this name!')
+                        self.inviters = res
                     }
+                    // if (res.status === 1) {
+                    //     if (res.mess === 'already') {
+                    //         self.$message.error('you have invited this name to this board!')
+                    //     } else {
+                    //         self.$message.success('invited is send!')
+                    //     }
+                    //     self.invitedname += 1
+                    // } else {
+                    //     self.$message.error('don`t have this name!')
+                    // }
                 })
-                // console.log(self.input3)
-            },
-            getInvite () {
-                let self = this
-                let formData = new FormData()
-                formData.append("id", self.arrCookie)
-                // formData.append("bid", self.board.bid)
-                // fetch(self.http + '/camU/index/index/getinvite', {
-                //     method: 'POST',
-                //     body: formData
-                //     // mode: 'no-cors',
-                //     // headers: { 'Content-Type': 'application/json' },
-                //     // credentials: 'same-origin'
-                // })
-                // .then(res => res.json())
-                // .then(function (res) {
-                //     // if (res.status === 1) {
-                //     //     if (res.mess === 'already') {
-                //     //         self.$message.error('you have invited this name to this board!')
-                //     //     } else {
-                //     //         self.$message.success('invited is send!')
-                //     //     }
-                //     //     self.invitedname += 1
-                //     // } else {
-                //     //     self.$message.error('don`t have this name!')
-                //     // }
-                // })
                 // debugger
             }
         },
         watch: {
             dialogVisible5: 'getPins',
-            invitedname: 'getInvite'
+            invitedname: 'getInvite',
+            "$route": 'getPins'
+
         }
     }
 </script>
@@ -1080,6 +1210,8 @@ h1 {
         vertical-align: middle;
         background: #eee;
         border-radius: 50%;
+        overflow: hidden;
+        border: 1px solid #eff;
         fill: #fff;
         ._3z {
             margin: 12px;

@@ -186,6 +186,7 @@
             let strCookie = document.cookie
             let arr = strCookie.split(";")
             let arrCookie = arr[0].split("=")
+            let arrName = arr[1].split("=")
             var checkUrl = (rule, value, callback) => {
                 // var ImgObj = new Image()
                 // ImgObj.src = value
@@ -206,6 +207,7 @@
                 textarea: '',
                 input2: '',
                 arrCookie: arrCookie[1],
+                cName: arrName[1],
                 dialogVisible: false,
                 dialogVisible2: false,
                 dialogVisible3: false,
@@ -275,6 +277,13 @@
             },
             getpins () {
                 let self = this
+                let array = self.$route.path.split("/")
+                if (self.$route.params.username !== self.cName && array[2] === 'pins') {
+                    self.$message.error('the page not found!')
+                    setTimeout(() => {
+                        self.$router.replace('/404/')
+                    }, 2000)
+                }
                 let formData = new FormData()
                 formData.append("id", self.arrCookie)
                 // formData.append("bid", e)
@@ -440,7 +449,8 @@
             handleIconClick () {}
         },
         watch: {
-            dialogVisible5: 'getpins'
+            dialogVisible5: 'getpins',
+            "$route": 'getpins'
         },
         mounted: function () {
             let self = this

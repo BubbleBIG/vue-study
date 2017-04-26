@@ -148,7 +148,7 @@ import header from '../header/header.vue'
                     if (!valueName) {
                         callback(new Error('输入3-16个数字或者英文字母'));
                     } else {
-                        if (value === 'pin' || value === 'settings' || value === 'news' || value === 'categories' || value === 'help') {
+                        if (value === 'error' || value === '404' || value === 'pin' || value === 'settings' || value === 'news' || value === 'categories' || value === 'help') {
                             callback(new Error('forbidden UrluserName!'));
                         } else {
                             formData.append("name", value)

@@ -6,37 +6,44 @@
             <ul class="" style="width:25%;padding: 7px 2px">
                 <li>
                     <router-link to="/settings" class="iconButton">
-                        <button class="Button editSettingsButton mr2">
-                            <em style="margin: 8px"></em>
+                        <el-button v-if="name.name!==userName" :disabled="true" type="text" class="Button editSettingsButton mr2">
+                            <em style="margin-left: 9px"></em>
                             <span class="accessibilityText">Edit settings</span>
-                        </button>
+                        </el-button>
+                        <el-button v-else type="text" class="Button editSettingsButton mr2">
+                            <em style="margin-left: 9px"></em>
+                            <span class="accessibilityText">Edit settings</span>
+                        </el-button>
                     </router-link>
                 </li>
-                <li class="" >
+                <li v-if="name.name===userName" class="" >
                     <div class="iconButton">
-                        <button class="Button sendProfileButton mr2">
-                            <em style="margin: 10px"></em>
+                        <el-button type="text" class="Button sendProfileButton mr2">
+                            <em style="margin-left: 9px"></em>
                             <span class="accessibilityText">Send Profile</span>
-                        </button>
+                        </el-button>
                     </div>
                 </li>
-                <li class="" id="userInfo">
+                <li v-if="name.name===userName" class="" id="userInfo">
                     <div class="iconButton">
                          <el-popover ref="popover3" placement="bottom" width="100" trigger="click">
                             <div style="height:130px;text-align:center">
                                 <el-button type="text" @click="logout">Logout</el-button>
                             </div>
                         </el-popover>
-                        <button v-popover:popover3 class="Button userMenuButton">
+                        <el-button type="text" v-popover:popover3 class="Button userMenuButton">
                             <em style="margin: 10px"></em>
                             <span class="accessibilityText">User menu</span>
-                        </button>
+                        </el-button>
 
                     </div>
                 </li>
             </ul>
             <div style="width:50%;vertical-align: middle">
-                <div align="center" id="boardName" class="boardName"><h1>Bubble</h1></div>
+                <div align="center" id="boardName" class="boardName">
+                    <h1 v-if="name.name">{{ name.name }}</h1>
+                    <h1 v-else>{{ userName }}</h1>
+                    </div>
             </div>
             <div style="width:25%">
                 
@@ -46,7 +53,10 @@
         <div class="userCommon">
             <div class="flex" style="padding-top:64px">
                 <div class="user-info">
-                    <div class="fontFamily dp1"><h1>Bubble</h1></div>
+                    <div class="fontFamily dp1">
+                        <h1 v-if="name.name">{{ name.name }}</h1>
+                        <h1 v-else>{{ userName }}</h1>
+                        </div>
                     <div class="flex follow dp1">
                         <div class="px1">
                             <a  rel="">
@@ -73,13 +83,16 @@
             </div>
         </div>
         <ul class="userCommon">
-            <li><router-link :to="'/' + userName + '/boards/'" class="userLink">
+            <li v-if="name.name"><router-link :to="'/' + name.name + '/boards/'" class="userLink">
                 <div class="userLink boardsLink">Boards</div>
             </router-link></li>
-            <li><router-link :to="'/' + userName + '/pins/'" class="userLink">
+            <li v-else><router-link :to="'/' + userName + '/boards/'" class="userLink">
+                <div class="userLink boardsLink">Boards</div>
+            </router-link></li>
+            <li v-if="name.name===userName"><router-link :to="'/' + userName + '/pins/'" class="userLink">
                 <div class="userLink pinsLink">Pins</div>
             </router-link></li>
-            <li><router-link :to="'/' + userName + '/likes/'" class="userLink">
+            <li v-if="name.name===userName"><router-link :to="'/' + userName + '/likes/'" class="userLink">
                 <div class="userLink likesLink">Likes</div>
             </router-link></li>
         </ul>
@@ -113,13 +126,68 @@ import header from '../header/header.vue'
             let arrCookie = arr[0].split("=")
             let arrName = arr[1].split("=")
             return {
-                userName: arrName[1]
+                http: 'http://localhost',
+                userName: arrName[1],
+                name: ''
             }
         },
-        // mounted: function () {
-        //     document.title = this.$route.path
-        // },
+        created: function () {
+            this.path()
+        },
+        watch: {
+        // 如果路由有变化，会再次执行该方法
+        // "$route": "fetchDate"
+            "$route": 'path'
+        },
         methods: {
+            path () {
+                let self = this
+                let array = self.$route.path.split("/")
+                // console.log(array)
+                if (self.$route.params.username !== self.userName) {
+                    if (array[2] && array[2] !== 'boards') {
+                        // console.log('array')
+                    } else {
+                        let formData = new FormData()
+                        formData.append('name', self.$route.params.username)
+                        fetch(self.http + '/camU/index/index/checkuser', {
+                            method: 'POST',
+                            body: formData
+                            // mode: 'no-cors',
+                            // headers: { 'Content-Type': 'application/json' },
+                            // credentials: 'same-origin'
+                        })
+                        .then(res => res.json())
+                        .then(function (res) {
+                            // console.log(bos)
+                            self.name = res
+                        })
+                        // console.log(array)
+                    }
+                    // self.$message.error('the page not found!')
+                    // setTimeout(() => {
+                    //     self.$router.replace('/404/')
+                    // }, 2000)
+                } else {
+                    let formData = new FormData()
+                    formData.append('name', self.$route.params.username)
+                    fetch(self.http + '/camU/index/index/checkuser', {
+                        method: 'POST',
+                        body: formData
+                        // mode: 'no-cors',
+                        // headers: { 'Content-Type': 'application/json' },
+                        // credentials: 'same-origin'
+                    })
+                    .then(res => res.json())
+                    .then(function (res) {
+                        // console.log(bos)
+                        self.name = res
+                    })
+                    // self.name.name === self.userName
+                    // console.log(array)
+                }
+                // console.log(this.$route.path)
+            },
             logout () {
                 let self = this
                 var date = new Date()
@@ -127,7 +195,7 @@ import header from '../header/header.vue'
                 document.cookie = 'id' + " = v; expires = " + date.toGMTString()
                 document.cookie = 'name' + " = v; expires = " + date.toGMTString()
                 setTimeout(() => {
-                    self.$router.push('/log')
+                    self.$router.replace('/log')
                 }, 800)
                 // if (document.cookie)
                 console.log(document.cookie)

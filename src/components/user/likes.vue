@@ -71,13 +71,18 @@ import WaterfallSlot from 'vue-waterfall/lib/waterfall-slot'
             // }
             // Grade(document.querySelectorAll('.gradient-wrap'))
         },
+        watch: {
+            "$route": 'getPins'
+        },
         data () {
             let strCookie = document.cookie;
             let arr = strCookie.split(";")
             let arrCookie = arr[0].split("=")
+            let arrName = arr[1].split("=")
             return {
                 http: 'http://localhost',
                 arrCookie: arrCookie[1],
+                cName: arrName[1],
                 pins: [],
                 align: 'center'
             }
@@ -140,6 +145,13 @@ import WaterfallSlot from 'vue-waterfall/lib/waterfall-slot'
             },
             getPins () {
                 let self = this
+                let array = self.$route.path.split("/")
+                if (self.$route.params.username !== self.cName && array[2] === 'likes') {
+                    self.$message.error('the page not found!')
+                    setTimeout(() => {
+                        self.$router.replace('/404/')
+                    }, 2000)
+                }
                 let formData = new FormData()
                 formData.append("id", self.arrCookie)
                 // formData.append("bid", e)

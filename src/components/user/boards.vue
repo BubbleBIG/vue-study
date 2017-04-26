@@ -2,7 +2,7 @@
     <div class="user-routers">
         <div class="boards">
             <div class="boardsItems flex-wrap">
-                <div class="ProfileBoardCard" style="margin:20px 0;padding: 0 12px">
+                <div v-if="name.name===userName" class="ProfileBoardCard" style="margin:20px 0;padding: 0 12px">
                     <button class="createCard" type="text" @click="dialogFormVisible2 = true">
                         <div style="position: relative;width:301px;height:200px">
                             <div class="createRep flex ">
@@ -16,7 +16,37 @@
                 </div>
                 <div v-for="bo in bos" v-if="bo.secret === 'false'" class="ProfileBoardCard" style="margin:20px 0;padding: 0 12px">
                     <div class="createCard" type="text">
-                        <router-link :to="'/' + userName + '/' + bo.bname + '/'">
+                        <router-link v-if="bo.invited===1" :to="'/' + bo.name + '/' + bo.bname + '/'">
+                        <div style="position: relative;width:301px;height:200px;">
+                            <div class="createRep" style="border-raduis:9px;overflow:hidden;">
+                                <ul v-if="bo.cover">
+                                <li>
+                                    <img :src="bo.cover" width="100%" style="width: 199px;
+                                    height: 200px;object-fit: cover;max-width:100%;border:1px solid #eee">
+                                </li>
+                                <!--{{ bo.img.length }}-->
+                                <li v-if="bo.count !== 0" v-for="item in bo.img" style="width:98px;height:99px;padding:1px 1px;">
+                                    <img :src="http+'/camU'+item.url" style="width:100px;height:100px;object-fit: cover;">
+                                </li>
+                                <!--{{ bo.img.length }}-->
+                                <li v-if="bo.count !== 0" v-for="item in 2-bo.img.length" style="width:98px;height:99px;padding:1px 1px;">
+                                    <div style="width:100%;height:100%;border:1px solid #eee"></div>
+                                </li>
+                                </ul>
+                                <ul v-else>
+                                <!--{{ bo.img.length }}-->
+                                <li v-if="bo.count !== 0" v-for="item in bo.img" style="width:98px;height:99px;padding:1px 1px;">
+                                    <img :src="http+'/camU'+item.url" style="width:99px;height:100px;object-fit: cover;">
+                                </li>
+                                <!--{{ bo.img.length }}-->
+                                <li v-for="item in 6-bo.img.length" style="width:98px;height:99px;padding:1px 1px;">
+                                    <div style="width:100%;height:100%;border:1px solid #eee"></div>
+                                </li>
+                                </ul>
+                            </div>
+                        </div>
+                        </router-link>
+                        <router-link v-else :to="'/' + name.name + '/' + bo.bname + '/'">
                         <div style="position: relative;width:301px;height:200px;">
                             <div class="createRep" style="border-raduis:9px;overflow:hidden;">
                                 <ul v-if="bo.cover">
@@ -47,10 +77,23 @@
                         </div>
                         </router-link>
                         <div class="px1 py2">
+                            <div v-if="bo.invited" style="position:relative;">
+                                <div style="width:60px;height:60px;border-radius:50%;overflow:hidden;
+                                background:#eff;border:3px solid #eff;position:absolute;left:4%;bottom:90%;">
+                                <div style="position:relative;margin-right:1px;width:30px;transform: translateX(0px) translateY(0px);">
+                                <div style="overflow:hidden;"><div style="position:"><img v-if="bo.uimg" :src="http+'/camu'+bo.uimg" width="60" height="60" style="left:-15px;">
+                                <img v-else src="../../common/images/person.png" width="60" height="60" style="margin-left:-30px;"></div></div>
+                                </div>
+                                <div style="position:absolute;margin-left:2px;top:0;width:30px;transform: translateX(31px) translateY(0px);">
+                                    <div style="overflow:hidden;"><div style="position:relative;"><img src="../../common/images/person.png" width="60" height="60" style="margin-left:-30px;"></div></div>
+                                </div>
+                                </div>
+                            </div>
                             <div class="pz3" style="color:#555">{{ bo.bname }}</div>
                             <div class="pz3 pz4">{{ bo.count }} Pins</div>
-                            <button class="pz3 pz5" style="color: #555" @click="changeBoard(bo.bid),
+                            <button v-if="parseInt(arrCookie)===parseInt(bo.uid)" class="pz3 pz5" style="color: #555" @click="changeBoard(bo.bid),
                                 dialogFormVisible1 = true">Edit</button>
+                            <button v-else class="pz3 pz5" style="color: #555" @click="">Follow</button>
                         </div>
                     </div>
                 </div>
@@ -58,7 +101,7 @@
             <div style="clear:both;">
             </div>
         </div>
-        <div class="secretBoard">
+        <div v-if="name.name===userName" class="secretBoard">
         <div class="sBoardsHeader">
         <div class="userCommon flex">
             <ul class="" style=";padding: 7px 2px">
@@ -280,6 +323,7 @@
                     delBoard(form1.bid)">Delete board</el-button>
             </span>
         </el-dialog>
+        <div style="height:500px;"></div>
     </div>
 </template>
 
@@ -357,7 +401,8 @@
                 //     prevButton: '.swiper-button-prev'
                 // },
                 pinss: {},
-                saveCovertag: 0
+                saveCovertag: 0,
+                name: ''
             }
         },
         created: function () {
@@ -367,21 +412,84 @@
         methods: {
             getBoards () {
                 let self = this
-                let formData = new FormData()
-                formData.append("id", self.arrCookie);
-                // fetch(':3000/todos', {
-                fetch(self.http + '/camU/index/index/getboards', {
-                    method: 'POST',
-                    body: formData
-                    // mode: 'no-cors',
-                    // headers: { 'Content-Type': 'application/json' },
-                    // credentials: 'same-origin'
-                })
-                .then(res => res.json())
-                .then(function (bos) {
-                    // console.log(bos)
-                    self.bos = bos
-                })
+                let array = self.$route.path.split("/")
+                // console.log(array)
+                if (self.$route.params.username !== self.userName) {
+                    if (array[2] && array[2] !== 'boards') {
+                        // console.log('array')
+                    } else {
+                        let formData1 = new FormData()
+                        formData1.append('name', self.$route.params.username)
+                        fetch(self.http + '/camU/index/index/checkuser', {
+                            method: 'POST',
+                            body: formData1
+                            // mode: 'no-cors',
+                            // headers: { 'Content-Type': 'application/json' },
+                            // credentials: 'same-origin'
+                        })
+                        .then(res => res.json())
+                        .then(function (res) {
+                            // console.log(bos)
+                            if (res.status === 1) {
+                                self.name = res
+                                let formData = new FormData()
+                                formData.append("id", self.name.id);
+                                // fetch(':3000/todos', {
+                                fetch(self.http + '/camU/index/index/getboards', {
+                                    method: 'POST',
+                                    body: formData
+                                    // mode: 'no-cors',
+                                    // headers: { 'Content-Type': 'application/json' },
+                                    // credentials: 'same-origin'
+                                })
+                                .then(res => res.json())
+                                .then(function (bos) {
+                                    // console.log(bos)
+                                    self.bos = bos
+                                })
+                            } else {
+                                self.$message.error('the page not found!')
+                                // setTimeout(() => {
+                                    self.$router.replace('/404/')
+                                // }, 2000)
+                            }
+                        })
+                    }
+                    // self.$message.error('the page not found!')
+                    // setTimeout(() => {
+                    //     self.$router.replace('/404/')
+                    // }, 2000)
+                } else {
+                    let formData1 = new FormData()
+                    formData1.append('name', self.$route.params.username)
+                    fetch(self.http + '/camU/index/index/checkuser', {
+                        method: 'POST',
+                        body: formData1
+                        // mode: 'no-cors',
+                        // headers: { 'Content-Type': 'application/json' },
+                        // credentials: 'same-origin'
+                    })
+                    .then(res => res.json())
+                    .then(function (res) {
+                        // console.log(bos)
+                        self.name = res
+                    })
+                    let formData = new FormData()
+                    formData.append("id", self.arrCookie);
+                    // fetch(':3000/todos', {
+                    fetch(self.http + '/camU/index/index/getboards', {
+                        method: 'POST',
+                        body: formData
+                        // mode: 'no-cors',
+                        // headers: { 'Content-Type': 'application/json' },
+                        // credentials: 'same-origin'
+                    })
+                    .then(res => res.json())
+                    .then(function (bos) {
+                        // console.log(bos)
+                        self.bos = bos
+                    })
+                }
             },
             createBoard (formName) {
                 let self = this
@@ -765,7 +873,8 @@
         // 如果路由有变化，会再次执行该方法
         // "$route": "fetchDate"
             boardchange: 'getBoards',
-            saveCovertag: 'getBoards'
+            saveCovertag: 'getBoards',
+            "$route": 'getBoards'
         },
         mounted() {
             document.title = this.$route.path   // 改变网页title
