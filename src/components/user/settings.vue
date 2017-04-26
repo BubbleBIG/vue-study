@@ -63,7 +63,7 @@
                 <img :src="imageUrl" class="avatar" style="float:right">
                 <el-upload name="photo"
                 class="avatar-uploader"
-                action="/camU/index/index/uploadpintmp"
+                :action="http+'/camU/index/index/uploadpintmp'"
                 :show-file-list="false"
                 :on-success="handleAvatarScucess"
                 :before-upload="beforeAvatarUpload">

@@ -32,17 +32,18 @@
                 <router-link :to="'/'">Home</router-link>
             </div>
             </el-popover>
-        <a v-popover:popover1 class=""><div class="categoriesHeader"></div></a>
+        <el-button type="text" v-popover:popover1 class="" style="width:52px;margin-top:-4px;"><span class="categoriesHeader" style="margin-left:14px;"></span></button>
         </span>
         <span class="navb-group navb-g" style="width:px;padding:4px 0;vertical-align: middles">
-        <router-link :to="'/' + userName + '/'" class="userimg"><div class="userImg"></div>
+        <router-link :to="'/' + userName + '/'" class="userimg" style="margin-top:-2px;"><div class="userImg"></div>
         </router-link>
         </span>
-        <span class="navb-group navb-g" style="width:px;padding:4px 0;margin-right:4px;">
+        <span class="navb-group navb-g" style="width:px;margin-right:4px;">
             <el-popover ref="popover2" placement="bottom" width="200" trigger="click">
             <div style="height:300px"></div>
             </el-popover>
-        <a v-popover:popover2 class="newsimg"><div class="newsImg"></div></a>
+            <el-button type="text" v-popover:popover2 @click="getNews()" class="newsimg" style="width:52px;">
+            <el-badge :value="newsNums" :max="6" class="newsNums"><span class="newsImg"></span></el-badge></el-button>
         <div>
             <span class="bot"></span>
             <span class="top"></span>
@@ -60,16 +61,43 @@
             return {
                 http: 'http://localhost',
                 categoryLists: '',
+                arrCookie: arrCookie[1],
                 userName: arrName[1],
                 restaurants: [],
                 state4: '',
-                timeout: null
+                timeout: null,
+                count: 0,
+                newsNums: 0
             }
         },
         created: function () {
-            // this.getCategory()
+            // this.getNewsNums()
         },
         methods: {
+            getNewsNums () {
+                let self = this
+                let formData = new FormData()
+                formData.append('id', self.arrCookie)
+                fetch(self.http + '/camU/index/index/getnewsnums', {
+                    method: 'POST',
+                    body: formData
+                })
+                .then(res => res.json())
+                .then(function (res) {
+                    if (res.status === 1) {
+                        self.newsNums = res.nums
+                    } else {}
+                    // console.log(res)
+                })
+                .catch(function(error) {
+                    console.error('Fetching failed:', error);
+                    throw error;
+                })
+                // console.log(self.arrCookie)
+            },
+            getNews () {
+                console.log('getnews')
+            },
             category () {
                 let self = this
                 fetch(self.http + '/camU/index/index/getcategory', {
@@ -110,6 +138,14 @@
         },
         mounted() {
             this.restaurants = this.loadAll();
+            if (this.$route.path) {
+                this.count += 1
+            }
+            console.log(this.$route.path)
+        },
+        watch: {
+            '$route': 'getNewsNums',
+            count: 'getNewsNums'
         }
     }
 </script>
@@ -191,5 +227,15 @@
             border: none;
             background-color: rgb(235, 235, 235);
         }
+    }
+    .newsNums {
+        margin-top: -2px;
+        margin-right: 1px;
+    }
+    .el-popover[x-placement^=bottom] {
+        margin-top: 0;
+    }
+    .el-badge {
+        vertical-align: baseline;
     }
 </style>

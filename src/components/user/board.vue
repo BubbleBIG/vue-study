@@ -7,7 +7,7 @@
             <ul class="" style="width:25%;padding: 7px 2px;fill:#b5b5b5;">
                 <li class="" >
                     <div class="iconButton">
-                        <el-button v-if="board.invited===0" type="text" class="Button sendProfileButton mr2" @click="dialogFormVisible1 = true">
+                        <el-button v-if="parseInt(board.uid)===parseInt(arrCookie)" type="text" class="Button sendProfileButton mr2" @click="dialogFormVisible1 = true">
                             <svg style="fill:#b5b5b5" height="24" width="24" viewBox="0 0 16 16" aria-label="" role="img"><title></title><path d="M8.917 3.368L1.67 10.577a.664.664 0 0 0-.154.253l-.005-.002L.03 
                             15.13h.007a.659.659 0 0 0 .154.68c.185.185.451.232.684.154v.007L5.2 14.495l-.001-.005a.642.642 0 0 0 .254-.152l7.245-7.209-3.78-3.76zm6.3-2.507c-1.26-1.253-2.736-1.038-3.78 
                             0l-1.26 1.254 3.78 3.76 1.26-1.253a2.65 2.65 0 0 0 0-3.76"></path></svg>
@@ -21,7 +21,7 @@
                         </el-button>
                     </div>
                 </li>
-                <li v-if="board.invited===0" class="" >
+                <li v-if="parseInt(board.uid)===parseInt(arrCookie)" class="" >
                     <div class="iconButton">
                         <el-button type="text" class="Button sendProfileButton mr2">
                             <em style="margin-left: 10px"></em>
@@ -29,7 +29,7 @@
                         </el-button>
                     </div>
                 </li>
-                <li v-if="board.invited===0" class="" id="userInfo">
+                <li v-if="parseInt(board.uid)===parseInt(arrCookie)" class="" id="userInfo">
                     <div class="iconButton">
                          <el-popover ref="popover3" placement="bottom" width="100" trigger="click">
                             <div style="height:130px;text-align:center">
@@ -57,11 +57,12 @@
                         <h1>{{ bName.bname }}</h1>
                     </div>
                     <div v-if="board.count>0" class="_sp _sp2">
-                        <el-button v-if="board.invited===0" style="display: inline;" icon="plus" type="danger" @click="dialogVisible3 = true">Save pin</el-button>
+                        <el-button class="btn-savepin" v-if="inviters.count>0" icon="plus" type="danger" @click="dialogVisible3 = true">Save pin</el-button>
+                        <el-button class="btn-savepin" v-if="parseInt(board.uid)===parseInt(arrCookie)"  icon="plus" type="danger" @click="dialogVisible3 = true">Save pin</el-button>
                     </div>
                 </div>
                 <div style="clear:both;" class="fontFamily"><span class="pins-count">{{ board.count }} Pins</span></div>
-                <div style="" class="fontFamily"><span class="pins-count">{{ inviters.count }} Followers</span></div>
+                <div v-if="inviters.count" style="" class="fontFamily"><span class="pins-count">{{ inviters.count }} Followers</span></div>
             </div>
             <div class="user-info-board" align="right">
                 <div v-if="board.secret===true" class="user-info-li" style="background:#555;">
@@ -70,21 +71,24 @@
                     6-5.755c0-1.253-.423-2.47-1.2-3.454zm-2.36 0H5.56V4.566c0-1.29 1.095-2.34 2.44-2.34s2.44 1.05 2.44 2.34v2.225z"></path></svg>
                 </div>
                 <div class="user-info-li">
-                    <el-button type="text" @click="dialogVisible6=true,getInvite()" class="hasIcon borderless"><i style="font-size:36px;font-weight:bold;" class="el-icon-plus"></i></el-button>
-                    <!--<el-button v-else :disabled="true" type="text" class="hasIcon borderless"><i style="font-size:36px;font-weight:bold;" class="el-icon-plus"></i></el-button>-->
+                    <el-button v-for="inviter in inviters.mess" v-if="inviter.status===1&&parseInt(inviter.inviteduid)===parseInt(arrCookie)" type="text" @click="dialogVisible6=true,getInvite()" class="hasIcon borderless">
+                        <i style="font-size:36px;font-weight:bold;" class="el-icon-plus"></i></el-button>
+                    <el-button v-if="parseInt(board.uid)===parseInt(arrCookie)" type="text" @click="dialogVisible6=true,getInvite()" class="hasIcon borderless">
+                        <i style="font-size:36px;font-weight:bold;" class="el-icon-plus"></i></el-button>
+                    <el-button v-else :disabled="true" type="text" class="hasIcon borderless"><i style="font-size:36px;font-weight:bold;" class="el-icon-plus"></i></el-button>
                 </div>
-                <div v-for="inviter in inviters.mess" v-if="inviter.status===1" class="user-info-li">
+                <router-link :to="'/'+inviter.inviteduname+'/'" v-for="inviter in inviters.mess" v-if="inviter.status===1" class="user-info-li">
                     <el-tooltip class="" effect="light" :content="inviter.inviteduname+' invited by '+board.name" placement="top">
                         <img v-if="inviter.img" :src="http+'/camu'+inviter.img" width="56" height="56">
                         <img v-else src="../../common/images/person.png" width="56" height="56" />
                     </el-tooltip>
-                </div>
-                <div class="user-info-li">
+                </router-link>
+                <router-link :to="'/'+board.name+'/'" class="user-info-li">
                     <el-tooltip class="" effect="light" :content="board.name+', the Owner'" placement="top">
                         <img v-if="board.img" :src="http+'/camu'+board.img" width="56" height="56">
                         <img v-else src="../../common/images/person.png" width="56" height="56" >
                     </el-tooltip>
-                </div>
+                </router-link>
             </div>
         </div>
     </div>
@@ -120,12 +124,15 @@
                 </div>
                 <!--<div style="clear: both;padding-top: 5px;color:#aaa;">Picked for you</div>-->
                 <div style="padding:8px 0px;clear:both" align="left">
-                    <a href="####" style="height: 30px;color: #a8a8a8">
+                    <a href="####" style="height: 30px;color: #a8a8a8;position:relative;">
                         <div class="userPic" style="float:left">
-                            <img v-if="board.img" :src="http+'/camu'+board.img"
-                            style="vertical-align: middle;width:24px;height:24px;border-radius:50%;">
+                            <img v-if="pin.uid===board.uid" :src="http+'/camu'+board.img"
+                            style="position:absolute;z-index:2;vertical-align: middle;width:24px;height:24px;border-radius:50%;">
                             <img v-else src="../../common/images/person.png"
-                            style="vertical-align: middle;width:24px;height:24px"></div>
+                            style="position:absolute;z-index:1;vertical-align: middle;width:24px;height:24px">
+                            </div>
+                            <img v-for="inviter in inviters.mess" v-if="pin.uid===inviter.inviteduid" :src="http+'/camu'+inviter.img"
+                            style="position:absolute;z-index:2;vertical-align: middle;width:24px;height:24px;border-radius:50%;">
                         <div style="padding:0px 32px;" class="creditName">Saved to</div>
                         <div style="padding:0px 32px;" class="creditTitle">{{ pin.bname }}</div>
                     </a>
@@ -350,13 +357,19 @@
                             <div class="choose-board">
                                 <div v-for="bo in bos">
                                     <div class="board-list">
-                                        <div>
+                                        <div style="position:relative">
                                             <el-button type="text" class="board-list-btn">
                                                 <img v-if="bo.cover" :src="bo.cover" style="vertical-align:middle;width:35px;
                                                 height:34px;object-fit: cover;border-radius:3px;">
                                                 <img v-else src="../../common/images/pg.png" style="vertical-align:middle">
-                                                <span style="display:inline">{{ bo.bname }}</span></el-button>
-                                            <el-button type="primary" class="board-list-save"
+                                                <span style="display:inline">{{ bo.bname }}</span>
+                                                <svg v-if="bo.secret === 'true'" class="_2X6AN" style="right:20px;" viewBox="0 0 16 16"><path d="M12.8 6.791h-.04V4.566C12.76 2.048 10.625 0 8 0S3.24 2.048 
+                                                3.24 4.566v2.225H3.2A5.577 5.577 0 0 0 2 10.245C2 13.423 4.686 16 8 16s6-2.577 6-5.755a5.579 5.579 0 0 0-1.2-3.454zm-2.36 
+                                                0H5.56V4.566c0-1.29 1.095-2.34 2.44-2.34s2.44 1.05 2.44 2.34v2.225z" fill-rule="evenodd"></path></svg>
+                                                <svg v-if="parseInt(bo.uid)!==parseInt(arrCookie)" class="_2X6AN" viewBox="0 0 16 16"><path d="M9.143 10.2A4 4 0 0 1 16 13v1H0v-1a5 5 0 0 1 9.143-2.8zM12
+                                                8a2 2 0 1 0 .001-3.999A2 2 0 0 0 12 8zM5 7a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5z" fill-rule="evenodd"></path></svg>
+                                                </el-button>
+                                            <el-button style="position:absolute;top:0;right:0;" type="primary" class="board-list-save"
                                             @click="pinSave(bo)">Save</el-button>
                                         </div>
                                     </div>
@@ -411,43 +424,55 @@
                                 <div>
                                     <div class="board-list">
                                         <div>
-                                            <el-button type="text" class="board-list-btn">
-                                                <img v-if="inviters" :src="inviters" style="vertical-align:middle;width:35px;
+                                            <el-button type="text" class="board-list-btn" style="margin-left: 5px;">
+                                                <img v-if="board.img" :src="http+'/camu'+board.img" style="vertical-align:middle;width:35px;
                                                 height:34px;object-fit: cover;border-radius:3px;">
                                                 <img v-else src="../../common/images/pg.png" style="vertical-align:middle">
-                                                <span style="display:inline">hh</span></el-button>
-                                            <!--<el-button type="primary" class="board-list-save"
-                                            @click="">Remove</el-button>-->
+                                                <span style="display:inline">{{ board.name }}</span>
+                                            </el-button>
                                         </div>
                                     </div>
-                                    <!--<div>
-                                        <div>{{ bo.bname }}</div>
-                                        <div><el-button type="primary">Save</el-button></div>
-                                    </div>-->
                                 </div>
                                 <div v-if="inviters.status===1" v-for="inviter in inviters.mess">
-                                    <div class="board-list">
-                                        <div>
-                                            <el-button type="text" class="board-list-btn">
-                                                <img v-if="inviter" :src="inviter" style="vertical-align:middle;width:35px;
-                                                height:34px;object-fit: cover;border-radius:3px;">
-                                                <!--<img v-else src="../../common/images/pg.png" style="vertical-align:middle">-->
-                                                <span style="display:inline">{{ inviter.status }}</span></el-button>
+                                    <div v-if="parseInt(arrCookie)===parseInt(inviter.inviteduid)" class="board-list">
+                                        <el-button type="text" class="board-list-btn" style="margin-left: 5px;">
+                                            <img v-if="inviter.img" :src="http+'/camu'+inviter.img" style="vertical-align:middle;width:35px;
+                                            height:34px;object-fit: cover;border-radius:3px;">
+                                            <img v-else src="../../common/images/person.png" style="width:35px;height:34px;vertical-align:middle">
+                                            <span style="display:inline">{{ inviter.inviteduname }}</span>
+                                            <i v-if="inviter.status===1" class="el-icon-circle-check el-icon--right" style="color:#13CE66;"></i>
+                                            <i v-else class="el-icon-circle-cross el-icon--right"></i>
+                                            </el-button>
                                             <el-button type="primary" class="board-list-save"
-                                            @click="">Remove</el-button>
-                                        </div>
+                                            @click="remove(inviter.inviteduid)">Leave</el-button>
                                     </div>
-                                    <!--<div>
-                                        <div>{{ bo.bname }}</div>
-                                        <div><el-button type="primary">Save</el-button></div>
-                                    </div>-->
+                                    <div v-else class="board-list">
+                                        <el-button type="text" class="board-list-btn" style="margin-left: 5px;">
+                                            <img v-if="inviter.img" :src="http+'/camu'+inviter.img" style="vertical-align:middle;width:35px;
+                                            height:34px;object-fit: cover;border-radius:3px;">
+                                            <img v-else src="../../common/images/person.png" style="width:35px;height:34px;vertical-align:middle">
+                                            <span style="display:inline">{{ inviter.inviteduname }}</span>
+                                            <i v-if="inviter.status===1" class="el-icon-circle-check el-icon--right" style="color:#13CE66;"></i>
+                                            <i v-else class="el-icon-circle-cross el-icon--right"></i>
+                                            </el-button>
+                                        <span v-if="parseInt(arrCookie)===parseInt(inviter.uid)" style="display:inline">
+                                        <el-button type="primary" class="board-list-save"
+                                        @click="remove(inviter.inviteduid)">Remove</el-button></span>
+                                        <span v-else-if="parseInt(arrCookie)===parseInt(inviter.inviteruid)" style="display:inline">
+                                        <el-button type="primary" class="board-list-save"
+                                        @click="remove(inviter.inviteduid)">Remove</el-button></span>
+                                        <!--<span v-else-if="parseInt(arrCookie)===parseInt(inviter.inviteduid)" style="display:inline">
+                                        <el-button type="primary" class="board-list-save"
+                                        @click="remove(inviter.inviteduname)">Leave</el-button></span>-->
+                                        <!--<span v-else></span>-->
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </el-col>
                 </el-row>
-                <div align="right">
+                <div align="right" style="margin-top:12px;margin-bottom:-12px;">
                     <el-button type="primary" @click="dialogVisible6 = false">Done</el-button>
                 </div>
             </el-form>
@@ -558,7 +583,7 @@ import WaterfallSlot from 'vue-waterfall/lib/waterfall-slot'
                 },
                 inviters: '',
                 invitedname: 1,
-                inviterlist: '',
+                // rmInviter: 0,
                 username: this.$route.params.username
             }
         },
@@ -1067,10 +1092,10 @@ import WaterfallSlot from 'vue-waterfall/lib/waterfall-slot'
                     if (res.status) {
                         let length = self.bos.length
                         for (let i = 0; i < length; i++) {
-                            if (self.bos[i].bid === e) {
-                                self.bos.splice(i, 1) // 根据下标删除当前对应的元素
-                                console.log(i)
-                            }
+                            // if (self.bos[i].bid === e) {
+                            //     self.bos.splice(i, 1) // 根据下标删除当前对应的元素
+                            //     console.log(i)
+                            // }
                         }
                         self.$message.success('delete success！')
                     }
@@ -1154,6 +1179,37 @@ import WaterfallSlot from 'vue-waterfall/lib/waterfall-slot'
                     // }
                 })
                 // debugger
+            },
+            remove (e) {
+                let self = this
+                let formData = new FormData()
+                formData.append('id', e)
+                formData.append('toid', parseInt(self.arrCookie))
+                formData.append('bid', self.board.bid)
+                fetch(self.http + '/camU/index/index/removeinvite', {
+                    'method': 'POST',
+                    'body': formData
+                })
+                .then(res => res.json())
+                .then(function (res) {
+                    if (res.status === 1) {
+                        if (parseInt(self.board.uid) === parseInt(self.arrCookie)) {
+                            self.invitedname += 1
+                        } else {
+                            self.invitedname += 1
+                            self.dialogVisible6 = false
+                        }
+                        self.$message.success('success')
+                    } else {
+                        self.$message.error('failure')
+                    }
+                })
+                .catch(function(error) {
+                    console.error('Fetching failed:', error);
+                    throw error;
+                })
+                // console.log(self.board.bid)
+                // console.log(e)
             }
         },
         watch: {
@@ -1189,12 +1245,19 @@ h1 {
         color: #666;
     }
     .fontFamily {
+        position: relative;
         ._sp {
             display: inline-block;
             vertical-align: middle;
         }
         ._sp2 {
-            padding-left: 130px;
+            // padding-left: 130px;
+            .btn-savepin {
+                position: absolute;
+                margin: 0;
+                top: 10px;
+                left: 300px;
+            }
         }
     }
 }

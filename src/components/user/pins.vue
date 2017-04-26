@@ -28,7 +28,7 @@
                 <div style="height: 30px" align="left">
                     <a href="####" style="height: 30px;color: #a8a8a8">
                         <div class="creditName">Saved to</div>
-                        <div class="creditTitle">first</div>
+                        <div class="creditTitle">{{ pin.bname }}</div>
                     </a>
                 </div>
             </div>
@@ -137,13 +137,19 @@
                             <div class="choose-board">
                                 <div v-for="bo in bos">
                                     <div class="board-list">
-                                        <div>
+                                        <div style="position:relative">
                                             <el-button type="text" class="board-list-btn">
                                                 <img v-if="bo.cover" :src="bo.cover" style="vertical-align:middle;width:35px;
                                                 height:34px;object-fit: cover;border-radius:3px;">
                                                 <img v-else src="../../common/images/pg.png" style="vertical-align:middle">
-                                                <span style="display:inline">{{ bo.bname }}</span></el-button>
-                                            <el-button type="primary" class="board-list-save"
+                                                <span style="display:inline">{{ bo.bname }}</span>
+                                                <svg v-if="bo.secret === 'true'" class="_2X6AN" style="right:20px;" viewBox="0 0 16 16"><path d="M12.8 6.791h-.04V4.566C12.76 2.048 10.625 0 8 0S3.24 2.048 
+                                                3.24 4.566v2.225H3.2A5.577 5.577 0 0 0 2 10.245C2 13.423 4.686 16 8 16s6-2.577 6-5.755a5.579 5.579 0 0 0-1.2-3.454zm-2.36 
+                                                0H5.56V4.566c0-1.29 1.095-2.34 2.44-2.34s2.44 1.05 2.44 2.34v2.225z" fill-rule="evenodd"></path></svg>
+                                                <svg v-if="parseInt(bo.uid)!==parseInt(arrCookie)" class="_2X6AN" viewBox="0 0 16 16"><path d="M9.143 10.2A4 4 0 0 1 16 13v1H0v-1a5 5 0 0 1 9.143-2.8zM12
+                                                8a2 2 0 1 0 .001-3.999A2 2 0 0 0 12 8zM5 7a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5z" fill-rule="evenodd"></path></svg>
+                                                </el-button>
+                                            <el-button style="position:absolute;top:0;right:0;" type="primary" class="board-list-save"
                                             @click="pinSave(bo)">Save</el-button>
                                         </div>
                                     </div>
@@ -774,6 +780,14 @@
                 display: block;
             }
         }
+    }
+    ._2X6AN {
+        fill: #b5b5b5;
+        width: 14px;
+        text-align: right;
+        position:absolute;
+        right: 2px;
+        z-index: 0;
     }
 @media (min-width: 2079px) {
     .pins {

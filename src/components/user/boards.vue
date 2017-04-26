@@ -91,9 +91,14 @@
                             </div>
                             <div class="pz3" style="color:#555">{{ bo.bname }}</div>
                             <div class="pz3 pz4">{{ bo.count }} Pins</div>
-                            <button v-if="parseInt(arrCookie)===parseInt(bo.uid)" class="pz3 pz5" style="color: #555" @click="changeBoard(bo.bid),
-                                dialogFormVisible1 = true">Edit</button>
-                            <button v-else class="pz3 pz5" style="color: #555" @click="">Follow</button>
+                            <div v-if="parseInt(arrCookie)===parseInt(bo.uid)">
+                            <button class="pz3 pz5" style="color: #555;" @click="changeBoard(bo.bid),
+                                dialogFormVisible1 = true">Edit</button></div>
+                            <div v-else>
+                            <button class="pz3 pz5" style="color: #555;" @click="">Follow</button></div>
+                            <!--<div v-if="bo.invited===1">-->
+                            <!--<button class="pz3 pz5" style="color: #555;width:80px;" @click="changeBoard(bo.bid),
+                                dialogFormVisible1 = true">Edit</button></div>-->
                         </div>
                     </div>
                 </div>
@@ -136,7 +141,37 @@
                 </div>
                 <div v-for="bo in bos" v-if="bo.secret === 'true'" class="ProfileBoardCard" style="margin:20px 0;padding: 0 12px">
                     <div class="createCard" type="text">
-                        <router-link :to="'/' + userName + '/' + bo.bname + '/'">
+                        <router-link v-if="bo.invited===1" :to="'/' + bo.name + '/' + bo.bname + '/'">
+                        <div style="position: relative;width:301px;height:200px;">
+                            <div class="createRep" style="border-raduis:9px;overflow:hidden;">
+                                <ul v-if="bo.cover">
+                                <li>
+                                    <img :src="bo.cover" width="100%" style="width: 199px;
+                                    height: 200px;object-fit: cover;max-width:100%;border:1px solid #eee">
+                                </li>
+                                <!--{{ bo.img.length }}-->
+                                <li v-if="bo.count !== 0" v-for="item in bo.img" style="width:98px;height:99px;padding:1px 1px;">
+                                    <img :src="http+'/camU'+item.url" style="width:100px;height:100px;object-fit: cover;">
+                                </li>
+                                <!--{{ bo.img.length }}-->
+                                <li v-if="bo.count !== 0" v-for="item in 2-bo.img.length" style="width:98px;height:99px;padding:1px 1px;">
+                                    <div style="width:100%;height:100%;border:1px solid #eee"></div>
+                                </li>
+                                </ul>
+                                <ul v-else>
+                                <!--{{ bo.img.length }}-->
+                                <li v-if="bo.count !== 0" v-for="item in bo.img" style="width:98px;height:99px;padding:1px 1px;">
+                                    <img :src="http+'/camU'+item.url" style="width:99px;height:100px;object-fit: cover;">
+                                </li>
+                                <!--{{ bo.img.length }}-->
+                                <li v-for="item in 6-bo.img.length" style="width:98px;height:99px;padding:1px 1px;">
+                                    <div style="width:100%;height:100%;border:1px solid #eee"></div>
+                                </li>
+                                </ul>
+                            </div>
+                        </div>
+                        </router-link>
+                        <router-link v-else :to="'/' + name.name + '/' + bo.bname + '/'">
                         <div style="position: relative;width:301px;height:200px;">
                             <div class="createRep" style="border-raduis:9px;overflow:hidden;">
                                 <ul v-if="bo.cover">
@@ -167,10 +202,28 @@
                         </div>
                         </router-link>
                         <div class="px1 py2">
+                            <div v-if="bo.invited" style="position:relative;">
+                                <div style="width:60px;height:60px;border-radius:50%;overflow:hidden;
+                                background:#eff;border:3px solid #eff;position:absolute;left:4%;bottom:90%;">
+                                <div style="position:relative;margin-right:1px;width:30px;transform: translateX(0px) translateY(0px);">
+                                <div style="overflow:hidden;"><div style="position:"><img v-if="bo.uimg" :src="http+'/camu'+bo.uimg" width="60" height="60" style="left:-15px;">
+                                <img v-else src="../../common/images/person.png" width="60" height="60" style="margin-left:-30px;"></div></div>
+                                </div>
+                                <div style="position:absolute;margin-left:2px;top:0;width:30px;transform: translateX(31px) translateY(0px);">
+                                    <div style="overflow:hidden;"><div style="position:relative;"><img src="../../common/images/person.png" width="60" height="60" style="margin-left:-30px;"></div></div>
+                                </div>
+                                </div>
+                            </div>
                             <div class="pz3" style="color:#555">{{ bo.bname }}</div>
                             <div class="pz3 pz4">{{ bo.count }} Pins</div>
-                            <button class="pz3 pz5" style="color: #555" @click="changeBoard(bo.bid),
-                                dialogFormVisible1 = true">Edit</button>
+                            <div v-if="parseInt(arrCookie)===parseInt(bo.uid)||bo.invited===1">
+                            <button class="pz3 pz5" style="color: #555;" @click="changeBoard(bo.bid),
+                                dialogFormVisible1 = true">Edit</button></div>
+                            <div v-else>
+                            <button class="pz3 pz5" style="color: #555;" @click="">Follow</button></div>
+                            <div v-if="bo.invited===1">
+                            <!--<button class="pz3 pz5" style="color: #555;width:80px;" @click="changeBoard(bo.bid),
+                                dialogFormVisible1 = true">Edit</button></div>-->
                         </div>
                     </div>
                 </div>
@@ -230,6 +283,7 @@
         </el-dialog>
         <el-dialog :title="'Edit your board : ' + form1.bname" v-model="dialogFormVisible1" top="18%">
             <el-form :model="form1" :rules="rules1" ref="form1" label-position="left">
+                <div v-if="parseInt(arrCookie)===parseInt(form1.uid)">
                 <el-form-item label="Name" prop="bname" :label-width="formLabelWidth">
                 <el-input v-model="form1.bname" auto-complete="off"></el-input>
                 </el-form-item>
@@ -265,8 +319,10 @@
                     <el-radio-button label="No"></el-radio-button>>
                 </el-radio-group>-->
                 </el-form-item>
+                </div>
+                <div>
                 <el-form-item label="Collaborators" :label-width="formLabelWidth">
-                    <el-input auto-complete="off" style="width:350px"></el-input>
+                    <el-input auto-complete="off" style="width:350px" placeholder="Name"></el-input>
                     <el-button>Invite</el-button>
                 <!--<el-radio-group v-model="form1.secret">
                     <el-radio-button label="Yes"></el-radio-button>
@@ -275,9 +331,10 @@
                 </el-form-item>
                 <hr>
                 <div class="dialog-footer">
-                    <el-button class="pz3" :plain="true" type="danger" @click="dialogVisible = true" style="float:left">Delete board</el-button>
+                    <el-button v-if="parseInt(arrCookie)===parseInt(form1.uid)" class="pz3" :plain="true" type="danger" @click="dialogVisible = true" style="float:left">Delete board</el-button>
                     <el-button class="pz3" @click="dialogFormVisible1 = false">Cancel</el-button>
-                    <el-button class="pz3" style="color: #fff" type="primary" @click="saveChange('form1')">Save</el-button>
+                    <el-button v-if="parseInt(arrCookie)===parseInt(form1.uid)" class="pz3" style="color: #fff" type="primary" @click="saveChange('form1')">Save</el-button>
+                    <el-button v-else class="pz3" style="color: #fff" type="primary" @click="dialogFormVisible1 = false">Done</el-button>
                 </div>
             </el-form>
         </el-dialog>
@@ -520,15 +577,15 @@
                     // .then(res => res.json())
                     .then(function (response) {
                         if (response.status === 1) {
-                            self.bos.reverse() // array倒序
-                            // self.bos.unshift(response)
-                            self.bos.push(response)
-                            self.bos.reverse()
+                            // self.bos.reverse() // array倒序
+                            // // self.bos.unshift(response)
+                            // self.bos.push(response)
+                            // self.bos.reverse()
                             self.$message.success('success')
                             self.dialogFormVisible2 = false
                             setTimeout(() => {
                                 // self.fullscreenLoading = false
-                                self.$router.push('/user/' + response.bname + '/')
+                                self.$router.replace('/' + self.userName + '/' + response.bname + '/')
                             }, 2000);
                         } else {
                             self.$message.error("board name is used by yourself")
@@ -574,7 +631,7 @@
                             self.dialogFormVisible2 = false
                             setTimeout(() => {
                                 // self.fullscreenLoading = false
-                                self.$router.push('/user/' + response.bname + '/')
+                                self.$router.replace('/' + self.userName + '/' + response.bname + '/')
                             }, 2000);
                         } else {
                             self.$message.error("board name is used by yourself")
@@ -846,10 +903,11 @@
                         let length = self.bos.length
                         for (let i = 0; i < length; i++) {
                             if (self.bos[i].bid === e) {
-                                self.bos.splice(i, 1) // 根据下标删除当前对应的元素
-                                console.log(i)
+                                // self.bos.splice(i, 1) // 根据下标删除当前对应的元素
+                                // console.log(i)
                             }
                         }
+                        self.boardchange += 1
                         self.$message.success('delete success！')
                     }
                     // debugger
