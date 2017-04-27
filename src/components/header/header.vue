@@ -39,11 +39,34 @@
         </router-link>
         </span>
         <span class="navb-group navb-g" style="width:px;margin-right:4px;">
-            <el-popover ref="popover2" placement="bottom" width="200" trigger="click">
-            <div style="height:300px"></div>
+            <el-popover ref="popover2" placement="bottom" width="250" trigger="click">
+            <div style="height:272px;">
+                <div class="news-list" style="height:270px;overflow:auto">
+                    <div v-for="item in news" style="margin-top:12px;margin-bottom: 5px;">
+                        <div v-if="item.action==='add'">
+                            <ul>
+                                <li style="width:40px;height:40px;overflow:hidden;border-radius:8px;">
+                                    <img src="../../common/images/board.jpg" width="40" height="40">
+                                </li>
+                                <li>
+                                    <router-link class="link" :to="'/'+item.wname+'/'+item.new.bname+'/'">{{ item.new.bname }}</router-link>
+                                    <span v-if="board.status===1&&board.mess.bid===item.news">You joined this board</span>
+                                    <span v-else>{{ item.uname }} invited you to this board</span>
+                                </li>
+                            </ul>
+                            <div v-if="board.status===1&&board.mess.bid===item.news" style="margin-top: 6px;" align="center">
+                            </div>
+                            <div v-else style="margin-top: 6px;" align="center">
+                                <el-button size="small" @click="status=0,handlenews(item.innewsid)">Ignore</el-button>
+                                <el-button size="small" @click="status=1,handlenews(item.innewsid)" type="primary">Accept</el-button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
             </el-popover>
             <el-button type="text" v-popover:popover2 @click="getNews()" class="newsimg" style="width:52px;">
-            <el-badge :value="newsNums" :max="6" class="newsNums"><span class="newsImg"></span></el-badge></el-button>
+            <el-badge :value="newsNums" :max="5" class="newsNums"><span class="newsImg"></span></el-badge></el-button>
         <div>
             <span class="bot"></span>
             <span class="top"></span>
@@ -67,7 +90,11 @@
                 state4: '',
                 timeout: null,
                 count: 0,
-                newsNums: 0
+                count1: 1,
+                newsNums: 0,
+                news: '',
+                status: '',
+                board: ''
             }
         },
         created: function () {
@@ -86,17 +113,69 @@
                 .then(function (res) {
                     if (res.status === 1) {
                         self.newsNums = res.nums
-                    } else {}
+                    } else {
+                        self.newsNums = 0
+                    }
                     // console.log(res)
                 })
-                .catch(function(error) {
+                .catch(function (error) {
                     console.error('Fetching failed:', error);
                     throw error;
                 })
                 // console.log(self.arrCookie)
             },
             getNews () {
-                console.log('getnews')
+                let self = this
+                self.count += 1
+                let formData = new FormData()
+                formData.append('id', self.arrCookie)
+                fetch(self.http + '/camu/index/index/getnews', {
+                    method: 'POST',
+                    body: formData
+                })
+                .then(res => res.json())
+                .then(function (res) {
+                    if (res.status === 1) {
+                        self.news = res.mess
+                    }
+                })
+                .catch(function (error) {
+                    console.error('Fetching failed:', error)
+                    throw error
+                })
+                // console.log('getnews')
+            },
+            handlenews (e) {
+                let self = this
+                let formData = new FormData()
+                formData.append('status', self.status)
+                formData.append('id', e)
+                fetch(self.http + '/camu/index/index/handlenews', {
+                    method: 'POST',
+                    body: formData
+                })
+                .then(res => res.json())
+                .then(function (res) {
+                    if (res.status === 1) {
+                        self.count += 1
+                        self.board = res
+                    } else if (res.status === 3) {
+                        self.count += 1
+                        // self.count1 += 1
+                        let length = self.news.length
+                        for (let i = 0; i < length; i++) {
+                            if (self.news[i].innewsid === e) {
+                                self.news.splice(i, 1)
+                            }
+                        }
+                    }
+                })
+                .catch(function (error) {
+                    console.error('Fetching failed:', error)
+                    throw error
+                })
+                // console.log(e)
+                // console.log(self.status)
             },
             category () {
                 let self = this
@@ -141,11 +220,12 @@
             if (this.$route.path) {
                 this.count += 1
             }
-            console.log(this.$route.path)
+            // console.log(this.$route.path)
         },
         watch: {
             '$route': 'getNewsNums',
-            count: 'getNewsNums'
+            count: 'getNewsNums',
+            count1: 'getNews'
         }
     }
 </script>
@@ -237,5 +317,18 @@
     }
     .el-badge {
         vertical-align: baseline;
+    }
+    .news-list {
+        ul li {
+            display: inline-block;
+            margin-right: 4px;
+            vertical-align: top;
+            color: #aaa;
+        }
+        .link {
+            font-weight: bold;
+            line-height: 16px;
+            color: #555;
+        }
     }
 </style>

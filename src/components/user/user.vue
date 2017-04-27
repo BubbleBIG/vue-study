@@ -41,8 +41,8 @@
             </ul>
             <div style="width:50%;vertical-align: middle">
                 <div align="center" id="boardName" class="boardName">
-                    <h1 v-if="name.name">{{ name.name }}</h1>
-                    <h1 v-else>{{ userName }}</h1>
+                    <h1 v-if="name.uname">{{ name.uname }}</h1>
+                    <h1 v-else>{{ uname }}</h1>
                     </div>
             </div>
             <div style="width:25%">
@@ -54,8 +54,8 @@
             <div class="flex" style="padding-top:64px">
                 <div class="user-info">
                     <div class="fontFamily dp1">
-                        <h1 v-if="name.name">{{ name.name }}</h1>
-                        <h1 v-else>{{ userName }}</h1>
+                        <h1 v-if="name.uname">{{ name.uname }}</h1>
+                        <h1 v-else>{{ uname }}</h1>
                         </div>
                     <div class="flex follow dp1">
                         <div class="px1">
@@ -128,11 +128,13 @@ import header from '../header/header.vue'
             return {
                 http: 'http://localhost',
                 userName: arrName[1],
-                name: ''
+                name: '',
+                uname: ''
             }
         },
         created: function () {
             this.path()
+            this.username()
         },
         watch: {
         // 如果路由有变化，会再次执行该方法
@@ -140,6 +142,23 @@ import header from '../header/header.vue'
             "$route": 'path'
         },
         methods: {
+            username () {
+                let self = this
+                let formData = new FormData()
+                formData.append('name', self.userName)
+                fetch(self.http + '/camU/index/index/getuname', {
+                    method: 'POST',
+                    body: formData
+                    // mode: 'no-cors',
+                    // headers: { 'Content-Type': 'application/json' },
+                    // credentials: 'same-origin'
+                })
+                .then(res => res.json())
+                .then(function (res) {
+                    // console.log(bos)
+                    self.uname = res
+                })
+            },
             path () {
                 let self = this
                 let array = self.$route.path.split("/")

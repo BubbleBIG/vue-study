@@ -447,7 +447,7 @@
                                             @click="remove(inviter.inviteduid)">Leave</el-button>
                                     </div>
                                     <div v-else class="board-list">
-                                        <el-button type="text" class="board-list-btn" style="margin-left: 5px;">
+                                        <el-button v-if="inviter.status===1" type="text" class="board-list-btn" style="margin-left: 5px;">
                                             <img v-if="inviter.img" :src="http+'/camu'+inviter.img" style="vertical-align:middle;width:35px;
                                             height:34px;object-fit: cover;border-radius:3px;">
                                             <img v-else src="../../common/images/person.png" style="width:35px;height:34px;vertical-align:middle">
@@ -455,6 +455,14 @@
                                             <i v-if="inviter.status===1" class="el-icon-circle-check el-icon--right" style="color:#13CE66;"></i>
                                             <i v-else class="el-icon-circle-cross el-icon--right"></i>
                                             </el-button>
+                                        <el-button v-else type="text" class="board-list-btn" style="margin-left: 5px;opacity:0.5">
+                                        <img v-if="inviter.img" :src="http+'/camu'+inviter.img" style="vertical-align:middle;width:35px;
+                                        height:34px;object-fit: cover;border-radius:3px;">
+                                        <img v-else src="../../common/images/person.png" style="width:35px;height:34px;vertical-align:middle">
+                                        <span style="display:inline">{{ inviter.inviteduname }}</span>
+                                        <i v-if="inviter.status===1" class="el-icon-circle-check el-icon--right" style="color:#13CE66;"></i>
+                                        <i v-else class="el-icon-circle-cross el-icon--right"></i>
+                                        </el-button>
                                         <span v-if="parseInt(arrCookie)===parseInt(inviter.uid)" style="display:inline">
                                         <el-button type="primary" class="board-list-save"
                                         @click="remove(inviter.inviteduid)">Remove</el-button></span>
@@ -1135,8 +1143,11 @@ import WaterfallSlot from 'vue-waterfall/lib/waterfall-slot'
                     .then(function (res) {
                         if (res.status === 1) {
                             if (res.mess === 'already') {
-                                self.$message.error('This name have invited to this board!')
+                                self.$message.error('That user has already been invited to save to this board!')
+                            } else if (res.mess === 'dupe') {
+                                self.$message.error('That user has already been invited to save to this board!')
                             } else {
+                                self.input3 = ''
                                 self.$message.success('Invited is send!')
                             }
                             self.invitedname += 1
