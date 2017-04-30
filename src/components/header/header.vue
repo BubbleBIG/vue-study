@@ -1,4 +1,6 @@
 <template>
+<div>
+    <div v-if="show" class="l-modal"></div>
     <div class="navb flex">
         <span class="navb-group navb-g" style="width:40px;margin:0 10px 0 20px">
             <router-link to="/"style="padding:0"><img width="40" height="40" alt="Brand"
@@ -8,17 +10,60 @@
         padding: 4px 5px">
             <div class="searchImg"></div>
         </span>-->
-        <form class="navb-group search" role="search" style="background-color:#ebebeb;margin-right:16px;">
-            <i class="search-img" >
-                <div class="searchImg"></div>
-            </i>
+        <form class="navb-group search" role="search" style="border-radius:4px;background-color:#ebebeb;margin-right:16px;">
+            <el-button @click="search()" type="text" class="search-img" style="top:5px;" >
+                <span class="searchImg"></span>
+            </el-button>
             <!--<input id="search1" type="text" class="form-control" placeholder="Search" 
             style="background-color:#ebebeb;margin-top:5px;font-size: 16px;
             font-weight: 600;height: 32px;line-height: 20px;">-->
-            <el-autocomplete class="search-input"
-            v-model="state4" :fetch-suggestions="querySearchAsync" placeholder="Search"
-            @select="handleSelect"
-            ></el-autocomplete>
+            <div class="search-input">
+                <!--<el-input class="inputWord" @focus="focusfns" @blur="blurfns"-->
+            <el-input class="inputWord" @focus="focusfns" @blur="blurfns"
+            v-model="searchWords" placeholder="Search" ></el-input>
+            <div v-if="show" style="width:100%;min-height:90px;background:#fff;border-radius:4px;">
+                <div style="padding:2px 15px;height:100%;">
+                <div v-if="searchLists.user">
+                    <div style="line-height: 24px;">people</div>
+                    <router-link :to="'/'+item.wname+'/'" v-for="item in searchLists.user" style="padding:0;">
+                        <div style="vertical-align:center;">
+                            <img v-if="item.uimg" :src="http+'/camu'+item.uimg" width="40" height="40" style="display:inline-block;">
+                            <div v-else style="vertical-align:center;display:inline-block;width:40px;height:40px;border:1px solid #eee;"></div>
+                            <div style="height:40px;display:inline-block;vertical-align:top;">
+                                <span style="line-height: 20px;font-size:18px;font-weight:bold;">{{ item.uname }}</span>
+                                <span style="line-height: 18px;">{{ item.wname }}</span>
+                            </div>
+                        </div>
+                    </router-link>
+                </div>
+                <div>
+                    <div v-if="searchWords" style="line-height: 24px;">Boards</div>
+                    <router-link v-if="item.secret==='true'" :to="'/'+item.wname+'/'+item.bname+'/'" v-for="item in searchLists.board" style="padding:0;">
+                        <div v-if="parseInt(item.uid)===parseInt(arrCookie)" style="vertical-align:center;">
+                            <img v-if="item.cover" :src="item.cover" width="40" height="40" style="display:inline-block;">
+                            <div v-else style="vertical-align:center;display:inline-block;width:40px;height:40px;border:1px solid #eee;"></div>
+                            <div style="height:40px;display:inline-block;vertical-align:top;">
+                                <span style="line-height: 20px;font-size:18px;font-weight:bold;">{{ item.bname }}</span>
+                                <span style="line-height: 18px;">{{ item.wname }}</span>
+                            </div>
+                        </div>
+                    </router-link>
+                    <router-link v-if="item.secret==='false'" :to="'/'+item.wname+'/'+item.bname+'/'" v-for="item in searchLists.board" style="padding:0;">
+                        <div style="vertical-align:center;">
+                            <img v-if="item.cover" :src="item.cover" width="40" height="40" style="display:inline-block;">
+                            <div v-else style="vertical-align:center;display:inline-block;width:40px;height:40px;border:1px solid #eee;"></div>
+                            <div style="height:40px;display:inline-block;vertical-align:top;">
+                                <span style="line-height: 20px;font-size:18px;font-weight:bold;">{{ item.bname }}</span>
+                                <span style="line-height: 18px;">{{ item.wname }}</span>
+                            </div>
+                        </div>
+                    </router-link>
+                    <router-link v-if="searchWords" :to="'/search/'+searchWords+'/'" style="font-size:16px;font-weight:bold;">Boards call "{{ searchWords }}"</router-link>
+                </div>
+                <!--<p>www</P>-->
+                </div>
+            </div>
+            </div>
         </form>
         <span class="navb-group navb-g categoriesheader" style="width:px;padding:4px 0;" @click="category">
             <el-popover ref="popover1" placement="bottom" width="300" trigger="click">
@@ -57,8 +102,8 @@
                             <div v-if="board.status===1&&board.mess.bid===item.news" style="margin-top: 6px;" align="center">
                             </div>
                             <div v-else style="margin-top: 6px;" align="center">
-                                <el-button size="small" @click="status=0,handlenews(item.innewsid)">Ignore</el-button>
-                                <el-button size="small" @click="status=1,handlenews(item.innewsid)" type="primary">Accept</el-button>
+                                <el-button size="small" @click="bid=item.news,status=0,handlenews(item.innewsid)">Ignore</el-button>
+                                <el-button size="small" @click="bid=item.news,status=1,handlenews(item.innewsid)" type="primary">Accept</el-button>
                             </div>
                         </div>
                     </div>
@@ -73,6 +118,7 @@
         </div>
         </span>
     </div>
+</div>
 </template>
 <script>
     export default {
@@ -86,19 +132,22 @@
                 categoryLists: '',
                 arrCookie: arrCookie[1],
                 userName: arrName[1],
-                restaurants: [],
-                state4: '',
-                timeout: null,
+                searchWords: '',
                 count: 0,
                 count1: 1,
                 newsNums: 0,
                 news: '',
                 status: '',
-                board: ''
+                board: '',
+                bid: '',
+                touid: '',
+                // pins: '',
+                show: '',
+                searchLists: ''
             }
         },
         created: function () {
-            // this.getNewsNums()
+            // this.getPins()
         },
         methods: {
             getNewsNums () {
@@ -149,7 +198,8 @@
                 let self = this
                 let formData = new FormData()
                 formData.append('status', self.status)
-                formData.append('id', e)
+                formData.append('id', self.arrCookie)
+                formData.append('bid', self.bid)
                 fetch(self.http + '/camu/index/index/handlenews', {
                     method: 'POST',
                     body: formData
@@ -176,6 +226,8 @@
                 })
                 // console.log(e)
                 // console.log(self.status)
+                // console.log(self.bid)
+                // console.log(self.arrCookie)
             },
             category () {
                 let self = this
@@ -190,33 +242,67 @@
                     self.categoryLists = res
                 })
             },
-            loadAll() {
-                return [
-                { "value": "test" },
-                { "value": "hh", "word": "fff" }
-                ];
+            // getPins () {
+            //     let self = this
+            //     let formData = new FormData()
+            //     formData.append("id", self.arrCookie)
+            //     // formData.append("bid", e)
+            //     fetch(self.http + '/camU/index/index/getpins', {
+            //         method: 'POST',
+            //         body: formData
+            //         // mode: 'no-cors',
+            //         // headers: { 'Content-Type': 'application/json' },
+            //         // credentials: 'same-origin'
+            //     })
+            //     .then(res => res.json())
+            //     .then(function (pins) {
+            //         let length = pins.length
+            //         for (let i = 0; i < length; i++) {
+            //             pins[i].height = 114 + parseInt(pins[i].height)
+            //             if (pins[i].iswebsite === 0) {
+            //                 pins[i].url = self.http + "/camu" + pins[i].url
+            //                 // console.log(pins)
+            //             }
+            //         }
+            //         // console.log(pins)
+            //         self.pins = pins
+            //     })
+            // },
+            search () {
+                this.$router.replace('/search/' + this.searchWords + '/')
+                // console.log(this.searchWords)
             },
-            querySearchAsync(queryString, cb) {
-                var restaurants = this.restaurants;
-                var results = queryString ? restaurants.filter(this.createStateFilter(queryString)) : restaurants;
-
-                clearTimeout(this.timeout);
-                this.timeout = setTimeout(() => {
-                cb(results);
-                }, 1000);
-                // }, 8000 * Math.random());
+            getSearch () {
+                let self = this
+                let formData = new FormData()
+                formData.append('word', self.searchWords)
+                fetch(self.http + '/camu/index/index/getsearch', {
+                    method: 'POST',
+                    body: formData
+                })
+                .then(res => res.json())
+                .then(function (res) {
+                    self.searchLists = res
+                    // console.log(res)
+                })
+                .catch(function(error) {
+                    console.error('Fetching failed:', error);
+                    throw error;
+                })
+                // console.log(self.searchWords)
             },
-            createStateFilter(queryString) {
-                return (state) => {
-                return (state.value.indexOf(queryString.toLowerCase()) === 0);
-                };
+            focusfns () {
+                let self = this
+                self.show = true
             },
-            handleSelect(item) {
-                console.log(item);
+            blurfns () {
+                setTimeout(() => {
+                    this.show = false
+                }, 300)
             }
         },
         mounted() {
-            this.restaurants = this.loadAll();
+            // this.restaurants = this.loadAll()
             if (this.$route.path) {
                 this.count += 1
             }
@@ -225,7 +311,8 @@
         watch: {
             '$route': 'getNewsNums',
             count: 'getNewsNums',
-            count1: 'getNews'
+            count1: 'getNews',
+            searchWords: 'getSearch'
         }
     }
 </script>
@@ -330,5 +417,15 @@
             line-height: 16px;
             color: #555;
         }
+    }
+    .l-modal {
+        position: fixed;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        opacity: .5;
+        background: #000;
+        z-index: 99;
     }
 </style>

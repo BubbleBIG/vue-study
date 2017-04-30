@@ -19,6 +19,7 @@ import pin from './components/user/pin'
 import board from './components/user/board'
 import category from './components/user/category'
 import error from './components/user/404'
+import search from './components/user/search'
 import VueAwesomeSwiper from 'vue-awesome-swiper'
 // import '../static/js/test.js'
 // require('es6-promise').polyfill()
@@ -62,6 +63,7 @@ Vue.use(VueAwesomeSwiper)
     // { path: '/pin/:id', name: 'pin', component: pin },
     { path: '/pin/:id', component: pin },
     { path: '/category/:name', name: 'category', component: category },
+    { path: '/search/:name', name: 'search', component: search },
     { path: '/:username',
       component: user,
       children: [
@@ -80,7 +82,10 @@ Vue.use(VueAwesomeSwiper)
     //     { path: 'reg', component: reg }
     //   ]
     // }
-  ]
+  ],
+  scrollBehavior (to, from, savedPosition) {
+    return { x: 0, y: 0 }
+  }
 })
 
 router.beforeEach((to, from, next) => {

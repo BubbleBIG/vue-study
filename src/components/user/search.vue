@@ -1,52 +1,11 @@
 <template>
     <div class="user-routers">
+        <v-header></v-header>
         <div class="boards">
             <div class="boardsItems flex-wrap">
-                <div v-if="name.name===userName" class="ProfileBoardCard" style="margin:20px 0;padding: 0 12px">
-                    <button class="createCard" type="text" @click="dialogFormVisible2 = true">
-                        <div style="position: relative;width:301px;height:200px">
-                            <div class="createRep flex ">
-                                <i></i>
-                            </div>
-                        </div>
-                        <div class="px1 py2">
-                            <div  class="pz3">Create board</div>
-                        </div>
-                    </button>
-                </div>
                 <div v-for="bo in bos" v-if="bo.secret === 'false'" class="ProfileBoardCard" style="margin:20px 0;padding: 0 12px">
                     <div class="createCard" type="text">
-                        <router-link v-if="bo.invited===1" :to="'/' + bo.name + '/' + bo.bname + '/'">
-                        <div style="position: relative;width:301px;height:200px;">
-                            <div class="createRep" style="border-raduis:9px;overflow:hidden;">
-                                <ul v-if="bo.cover">
-                                <li>
-                                    <img :src="bo.cover" width="100%" style="width: 199px;
-                                    height: 200px;object-fit: cover;max-width:100%;border:1px solid #eee">
-                                </li>
-                                <!--{{ bo.img.length }}-->
-                                <li v-if="bo.count !== 0" v-for="item in bo.img" style="width:98px;height:99px;padding:1px 1px;">
-                                    <img :src="http+'/camU'+item.url" style="width:100px;height:100px;object-fit: cover;">
-                                </li>
-                                <!--{{ bo.img.length }}-->
-                                <li v-if="bo.count !== 0" v-for="item in 2-bo.img.length" style="width:98px;height:99px;padding:1px 1px;">
-                                    <div style="width:100%;height:100%;border:1px solid #eee"></div>
-                                </li>
-                                </ul>
-                                <ul v-else>
-                                <!--{{ bo.img.length }}-->
-                                <li v-if="bo.count !== 0" v-for="item in bo.img" style="width:98px;height:99px;padding:1px 1px;">
-                                    <img :src="http+'/camU'+item.url" style="width:99px;height:100px;object-fit: cover;">
-                                </li>
-                                <!--{{ bo.img.length }}-->
-                                <li v-for="item in 6-bo.img.length" style="width:98px;height:99px;padding:1px 1px;">
-                                    <div style="width:100%;height:100%;border:1px solid #eee"></div>
-                                </li>
-                                </ul>
-                            </div>
-                        </div>
-                        </router-link>
-                        <router-link v-else :to="'/' + name.name + '/' + bo.bname + '/'">
+                        <router-link :to="'/' + bo.name + '/' + bo.bname + '/'">
                         <div style="position: relative;width:301px;height:200px;">
                             <div class="createRep" style="border-raduis:9px;overflow:hidden;">
                                 <ul v-if="bo.cover">
@@ -102,76 +61,9 @@
                         </div>
                     </div>
                 </div>
-            </div>
-            <div style="clear:both;">
-            </div>
-        </div>
-        <div v-if="name.name===userName" class="secretBoard">
-        <div class="sBoardsHeader">
-        <div class="userCommon flex">
-            <ul class="" style=";padding: 7px 2px">
-                <li class="">
-                    <svg height="32" width="32" viewBox="0 0 16 16" style="fill:#555">
-                    <path d="M12.8 6.791h-.04V4.566C12.76 2.048 10.625 0 8 0S3.24 2.048 3.24 4.566v2.225H3.2c-.777.984-1.2 2.2-1.2 
-                    3.454C2 13.423 4.686 16 8 16s6-2.577 6-5.755c0-1.253-.423-2.47-1.2-3.454zm-2.36 0H5.56V4.566c0-1.29 1.095-2.34 
-                    2.44-2.34s2.44 1.05 2.44 2.34v2.225z"></path></svg>
-                </li>
-                <li>
-                    <div class="title">Secret boards</div>
-                    <div class="text">
-                        Only you (and people you invite) can see these boards.
-                    </div>
-                </li>
-            </ul>
-        </div>
-        </div>
-        <div class="boards">
-            <div class="boardsItems flex-wrap">
-                <div class="ProfileBoardCard" style="margin:20px 0;padding: 0 12px">
-                    <button style="background:#f7f7f7" class="createCard" type="text" @click="dialogFV = true">
-                        <div style="position: relative;width:301px;height:200px">
-                            <div class="createRep flex ">
-                                <i></i>
-                            </div>
-                        </div>
-                        <div class="px1 py2">
-                            <div  class="pz3">Create board</div>
-                        </div>
-                    </button>
-                </div>
-                <div v-for="bo in bos" v-if="bo.secret === 'true'" class="ProfileBoardCard" style="margin:20px 0;padding: 0 12px">
+                <div v-for="bo in bos" v-if="bo.secret === 'true'&&bo.invited===1||bo.uid===parseInt(arrCookie)" class="ProfileBoardCard" style="margin:20px 0;padding: 0 12px">
                     <div class="createCard" type="text">
-                        <router-link v-if="bo.invited===1" :to="'/' + bo.name + '/' + bo.bname + '/'">
-                        <div style="position: relative;width:301px;height:200px;">
-                            <div class="createRep" style="border-raduis:9px;overflow:hidden;">
-                                <ul v-if="bo.cover">
-                                <li>
-                                    <img :src="bo.cover" width="100%" style="width: 199px;
-                                    height: 200px;object-fit: cover;max-width:100%;border:1px solid #eee">
-                                </li>
-                                <!--{{ bo.img.length }}-->
-                                <li v-if="bo.count !== 0" v-for="item in bo.img" style="width:98px;height:99px;padding:1px 1px;">
-                                    <img :src="http+'/camU'+item.url" style="width:100px;height:100px;object-fit: cover;">
-                                </li>
-                                <!--{{ bo.img.length }}-->
-                                <li v-if="bo.count !== 0" v-for="item in 2-bo.img.length" style="width:98px;height:99px;padding:1px 1px;">
-                                    <div style="width:100%;height:100%;border:1px solid #eee"></div>
-                                </li>
-                                </ul>
-                                <ul v-else>
-                                <!--{{ bo.img.length }}-->
-                                <li v-if="bo.count !== 0" v-for="item in bo.img" style="width:98px;height:99px;padding:1px 1px;">
-                                    <img :src="http+'/camU'+item.url" style="width:99px;height:100px;object-fit: cover;">
-                                </li>
-                                <!--{{ bo.img.length }}-->
-                                <li v-for="item in 6-bo.img.length" style="width:98px;height:99px;padding:1px 1px;">
-                                    <div style="width:100%;height:100%;border:1px solid #eee"></div>
-                                </li>
-                                </ul>
-                            </div>
-                        </div>
-                        </router-link>
-                        <router-link v-else :to="'/' + name.name + '/' + bo.bname + '/'">
+                        <router-link :to="'/' + bo.name + '/' + bo.bname + '/'">
                         <div style="position: relative;width:301px;height:200px;">
                             <div class="createRep" style="border-raduis:9px;overflow:hidden;">
                                 <ul v-if="bo.cover">
@@ -229,58 +121,8 @@
                 </div>
             </div>
             <div style="clear:both;">
-            <h1 style="height:50px"></h1>
             </div>
         </div>
-        </div>
-        <el-dialog title="Create board" v-model="dialogFormVisible2" top="25%">
-            <el-form :model="form2" :rules="rules2" ref="form2">
-                <el-form-item label="Name" prop="name" :label-width="formLabelWidth">
-                <el-input v-model="form2.name" auto-complete="off"></el-input>
-                </el-form-item>
-                <el-form-item label="Secret" :label-width="formLabelWidth">
-                    <el-switch
-                    v-model="radio1"
-                    on-text="Yes"
-                    off-text="No"
-                    on-color="#13ce66"
-                    off-color="#ff4949">
-                    </el-switch>
-                <!--<el-radio-group v-model="radio1">
-                    <el-radio-button label="Yes"></el-radio-button>
-                    <el-radio-button label="No"></el-radio-button>>
-                </el-radio-group>-->
-                </el-form-item>
-                <div class="dialog-footer">
-                    <el-button @click="dialogFormVisible2 = false,resetForm('form2')">Cancel</el-button>
-                    <el-button type="primary" @click="createBoard('form2')">Create</el-button>
-                </div>
-            </el-form>
-        </el-dialog>
-        <el-dialog title="Create board" v-model="dialogFV" top="25%">
-            <el-form :model="form2" :rules="rules2" ref="form2">
-                <el-form-item label="Name" prop="name" :label-width="formLabelWidth">
-                <el-input v-model="form2.name" auto-complete="off"></el-input>
-                </el-form-item>
-                <el-form-item label="Secret" :label-width="formLabelWidth">
-                    <el-switch
-                    v-model="radio2"
-                    on-text="Yes"
-                    off-text="No"
-                    on-color="#13ce66"
-                    off-color="#ff4949">
-                    </el-switch>
-                <!--<el-radio-group v-model="radio1">
-                    <el-radio-button label="Yes"></el-radio-button>
-                    <el-radio-button label="No"></el-radio-button>>
-                </el-radio-group>-->
-                </el-form-item>
-                <div class="dialog-footer">
-                    <el-button @click="dialogFV = false,resetForm('form2')">Cancel</el-button>
-                    <el-button type="primary" @click="createBoard1('form2')">Create</el-button>
-                </div>
-            </el-form>
-        </el-dialog>
         <el-dialog :title="'Edit your board : ' + form1.bname" v-model="dialogFormVisible1" top="18%">
             <el-form :model="form1" :rules="rules1" ref="form1" label-position="left">
                 <div v-if="parseInt(arrCookie)===parseInt(form1.uid)">
@@ -385,18 +227,11 @@
 </template>
 
 <script>
-    // var config = {
-    //     apiKey: 'AIzaSyDiySNTb9ENOWDMaVKflek_4FbTMQx11jM',
-    //     authDomain: 'vuestudy.firebaseio.com',
-    //     databaseURL: 'https://vuestudy.firebaseio.com/'
-    // }
-    // firebase.initializeApp(config)
-    // var usersRef = firebase.database().ref('users')
-    // import user from './user.vue'
+import header from '../header/header.vue'
     export default {
-        // components: {
-        // 'v-user': user
-        // },
+        components: {
+        'v-header': header
+        },
         data () {
             var checkName = (rule, value, callback) => {
                 if (!value) {
@@ -469,180 +304,68 @@
         methods: {
             getBoards () {
                 let self = this
-                let array = self.$route.path.split("/")
+                // let array = self.$route.params
                 // console.log(array)
-                if (self.$route.params.username !== self.userName) {
-                    if (array[2] && array[2] !== 'boards') {
-                        // console.log('array')
-                    } else {
-                        let formData1 = new FormData()
-                        formData1.append('name', self.$route.params.username)
-                        fetch(self.http + '/camU/index/index/checkuser', {
-                            method: 'POST',
-                            body: formData1
-                            // mode: 'no-cors',
-                            // headers: { 'Content-Type': 'application/json' },
-                            // credentials: 'same-origin'
-                        })
-                        .then(res => res.json())
-                        .then(function (res) {
-                            // console.log(bos)
-                            if (res.status === 1) {
-                                self.name = res
-                                let formData = new FormData()
-                                formData.append("id", self.name.id);
-                                // fetch(':3000/todos', {
-                                fetch(self.http + '/camU/index/index/getboards', {
-                                    method: 'POST',
-                                    body: formData
-                                    // mode: 'no-cors',
-                                    // headers: { 'Content-Type': 'application/json' },
-                                    // credentials: 'same-origin'
-                                })
-                                .then(res => res.json())
-                                .then(function (bos) {
-                                    // console.log(bos)
-                                    self.bos = bos
-                                })
-                            } else {
-                                self.$message.error('the page not found!')
-                                // setTimeout(() => {
-                                    self.$router.replace('/404/')
-                                // }, 2000)
-                            }
-                        })
-                    }
+                let formData = new FormData()
+                formData.append("word", self.$route.params.name);
+                formData.append("id", self.arrCookie);
+                // fetch(':3000/todos', {
+                fetch(self.http + '/camU/index/index/getsearchboards', {
+                    method: 'POST',
+                    body: formData
+                    // mode: 'no-cors',
+                    // headers: { 'Content-Type': 'application/json' },
+                    // credentials: 'same-origin'
+                })
+                .then(res => res.json())
+                .then(function (bos) {
+                    // console.log(bos)
+                    self.bos = bos
+                })
+                            // } else {
+                            //     self.$message.error('the page not found!')
+                            //     // setTimeout(() => {
+                            //         // self.$router.replace('/404/')
+                            //     // }, 2000)
+                            // }
+                        // })
+                    // }
                     // self.$message.error('the page not found!')
                     // setTimeout(() => {
                     //     self.$router.replace('/404/')
                     // }, 2000)
-                } else {
-                    let formData1 = new FormData()
-                    formData1.append('name', self.$route.params.username)
-                    fetch(self.http + '/camU/index/index/checkuser', {
-                        method: 'POST',
-                        body: formData1
-                        // mode: 'no-cors',
-                        // headers: { 'Content-Type': 'application/json' },
-                        // credentials: 'same-origin'
-                    })
-                    .then(res => res.json())
-                    .then(function (res) {
-                        // console.log(bos)
-                        self.name = res
-                    })
-                    let formData = new FormData()
-                    formData.append("id", self.arrCookie);
-                    // fetch(':3000/todos', {
-                    fetch(self.http + '/camU/index/index/getboards', {
-                        method: 'POST',
-                        body: formData
-                        // mode: 'no-cors',
-                        // headers: { 'Content-Type': 'application/json' },
-                        // credentials: 'same-origin'
-                    })
-                    .then(res => res.json())
-                    .then(function (bos) {
-                        // console.log(bos)
-                        self.bos = bos
-                    })
-                }
-            },
-            createBoard (formName) {
-                let self = this
-                var bname = this.form2.name.trim()
-                var secret = this.radio1
-                let formData = new FormData()
-                formData.append("id", self.arrCookie)
-                formData.append("bname", this.form2.name.trim())
-                formData.append('secret', this.radio1)
-                this.$refs[formName].validate((valid) => {
-                if (!valid) {
-                    // self.$message.error("name is used or can't be used")
-                } else {
-                    fetch(self.http + '/camU/index/index/createboard', {
-                        method: 'POST',
-                        body: formData
-                        // mode: 'no-cors',
-                        // headers: { 'Content-Type': 'application/json' },
-                        // credentials: 'same-origin'
-                    })
-                    .then(res => res.json())
-                    // fetch(':3000/todos', {
-                    //     method: 'POST',
-                    //     body: JSON.stringify({ bname, secret }),
-                    //     headers: { 'Content-Type': 'application/json' },
-                    //     credentials: 'same-origin'
-                    // })
-                    // .then(res => res.json())
-                    .then(function (response) {
-                        if (response.status === 1) {
-                            // self.bos.reverse() // array倒序
-                            // // self.bos.unshift(response)
-                            // self.bos.push(response)
-                            // self.bos.reverse()
-                            self.$message.success('success')
-                            self.dialogFormVisible2 = false
-                            setTimeout(() => {
-                                // self.fullscreenLoading = false
-                                self.$router.replace('/' + self.userName + '/' + response.bname + '/')
-                            }, 2000);
-                        } else {
-                            self.$message.error("board name is used by yourself")
-                        }
-                    })
-                }
-                })
-            },
-            createBoard1 (formName) {
-                let self = this
-                var bname = this.form2.name.trim()
-                var secret = this.radio1
-                let formData = new FormData()
-                formData.append("id", self.arrCookie)
-                formData.append("bname", this.form2.name.trim())
-                formData.append('secret', this.radio2)
-                this.$refs[formName].validate((valid) => {
-                if (!valid) {
-                    // self.$message.error("name is used or can't be used")
-                } else {
-                    fetch(self.http + '/camU/index/index/createboard', {
-                        method: 'POST',
-                        body: formData
-                        // mode: 'no-cors',
-                        // headers: { 'Content-Type': 'application/json' },
-                        // credentials: 'same-origin'
-                    })
-                    .then(res => res.json())
-                    // fetch(':3000/todos', {
-                    //     method: 'POST',
-                    //     body: JSON.stringify({ bname, secret }),
-                    //     headers: { 'Content-Type': 'application/json' },
-                    //     credentials: 'same-origin'
-                    // })
-                    // .then(res => res.json())
-                    .then(function (response) {
-                        if (response.status === 1) {
-                            self.bos.reverse() // array倒序
-                            // self.bos.unshift(response)
-                            self.bos.push(response)
-                            self.bos.reverse()
-                            self.$message.success('success')
-                            self.dialogFormVisible2 = false
-                            setTimeout(() => {
-                                // self.fullscreenLoading = false
-                                self.$router.replace('/' + self.userName + '/' + response.bname + '/')
-                            }, 2000);
-                        } else {
-                            self.$message.error("board name is used by yourself")
-                        }
-                    })
-                }
-                })
-            },
-            resetForm(formName) {
-                this.$refs[formName].resetFields()
-                console.log(formName)
+                // }
+                // else {
+                //     let formData1 = new FormData()
+                //     formData1.append('name', self.$route.params.username)
+                //     fetch(self.http + '/camU/index/index/checkuser', {
+                //         method: 'POST',
+                //         body: formData1
+                //         // mode: 'no-cors',
+                //         // headers: { 'Content-Type': 'application/json' },
+                //         // credentials: 'same-origin'
+                //     })
+                //     .then(res => res.json())
+                //     .then(function (res) {
+                //         // console.log(bos)
+                //         self.name = res
+                //     })
+                //     let formData = new FormData()
+                //     formData.append("id", self.arrCookie);
+                //     // fetch(':3000/todos', {
+                //     fetch(self.http + '/camU/index/index/getboards', {
+                //         method: 'POST',
+                //         body: formData
+                //         // mode: 'no-cors',
+                //         // headers: { 'Content-Type': 'application/json' },
+                //         // credentials: 'same-origin'
+                //     })
+                //     .then(res => res.json())
+                //     .then(function (bos) {
+                //         // console.log(bos)
+                //         self.bos = bos
+                //     })
+                // }
             },
             changeBoard (e) {
                 let self = this
@@ -936,8 +659,8 @@
         },
         mounted() {
             document.title = this.$route.path   // 改变网页title
-            let a = this.$route.params
-            console.log(a)
+            // let a = this.$route.params
+            // console.log(a)
             // console.log(this.arrCookie)
             // setInterval(() => {
             // // console.log('simulate async data')

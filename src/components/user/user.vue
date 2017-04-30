@@ -57,7 +57,7 @@
                         <h1 v-if="name.uname">{{ name.uname }}</h1>
                         <h1 v-else>{{ uname }}</h1>
                         </div>
-                    <div class="flex follow dp1">
+                    <!--<div class="flex follow dp1">
                         <div class="px1">
                             <a  rel="">
                             <div class="text-left bold">
@@ -74,7 +74,7 @@
                             </div>
                             </a>
                         </div>
-                    </div>
+                    </div>-->
                 </div>
                 <div class="user-info1" align="right">
                     <div></div>

@@ -142,8 +142,9 @@
               // console.log(self.$route)
               // alert('submit!');
             } else {
-              console.log('error login!!');
-              return false;
+              // console.log('error login!!');
+              self.$message.error('login error!')
+              // return false;
             }
           })
           }

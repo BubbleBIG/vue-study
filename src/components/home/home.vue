@@ -5,23 +5,23 @@
         <waterfall :line-gap="260" :watch="pins">
         <!-- each component is wrapped by a waterfall slot -->
         <waterfall-slot class="waterfall-img"
-            v-for="(pin, index) in pins"
+            v-for="(pin1, index) in pins"
             :width="260"
-            :height="pin.height"
+            :height="pin1.height"
             :order="index"
-            :key="pin.iid"
+            :key="pin1.iid"
         >
         <div style="padding: 12px">
             <div class="pin-img">
                 <div class="pin-btn" style="padding:4px 0px 0px 4px;">
                     <div class="btn"><el-button :plain="true" type="danger" icon="share"></el-button></div>
-                    <div class="btn"><el-button v-if="pin.pinsave === 1" type="danger" :plain="true"
-                    style="color: #fab000" icon="star-on" @click="like(pin.iid)"></el-button>
-                    <el-button v-else :plain="true" type="danger" icon="star-on" @click="like(pin.iid)"></el-button></div>
-                    <div style="margin-left: 72px;" class="btn"><el-button type="primary" @click="dialogVisible5=true,savePin(pin)">save</el-button></div>
+                    <div class="btn"><el-button v-if="pin1.pinsave === 1" type="danger" :plain="true"
+                    style="color: #fab000" icon="star-on" @click="like(pin1.iid)"></el-button>
+                    <el-button v-else :plain="true" type="danger" icon="star-on" @click="like(pin1.iid)"></el-button></div>
+                    <div style="margin-left: 72px;" class="btn"><el-button type="primary" @click="dialogVisible5=true,savePin(pin1)">save</el-button></div>
                 </div>
-                <div @click="dialogPin = true,getPin(pin.iid)" >
-                    <img :src="pin.url" width="100%">
+                <div @click="dialogPin = true,getPin(pin1.iid)" >
+                    <img :src="pin1.url" width="100%">
                 </div>
             </div>
             <div>
@@ -36,13 +36,13 @@
                 <div style="padding:8px 0px;clear:both" align="left">
                     <a href="####" style="height: 30px;color: #a8a8a8">
                         <div class="userPic" style="float:left">
-                            <img v-if="pin.uimg" :src="http+'/camu'+pin.uimg"
+                            <img v-if="pin1.uimg" :src="http+'/camu'+pin1.uimg"
                         style="vertical-align: middle;width:24px;height:24px">
                             <img v-else src="../../common/images/person.png"
                         style="vertical-align: middle;width:24px;height:24px">
                         </div>
                         <div style="padding:0px 32px;" class="creditName">Saved to</div>
-                        <div style="padding:0px 32px;" class="creditTitle">{{ pin.bname }}</div>
+                        <div style="padding:0px 32px;" class="creditTitle">{{ pin1.bname }}</div>
                     </a>
                 </div>
             </div>
@@ -52,22 +52,29 @@
             -->
         </waterfall-slot>
         </waterfall>
-        <el-dialog title="提示" v-model="dialogVisible" size="tiny">
-        <span>这是一段信息</span>
-            <span slot="footer" class="dialog-footer">
-                <el-button @click="dialogVisible = false">取 消</el-button>
-                <el-button type="primary" @click="dialogVisible = false">确 定</el-button>
-            </span>
-        </el-dialog>
         <el-dialog class="" v-model="dialogPin" top="5%">
-            <div class="pin-show" style="padding: 12px">
+            <div id="pin-show" class="pin-show" style="padding: 12px">
                 <div class="pin-img">
-                    <div class="pin-btn" style="padding:4px 0px 0px 4px;">
-                        <div class="btn btn_1"><el-button :plain="true" type="danger" icon="share"></el-button></div>
-                        <div class="btn btn_1"><el-button :plain="true" type="danger" icon="star-on"></el-button></div>
-                        <div style="margin-left: 355px;" class="btn"><el-button type="primary">save</el-button></div>
+                    <div class="pin-btn" style="position:absolute;padding:4px 0px 0px 4px;top:15px;left:28px;">
+                        <div class="btn btn_1">
+                            <el-button :plain="true" type="danger" icon="share"></el-button>
+                        </div>
+                        <div class="btn btn_1" style="position:absolute;top:4px;left:88px;z-index:2;">
+                            <el-button v-if="pin.pinsave === 1" type="danger" :plain="true"
+                        style="color: #fab000" icon="star-on" @click="like(pin.iid)"></el-button>
+                        <el-button v-else :plain="true" type="danger" icon="star-on" @click="like(pin.iid)"></el-button>
+                        </div>
+                        <div class="btn btn_1" style="position:absolute;top:8px;opacity:0.01;left:93px;width:5px;z-index:0;">
+                            <input v-model="pin.iid" v-focus style="width:5px;">
+                        </div>
+                        <div style="position:absolute;top:4px;left:445px;" class="btn">
+                            <el-button type="primary" @click="dialogVisible5=true,savePin(pin)">save</el-button>
+                        </div>
                     </div>
-                    <div>
+                    <div v-if="parseInt(pin.height)>300" align="center">
+                        <img :src="pin.url" height="100%" style="height:700px;">
+                    </div>
+                    <div v-else align="center">
                         <img :src="pin.url" width="100%" class="">
                     </div>
                 </div>
@@ -75,7 +82,7 @@
                     <div class="pinMetaWrapper">
                         <div style="width: 150px;height:29px;line-height:14px;font-size:14px;
                         word-break:break-all;float:left;overflow:hidden">
-                        Nothing</div>
+                        {{ pin.idescription }}</div>
                         <a href="###" align="right"><em class="repinIconSmall"></em>
                         <em class="repinCountSmall">111111</em></a>
                     </div>
@@ -85,7 +92,7 @@
                             <div class="userPic" style="float:left"><img src="../../common/images/person.png"
                             style="vertical-align: middle;width:24px;height:24px"></div>
                             <div style="padding:0px 32px;" class="creditName">Saved to</div>
-                            <div style="padding:0px 32px;" class="creditTitle">first</div>
+                            <div style="padding:0px 32px;" class="creditTitle">{{ pin.bname }}</div>
                         </a>
                     </div>
                 </div>
@@ -94,10 +101,10 @@
         <div :style="{width: '1050px',marginLeft:'-250px',background:'#fff'}">
             <div class="homePins" style="width: 1050px">
                 <div>Related Pins</div>
-                <waterfall :line-gap="260" :watch="pins">
+                <waterfall :line-gap="260" :watch="pins2">
                 <!-- each component is wrapped by a waterfall slot -->
                 <waterfall-slot class="waterfall-img"
-                    v-for="(pin, index) in pins"
+                    v-for="(pin, index) in pins2"
                     :width="260"
                     :height="pin.height"
                     :order="index"
@@ -107,13 +114,15 @@
                     <div class="pin-img">
                         <div class="pin-btn" style="padding:4px 0px 0px 4px;">
                             <div class="btn"><el-button :plain="true" type="danger" icon="share"></el-button></div>
-                            <div class="btn"><el-button :plain="true" type="danger" icon="star-on"></el-button></div>
-                            <div style="margin-left: 72px;" class="btn"><el-button type="primary">save</el-button></div>
+                            <div class="btn"><el-button v-if="pin.pinsave === 1" type="danger" :plain="true"
+                        style="color: #fab000" icon="star-on" @click="like(pin.iid)"></el-button>
+                        <el-button v-else :plain="true" type="danger" icon="star-on" @click="like(pin.iid)"></el-button></div>
+                            <div style="margin-left: 72px;" class="btn"><el-button type="primary" @click="dialogVisible5=true,savePin(pin)">save</el-button></div>
                         </div>
                         <!--<router-link :to="{ name: 'pin', params: { id: pin.iid }}">-->
-                        <router-link :to="'/pin/' + pin.iid">
+                        <a @click="getPin(pin.iid)">
                             <img :src="pin.url" width="100%" class=""/>
-                        </router-link>
+                        </a>
                     </div>
                     <div>
                         <div class="pinMetaWrapper">
@@ -127,11 +136,13 @@
                         <div style="padding:8px 0px;clear:both" align="left">
                             <a href="####" style="height: 30px;color: #a8a8a8">
                                 <div class="userPic" style="float:left">
-                                    <!--<img src="../../common/images/person.png"
-                                style="vertical-align: middle;width:24px;height:24px">-->
+                                    <img v-if="pin.uimg" :src="http+'/camu'+pin.uimg"
+                                style="vertical-align: middle;width:24px;height:24px">
+                                    <img v-else src="../../common/images/person.png"
+                                style="vertical-align: middle;width:24px;height:24px">
                                 </div>
                                 <div style="padding:0px 32px;" class="creditName">Saved to</div>
-                                <div style="padding:0px 32px;" class="creditTitle">first</div>
+                                <div style="padding:0px 32px;" class="creditTitle">{{ pin.bname }}</div>
                             </a>
                         </div>
                     </div>
@@ -240,6 +251,15 @@ import WaterfallSlot from 'vue-waterfall/lib/waterfall-slot'
     // import user from './user.vue'
 	// import { rdUpload } from 'radon-ui'
     export default {
+        directives: {
+            focus: {
+                // 指令的定义---
+                componentUpdated: function (el) {
+                    // 聚焦元素
+                    el.focus()
+                }
+            }
+        },
         components: {
 			// rdUpload
         'v-header': header,
@@ -248,7 +268,7 @@ import WaterfallSlot from 'vue-waterfall/lib/waterfall-slot'
         },
         mounted: function () {
             document.title = this.$route.path   // 改变网页title
-            // Grade(document.querySelectorAll('.gradient-wrap'))
+            // console.log(self.top)
         },
         data () {
             let strCookie = document.cookie
@@ -260,45 +280,24 @@ import WaterfallSlot from 'vue-waterfall/lib/waterfall-slot'
                 input2: '',
                 webUrl: '',
                 iswebsite: '',
-                dialogVisible: false,
                 dialogPin: false,
                 dialogVisible5: false,
                 http: 'http://localhost',
                 arrCookie: arrCookie[1],
                 pins: [],
+                pins2: [],
                 pin: '',
                 likes: '',
                 bosave: '',
                 saveimg: '',
-                align: 'center'
+                align: 'center',
+                numTop: 0
             }
         },
         created: function () {
             this.getPins()
         },
         methods: {
-			// uploadOne () {
-            //     var data = new FormData($('#form12')[0]);
-            //     $.ajax({
-            //         url: '/camU/index/index/uploadPins.html',
-            //         type: 'POST',
-            //         data: data,
-            //         dataType: 'JSON',
-            //         cache: false,
-            //         processData: false,
-            //         contentType: false
-            //     }).done(function (ret) {
-            //         if (ret['isSuccess']) {
-            //             var result = '';
-            //             result += '<img src="' + ret['photo'] + '"width="100">';
-            //             $('#result').html(result);
-            //         } else {
-            //             alert('提交失敗');
-            //         }
-            //     });
-            //             console.log('test success!')
-            //     return false;
-            // },
             getPins () {
                 let self = this
                 let formData = new FormData()
@@ -312,14 +311,6 @@ import WaterfallSlot from 'vue-waterfall/lib/waterfall-slot'
                     // credentials: 'same-origin'
                 })
                 .then(res => res.json())
-                // fetch(':3000/upload', {
-                // // fetch('/camU/index/index/getboards', {
-                //     method: 'GET',
-                //     // mode: 'no-cors',
-                //     headers: { 'Content-Type': 'application/json' },
-                //     credentials: 'same-origin'
-                // })
-                // .then(res => res.json())
                 .then(function (pins) {
                     let length = pins.length
                     fetch(self.http + '/camU/index/index/likes', {
@@ -350,7 +341,7 @@ import WaterfallSlot from 'vue-waterfall/lib/waterfall-slot'
             getPin (e) {
                 let self = this
                 let formData = new FormData()
-                // formData.append("id", self.arrCookie)
+                formData.append("id", self.arrCookie)
                 formData.append("iid", e)
                 fetch(self.http + '/camU/index/index/getpin', {
                     method: 'POST',
@@ -364,7 +355,48 @@ import WaterfallSlot from 'vue-waterfall/lib/waterfall-slot'
                     }
                     // console.log(pins)
                     self.pin = pin
+                    self.numTop += 1
                     // location.reload('/pin/' + pin.iid)
+                    formData.append("category", pin.category)
+                    // formData.append("id", pin.uid)
+                    fetch(self.http + '/camU/index/index/getcategorypins', {
+                        method: 'POST',
+                        body: formData
+                        // mode: 'no-cors',
+                        // headers: { 'Content-Type': 'application/json' },
+                        // credentials: 'same-origin'
+                    })
+                    .then(res => res.json())
+                    .then(function (pins) {
+                        let length = pins.length
+                        fetch(self.http + '/camU/index/index/likes', {
+                            method: 'POST',
+                            body: formData
+                        })
+                        .then(res => res.json())
+                        .then(function (res) {
+                            let length2 = res.mess.length
+                            for (let i = 0; i < length; i++) {
+                                pins[i].height = 114 + parseInt(pins[i].height)
+                                if (pins[i].iswebsite === 0) {
+                                    pins[i].url = self.http + "/camu" + pins[i].url
+                                    // console.log(pins)
+                                }
+                                for (let j = 0; j < length2; j++) {
+                                    if (pins[i].iid === res.mess[j].iid) {
+                                        pins[i].pinsave = 1
+                                        // console.log(pins)
+                                    }
+                                    if (pin.iid === res.mess[j].iid) {
+                                        pin.pinsave = 1
+                                        // console.log(pins)
+                                    }
+                                }
+                            }
+                            // console.log(pins)
+                            self.pins2 = pins
+                        })
+                    })
                 })
             },
             like (e) {
@@ -379,7 +411,7 @@ import WaterfallSlot from 'vue-waterfall/lib/waterfall-slot'
                 .then(res => res.json())
                 .then(function (res) {
                     self.likes = res
-                    console.log(res)
+                    // console.log(res)
                 })
                 // console.log(e)
             },
@@ -471,6 +503,12 @@ import WaterfallSlot from 'vue-waterfall/lib/waterfall-slot'
         },
         watch: {
             likes: 'getPins'
+            // numTop: function () {
+            //     var el = document.getElementById('pin-show')
+            //     var rect = el.getBoundingClientRect()
+            //     console.log(rect.top)
+            //     // console.log(el.top)
+            // }
         }
     }
 </script>
@@ -529,6 +567,10 @@ import WaterfallSlot from 'vue-waterfall/lib/waterfall-slot'
             background: #d7d7d7;
         }
     }
+}
+.pin-show {
+    // height: 800px;
+    // max-height: 800px;
 }
 @media (min-width: 2079px) {
     .homePins {

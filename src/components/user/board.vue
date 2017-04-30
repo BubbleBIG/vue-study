@@ -44,9 +44,18 @@
                     </div>
                 </li>
             </ul>
-            <div style="width:50%;vertical-align: middle">
+            <div style="width:50%;vertical-align: middle;text-align:center;">
             </div>
             <div style="width:25%"></div>
+        </div>
+    </div>
+    <div class="userCommon">
+        <div v-for="item in inviters.mess" v-if="item.status===0&&parseInt(item.inviteduid)===parseInt(arrCookie)" style="margin-bottom:-66px;padding-top:76px;padding-left:10px;text-align:center;">
+            <div style="padding:8px 4px;background-color:#aaa;border-radius:8px;">
+            <span style="display:inline;padding-right:25px;font-size:14px;">Bubble invited you to collaborate on this board</span>
+            <el-button @click="status=0,handlenews(item.bid)">Ignore</el-button>
+            <el-button @click="status=1,handlenews(item.bid)" type="primary">Accept</el-button>
+            </div>
         </div>
     </div>
     <div class="userCommon">
@@ -62,7 +71,7 @@
                     </div>
                 </div>
                 <div style="clear:both;" class="fontFamily"><span class="pins-count">{{ board.count }} Pins</span></div>
-                <div v-if="inviters.count" style="" class="fontFamily"><span class="pins-count">{{ inviters.count }} Followers</span></div>
+                <div v-if="parseInt(inviters.count)>0" style="" class="fontFamily"><span class="pins-count">{{ inviters.count }} Followers</span></div>
             </div>
             <div class="user-info-board" align="right">
                 <div v-if="board.secret===true" class="user-info-li" style="background:#555;">
@@ -77,7 +86,7 @@
                         <i style="font-size:36px;font-weight:bold;" class="el-icon-plus"></i></el-button>
                     <el-button v-else :disabled="true" type="text" class="hasIcon borderless"><i style="font-size:36px;font-weight:bold;" class="el-icon-plus"></i></el-button>
                 </div>
-                <router-link :to="'/'+inviter.inviteduname+'/'" v-for="inviter in inviters.mess" v-if="inviter.status===1" class="user-info-li">
+                <router-link :to="'/'+inviter.invitedwname+'/'" v-for="inviter in inviters.mess" v-if="inviter.status===1" class="user-info-li">
                     <el-tooltip class="" effect="light" :content="inviter.inviteduname+' invited by '+board.name" placement="top">
                         <img v-if="inviter.img" :src="http+'/camu'+inviter.img" width="56" height="56">
                         <img v-else src="../../common/images/person.png" width="56" height="56" />
@@ -503,8 +512,8 @@ import WaterfallSlot from 'vue-waterfall/lib/waterfall-slot'
         mounted: function () {
             document.title = this.$route.path   // 改变网页title
             // debugger;
-            let a = this.$route.params
-            console.log(a)
+            // let a = this.$route.params
+            // console.log(a)
         },
         data () {
             let bname = this.$route.params
@@ -591,6 +600,8 @@ import WaterfallSlot from 'vue-waterfall/lib/waterfall-slot'
                 },
                 inviters: '',
                 invitedname: 1,
+                status: '',
+                count: 0,
                 // rmInviter: 0,
                 username: this.$route.params.username
             }
@@ -1175,18 +1186,10 @@ import WaterfallSlot from 'vue-waterfall/lib/waterfall-slot'
                 })
                 .then(res => res.json())
                 .then(function (res) {
-                    if (res.status === 1) {
-                        self.inviters = res
-                    }
                     // if (res.status === 1) {
-                    //     if (res.mess === 'already') {
-                    //         self.$message.error('you have invited this name to this board!')
-                    //     } else {
-                    //         self.$message.success('invited is send!')
-                    //     }
-                    //     self.invitedname += 1
+                        self.inviters = res
                     // } else {
-                    //     self.$message.error('don`t have this name!')
+                    //     self.inviters = ''
                     // }
                 })
                 // debugger
@@ -1221,12 +1224,65 @@ import WaterfallSlot from 'vue-waterfall/lib/waterfall-slot'
                 })
                 // console.log(self.board.bid)
                 // console.log(e)
+            },
+            handlenews (e) {
+                let self = this
+                let formData = new FormData()
+                formData.append('status', self.status)
+                formData.append('id', self.arrCookie)
+                formData.append('bid', e)
+                fetch(self.http + '/camu/index/index/handlenews', {
+                    method: 'POST',
+                    body: formData
+                })
+                .then(res => res.json())
+                .then(function (res) {
+                    self.invitedname += 1
+                    // if (res.status === 1) {
+                    //     self.count += 1
+                    //     self.board = res
+                    // } else if (res.status === 3) {
+                    //     self.count += 1
+                    // }
+                })
+                .catch(function (error) {
+                    console.error('Fetching failed:', error)
+                    throw error
+                })
+                // console.log(e)
+                // console.log(self.status)
+                // console.log(self.bid)
+                // console.log(self.arrCookie)
             }
+            // getNewsNums () {
+            //     let self = this
+            //     let formData = new FormData()
+            //     formData.append('id', self.arrCookie)
+            //     fetch(self.http + '/camU/index/index/getnewsnums', {
+            //         method: 'POST',
+            //         body: formData
+            //     })
+            //     .then(res => res.json())
+            //     .then(function (res) {
+            //         if (res.status === 1) {
+            //             self.newsNums = res.nums
+            //         } else {
+            //             self.newsNums = 0
+            //         }
+            //         // console.log(res)
+            //     })
+            //     .catch(function (error) {
+            //         console.error('Fetching failed:', error);
+            //         throw error;
+            //     })
+            //     // console.log(self.arrCookie)
+            // }
         },
         watch: {
             dialogVisible5: 'getPins',
             invitedname: 'getInvite',
             "$route": 'getPins'
+            // count: 'getNewsNums'
 
         }
     }

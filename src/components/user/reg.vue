@@ -148,11 +148,12 @@
             if (res.status === 1) {
               // console.log(self.$route.path)
               self.$router.push('/log')
-              console.log(self.$route)
+              // console.log(self.$route)
               // alert('submit!');
             } else {
-              console.log('signUp error!!');
-              return false;
+              // console.log('signUp error!!');
+              self.$message.error('register error!')
+              // return false;
             }
           })
           }
