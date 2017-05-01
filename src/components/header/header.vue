@@ -66,9 +66,9 @@
             </div>
         </form>
         <span class="navb-group navb-g categoriesheader" style="width:px;padding:4px 0;" @click="category">
-            <el-popover ref="popover1" placement="bottom" width="300" trigger="click">
+            <el-popover ref="popover1" placement="bottom" width="320" trigger="click">
             <div id="category-link" style="height:283px;padding:16px 0px 0px 0px;border-bottom:1px solid #eee">
-                <router-link  style="width:150px;float:left;font-size:14px;font-weight:600;line-height: 18px;"
+                <router-link  style="width:160px;float:left;font-size:14px;font-weight:600;line-height: 18px;"
                 :to="'/category/' + item.label" v-for="item in categoryLists">
                     {{ item.value }}
                 </router-link>
