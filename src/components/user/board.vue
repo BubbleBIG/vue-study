@@ -205,8 +205,8 @@
             </el-radio-group>-->
             </el-form-item>
             <el-form-item label="Collaborators" :label-width="formLabelWidth">
-                <el-input auto-complete="off" style="width:350px"></el-input>
-                <el-button>Invite</el-button>
+                <el-input v-model="input3" auto-complete="off" style="width:350px"></el-input>
+                <el-button  @click="invite">Invite</el-button>
             <!--<el-radio-group v-model="board.secret">
                 <el-radio-button label="Yes"></el-radio-button>
                 <el-radio-button label="No"></el-radio-button>>

@@ -87,7 +87,7 @@
             <el-popover ref="popover2" placement="bottom" width="250" trigger="click">
             <div style="height:272px;">
                 <div class="news-list" style="height:270px;overflow:auto">
-                    <div v-for="item in news" style="margin-top:12px;margin-bottom: 5px;">
+                    <div v-if="news!==null" v-for="item in news" style="margin-top:12px;margin-bottom: 5px;">
                         <div v-if="item.action==='add'">
                             <ul>
                                 <li style="width:40px;height:40px;overflow:hidden;border-radius:8px;">
@@ -107,6 +107,8 @@
                             </div>
                         </div>
                     </div>
+                    <div  v-if="!news" align="center" style="font-size:16px;
+                    font-weight:bold;color:#aaa;padding-top:40px;">no new messages</div>
                 </div>
             </div>
             </el-popover>

@@ -15,10 +15,14 @@
             <div v-for="pin in pins" class="pinsItemsClass pinsItem" align="center">
                 <div class="">
                 <div class="pinsCard pinsCard2 gradient-wrap">
-                    <div class="">
-                        <!--{{ pin.id }}-->
-                        <!--<img :src="'/camU/public' + pin.url" width="100%" style="max-width: 100%"/>-->
-                        <img :src="pin.url" width="100%" style="max-width: 100%"/>
+                    <div class="pin-img" style="margin:0;width:210px;">
+                        <div class="pin-btn" style="position:absolute;padding:4px 0px 0px 4px;">
+                            <div class="btn" style="position:absolute;"><el-button :plain="true" @click="dialogVisible6=true,editPin(pin.iid)" icon="edit"></el-button></div>
+                            <div style="position:absolute;left:134px;" class="btn"><el-button type="primary" @click="dialogVisible5=true,savePin(pin)">save</el-button></div>
+                        </div>
+                        <div style="width:210px;margin-left:-10px;"  @click="dialogVisible7 = true,editPin(pin.iid)" >
+                            <img :src="pin.url" width="100%" style="width:210px;">
+                        </div>
                     </div>
                 </div>
                 </div>
@@ -121,6 +125,14 @@
                         <div style="padding-bottom: 10px;border-bottom: 1px solid #efefef">
                             <div class="title" style="font-size: 18px;font-weight: bold;
                             padding-bottom: 8px;">Choose board</div>
+                            <div v-for="bo in bos">
+                                <div v-if="bo.bid === bosave.bid" style="margin-bottom:8px;background-color:#ffe581;font-size:12px;padding:2px;">
+                                    Pssst! Looks like you've already <span style="display:inline;width；100%;color:#bd081c;font-weight:600;">saved this Pin to {{ bo.bname }}.</span>
+                                </div>
+                            </div>
+                            <div v-if="bosave.iid === saveimg.oiid" style="margin-bottom:8px;background-color:#ffe581;font-size:12px;padding:2px;">
+                                Pssst! Looks like you've already <span style="display:inline;width；100%;color:#bd081c;font-weight:600;">saved this Pin to {{ saveimg.bname }}.</span>
+                            </div>
                             <el-input
                             icon="search"
                             placeholder="search"
@@ -170,6 +182,60 @@
                 </el-row>
             </el-form>
         </el-dialog>
+        <el-dialog title="Edit this Pin" v-model="dialogVisible6">
+            <el-form :model="form1" ref="form1" label-position="left">
+                <div>
+                <el-row :gutter="20">
+                <el-col :span="16">
+                <el-form-item label="Board" :label-width="formLabelWidth">
+                    <el-select v-model="form1.bname" placeholder="What kind of board is it?">
+                        <el-option
+                        v-for="item in bos"
+                        :value="item.bname">
+                        {{ item.bname }}
+                         <svg v-if="item.secret === 'true'" class="_2X6AN" style="right:20px;" viewBox="0 0 16 16"><path d="M12.8 6.791h-.04V4.566C12.76 2.048 10.625 0 8 0S3.24 2.048 
+                        3.24 4.566v2.225H3.2A5.577 5.577 0 0 0 2 10.245C2 13.423 4.686 16 8 16s6-2.577 6-5.755a5.579 5.579 0 0 0-1.2-3.454zm-2.36 
+                        0H5.56V4.566c0-1.29 1.095-2.34 2.44-2.34s2.44 1.05 2.44 2.34v2.225z" fill-rule="evenodd"></path></svg>
+                        <svg v-if="parseInt(item.uid)!==parseInt(arrCookie)" class="_2X6AN" viewBox="0 0 16 16"><path d="M9.143 10.2A4 4 0 0 1 16 13v1H0v-1a5 5 0 0 1 9.143-2.8zM12
+                        8a2 2 0 1 0 .001-3.999A2 2 0 0 0 12 8zM5 7a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5z" fill-rule="evenodd"></path></svg>               
+                        </el-option>
+                    </el-select>
+                </el-form-item>
+                <el-form-item label="Description" :label-width="formLabelWidth">
+                <el-input type="textarea" :autosize="{ minRows: 5, maxRows: 5}" v-model="form1.idescription" placeholder="What's yours pin about?"
+                auto-complete="off"></el-input>
+                </el-form-item>
+                </el-col>
+                <el-col :span="8"><div style="width:150px;height:210;">
+                    <img :src="form1.url" width="100%" style="max-height:200;overflow:hidden;object-fit: cover">
+                    </div></el-col>
+                </el-row>
+                </div>
+                <div>
+                <hr>
+                <div class="dialog-footer">
+                    <el-button class="pz3" :plain="true" type="danger" @click="dialogVisible = true" style="float:left">Delete Pin</el-button>
+                    <el-button class="pz3" @click="dialogVisible6=false">Cancel</el-button>
+                    <el-button class="pz3" style="color: #fff" type="primary" @click="savePinEdit(form1)">Save</el-button>
+                </div>
+            </el-form>
+        </el-dialog>
+        <el-dialog title="Are you sure?" v-model="dialogVisible" top="35%">
+            <span>Once you delete this Pin, you can't undo it!</span>
+            <span slot="footer" class="dialog-footer">
+                <el-button @click="dialogVisible = false">Cancel</el-button>
+                <el-button type="primary" @click="
+                    delPin(form1)">Delete Pin</el-button>
+            </span>
+        </el-dialog>
+        <el-dialog
+        title=""
+        v-model="dialogVisible7">
+        <span>
+            <input v-focus style="opacity:0.1;position:absolute;">
+            <img :src="form1.url" width="100%" style="">
+        </span>
+        </el-dialog>
         <div id="result"></div>
         <h1 style="height:30px"></h1>
             <!--<form name="form1" id="form1">  
@@ -185,6 +251,15 @@
 <script>
     // import user from './user.vue'
     export default {
+        directives: {
+            focus: {
+                // 指令的定义---
+                componentUpdated: function (el) {
+                    // 聚焦元素
+                    el.focus()
+                }
+            }
+        },
         components: {
         // 'v-user': user
         },
@@ -219,7 +294,16 @@
                 dialogVisible3: false,
                 dialogVisible4: false,
                 dialogVisible5: false,
+                dialogVisible6: false,
+                dialogVisible7: false,
                 savepinbtn: [],
+                bosave: '',
+                form1: {
+                    // bname: ''
+                },
+                formLabelWidth: '80px',
+                options: 0,
+                saveimg: '',
                 pins: [],
                 bos: [],
                 dialogImageUrl: '',
@@ -404,6 +488,41 @@
                 this.$refs[e].resetFields()
                 // console.log('kk')
             },
+            savePin (e) {
+                let self = this
+                self.webUrl = e.url
+                self.iswebsite = e.iswebsite
+                self.bosave = e
+                let formData = new FormData()
+                formData.append("id", self.arrCookie);
+                // fetch(':3000/todos', {
+                fetch(self.http + '/camU/index/index/getboards', {
+                    method: 'POST',
+                    body: formData
+                    // mode: 'no-cors',
+                    // headers: { 'Content-Type': 'application/json' },
+                    // credentials: 'same-origin'
+                })
+                .then(res => res.json())
+                .then(function (bos) {
+                    // console.log(bos)
+                    self.bos = bos
+                })
+                formData.append("iid", self.bosave.iid);
+                fetch(self.http + '/camU/index/index/getsave', {
+                    method: 'POST',
+                    body: formData
+                    // mode: 'no-cors',
+                    // headers: { 'Content-Type': 'application/json' },
+                    // credentials: 'same-origin'
+                })
+                .then(res => res.json())
+                .then(function (res) {
+                    self.saveimg = res
+                    // debugger
+                    // console.log(bos)
+                })
+            },
             pinSave (e) {
                 // console.log(e)
                 // debugger
@@ -452,11 +571,101 @@
                 // console.log(this.ImageUrl)
                 // console.log(self.ImageUrl)
             },
+            editPin (e) {
+                let self = this
+                let formData = new FormData()
+                formData.append("id", self.arrCookie)
+                formData.append("iid", e)
+                fetch(self.http + '/camU/index/index/getpin', {
+                    method: 'POST',
+                    body: formData
+                })
+                .then(res => res.json())
+                .then(function (pin) {
+                    if (pin.iswebsite === 0) {
+                        pin.url = self.http + "/camu" + pin.url
+                        // console.log(pins)
+                    }
+                    self.form1 = pin
+                })
+                fetch(self.http + '/camU/index/index/getboards', {
+                    method: 'POST',
+                    body: formData
+                    // mode: 'no-cors',
+                    // headers: { 'Content-Type': 'application/json' },
+                    // credentials: 'same-origin'
+                })
+                .then(res => res.json())
+                .then(function (res) {
+                    self.bos = res
+                })
+            },
+            savePinEdit (e) {
+                let self = this
+                let formData = new FormData()
+                formData.append('iid', e.iid)
+                formData.append('bname', e.bname)
+                formData.append('bid', e.bid)
+                formData.append('id', self.arrCookie)
+                formData.append('idescription', e.idescription)
+                formData.append('url', e.url)
+                fetch(self.http + '/camu/index/index/savepinedit', {
+                    method: 'POST',
+                    body: formData
+                })
+                .then(res => res.json())
+                .then(function (res) {
+                    if (res.status === 1) {
+                        self.$message.success('Update success!')
+                        self.dialogVisible6 = false
+                        self.options += 1
+                    } else if (res.status === 2) {
+                        self.$message.success('Update success!')
+                        self.dialogVisible6 = false
+                    } else {
+                        self.$message.error('Nothing changed')
+                        self.dialogVisible6 = false
+                    }
+                })
+                .catch(function (error) {
+                    console.error('Fetching failed:', error);
+                    throw error;
+                })
+                // console.log(e)
+            },
+            delPin (e) {
+                let self = this
+                let formData = new FormData()
+                formData.append('iid', e.iid)
+                formData.append('bid', e.bid)
+                formData.append('cover', e.url)
+                fetch(self.http + '/camu/index/index/delpin', {
+                    method: 'POST',
+                    body: formData
+                })
+                .then(res => res.json())
+                .then(function (res) {
+                    if (res.status === 1) {
+                        self.$message.success('Delete success!')
+                        self.options += 1
+                    } else {
+                        self.$message.error('Delete error!')
+                    }
+                    self.dialogVisible = false
+                    self.dialogVisible6 = false
+                })
+                .catch(function (error) {
+                    console.error('Fetching failed:', error);
+                    throw error;
+                })
+                console.log(e.url)
+            },
             handleIconClick () {}
         },
         watch: {
             dialogVisible5: 'getpins',
-            "$route": 'getpins'
+            "$route": 'getpins',
+            options: 'getpins'
         },
         mounted: function () {
             let self = this
@@ -562,6 +771,12 @@
             }
             .pinsCard {
                 height: 236px;
+                .pin-btn {
+                    opacity: 0;
+                }
+            }
+            .pinsCard:hover .pin-btn {
+                    opacity: 1;
             }
         }
         .pinsCard2 {

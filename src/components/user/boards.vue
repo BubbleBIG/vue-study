@@ -322,8 +322,8 @@
                 </div>
                 <div>
                 <el-form-item label="Collaborators" :label-width="formLabelWidth">
-                    <el-input auto-complete="off" style="width:350px" placeholder="Name"></el-input>
-                    <el-button>Invite</el-button>
+                    <el-input v-model="input3" auto-complete="off" style="width:350px"></el-input>
+                    <el-button  @click="invite">Invite</el-button>
                 <!--<el-radio-group v-model="form1.secret">
                     <el-radio-button label="Yes"></el-radio-button>
                     <el-radio-button label="No"></el-radio-button>>
@@ -422,6 +422,7 @@
                 radio3: 1,
                 visible2: false,
                 radio2: true,
+                input3: '',
                 dialogVisible: false,
                 dialogVisible2: false,
                 dialogFormVisible1: false,
@@ -925,6 +926,43 @@
                 // }
                 })
                 // console.log(e)
+            },
+            invite () {
+                let self = this
+                let formData = new FormData()
+                formData.append("id", self.arrCookie)
+                formData.append("bid", self.form1.bid)
+                formData.append("name", self.input3)
+                if (self.input3 === self.arrname) {
+                    self.$message.error('not allow to invite yourself!')
+                } else {
+                    fetch(self.http + '/camU/index/index/invite', {
+                        method: 'POST',
+                        body: formData
+                        // mode: 'no-cors',
+                        // headers: { 'Content-Type': 'application/json' },
+                        // credentials: 'same-origin'
+                    })
+                    .then(res => res.json())
+                    .then(function (res) {
+                        if (res.status === 1) {
+                            if (res.mess === 'already') {
+                                self.$message.error('That user has already been invited to save to this board!')
+                            } else if (res.mess === 'dupe') {
+                                self.$message.error('That user has already been invited to save to this board!')
+                            } else {
+                                self.input3 = ''
+                                self.$message.success('Invited is send!')
+                            }
+                            self.invitedname += 1
+                        } else if (res.status === 2) {
+                            self.$message.error('Not allow to invite the Owner!')
+                        } else {
+                            self.$message.error('Unfind this name!')
+                        }
+                    })
+                }
+                // console.log(self.input3)
             }
         },
         watch: {

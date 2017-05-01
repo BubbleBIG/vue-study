@@ -24,11 +24,11 @@
                     <img :src="pin1.url" width="100%">
                 </div>
             </div>
-            <div>
+         <div>
                 <div class="pinMetaWrapper">
                     <div style="width: 150px;height:29px;line-height:14px;font-size:14px;
                     word-break:break-all;float:left;overflow:hidden">
-                    Nothing</div>
+                    {{ pin1.idescription }}</div>
                     <a href="###" align="right"><em class="repinIconSmall"></em>
                     <em class="repinCountSmall">111111</em></a>
                 </div>
@@ -128,7 +128,7 @@
                         <div class="pinMetaWrapper">
                             <div style="width: 150px;height:29px;line-height:14px;font-size:14px;
                             word-break:break-all;float:left;overflow:hidden">
-                            Nothing</div>
+                            {{ pin.idescription }}</div>
                             <a href="###" align="right"><em class="repinIconSmall"></em>
                             <em class="repinCountSmall">111111</em></a>
                         </div>
