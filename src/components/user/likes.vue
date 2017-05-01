@@ -15,16 +15,19 @@
             <div class="pin-img">
                 <div class="pin-btn" style="padding:4px 0px 0px 4px;">
                     <div class="btn"><el-button :plain="true" type="danger" icon="share"></el-button></div>
-                    <div class="btn"><el-button v-if="pin1.pinsave === 1" type="danger" :plain="true"
-                    style="color: #fab000" icon="star-on" @click="like(pin1.iid)"></el-button>
-                    <el-button v-else :plain="true" type="danger" icon="star-on" @click="like(pin1.iid)"></el-button></div>
+                    <div class="btn">
+                        <el-tooltip v-if="pin1.pinsave === 1" effect="dark" content="Unlike" placement="bottom">
+                        <el-button type="danger" :plain="true"
+                        style="color: #fab000" icon="star-on" @click="like(pin1.iid)"></el-button></el-tooltip>
+                        <el-tooltip v-else effect="dark" content="like" placement="bottom">
+                        <el-button :plain="true" type="danger" icon="star-on" @click="like(pin1.iid)"></el-button></div></el-tooltip>
                     <div style="margin-left: 72px;" class="btn"><el-button type="primary" @click="dialogVisible5=true,savePin(pin1)">save</el-button></div>
                 </div>
                 <div @click="dialogPin = true,getPin(pin1.iid)" >
                     <img :src="pin1.url" width="100%">
                 </div>
             </div>
-            <div>
+         <div>
                 <div class="pinMetaWrapper">
                     <div style="width: 150px;height:29px;line-height:14px;font-size:14px;
                     word-break:break-all;float:left;overflow:hidden">
@@ -303,7 +306,7 @@ import WaterfallSlot from 'vue-waterfall/lib/waterfall-slot'
                 let formData = new FormData()
                 formData.append("id", self.arrCookie)
                 // formData.append("bid", e)
-                fetch(self.http + '/camU/index/index/getpins1', {
+                fetch(self.http + '/camU/index/index/getpinslike', {
                     method: 'POST',
                     body: formData
                     // mode: 'no-cors',

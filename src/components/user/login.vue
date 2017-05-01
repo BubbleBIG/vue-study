@@ -3,6 +3,7 @@
         <div class="signUpCard">
         <el-card class="box-card">
           <div slot="header" class="clearfix">
+            <div style="font-size:14px;">( 测试账号：user  密码：123456 )</div>
             <span style="">Login</span>
           </div>
             <el-form :model="ruleForm1" :rules="rules1" ref="ruleForm1">
