@@ -18,7 +18,7 @@
                     <div class="pin-img" style="margin:0;width:210px;">
                         <div class="pin-btn" style="position:absolute;padding:4px 0px 0px 4px;">
                             <div class="btn" style="position:absolute;"><el-button :plain="true" @click="dialogVisible6=true,editPin(pin.iid)" icon="edit"></el-button></div>
-                            <div style="position:absolute;left:134px;" class="btn"><el-button type="primary" @click="dialogVisible5=true,savePin(pin)">save</el-button></div>
+                            <div style="position:absolute;left:134px;" class="btn"><el-button type="primary" @click="dialogVisible5=true,hash='',savePin(pin)">save</el-button></div>
                         </div>
                         <div style="width:210px;margin-left:-10px;"  @click="dialogVisible7 = true,editPin(pin.iid)" >
                             <img :src="pin.url" width="100%" style="width:210px;">
@@ -130,8 +130,11 @@
                                     Pssst! Looks like you've already <span style="display:inline;width；100%;color:#bd081c;font-weight:600;">saved this Pin to {{ bo.bname }}.</span>
                                 </div>
                             </div>
-                            <div v-if="bosave.iid === saveimg.oiid" style="margin-bottom:8px;background-color:#ffe581;font-size:12px;padding:2px;">
+                            <!--<div v-if="bosave.iid === saveimg.oiid" style="margin-bottom:8px;background-color:#ffe581;font-size:12px;padding:2px;">
                                 Pssst! Looks like you've already <span style="display:inline;width；100%;color:#bd081c;font-weight:600;">saved this Pin to {{ saveimg.bname }}.</span>
+                            </div>-->
+                            <div v-for="bo in bos" v-if="hash&&hash.bid === bo.bid" style="margin-bottom:8px;background-color:#ffe581;font-size:12px;padding:2px;">
+                                Pssst! Looks like you've already <span style="display:inline;width；100%;color:#bd081c;font-weight:600;">upload this Pin to {{ bo.bname }}.</span>
                             </div>
                             <el-input
                             icon="search"
@@ -161,7 +164,9 @@
                                                 <svg v-if="parseInt(bo.uid)!==parseInt(arrCookie)" class="_2X6AN" viewBox="0 0 16 16"><path d="M9.143 10.2A4 4 0 0 1 16 13v1H0v-1a5 5 0 0 1 9.143-2.8zM12
                                                 8a2 2 0 1 0 .001-3.999A2 2 0 0 0 12 8zM5 7a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5z" fill-rule="evenodd"></path></svg>
                                                 </el-button>
-                                            <el-button style="position:absolute;top:0;right:0;" type="primary" class="board-list-save"
+                                            <el-button v-if="bosave" style="position:absolute;top:0;right:0;" type="primary" class="board-list-save"
+                                            @click="pinSave2(bo)">Save</el-button>
+                                            <el-button v-else style="position:absolute;top:0;right:0;" type="primary" class="board-list-save"
                                             @click="pinSave(bo)">Save</el-button>
                                         </div>
                                     </div>
@@ -318,7 +323,8 @@
                     url: [
                         { validator: checkUrl, trigger: 'blur' }
                     ]
-                }
+                },
+                hash: ''
             }
         },
         created: function () {
@@ -408,6 +414,7 @@
             },
             handleResponse(file, fileList) {
                 let self = this
+                self.bosave = ''
                 if (file.response.status === 1) {
                 let formData = new FormData()
                 formData.append("id", self.arrCookie);
@@ -425,6 +432,7 @@
                     self.bos = bos
                 })
                 this.webUrl = file.url
+                self.hash = file.response.img
                 this.ImageUrl = file.response.url
                 this.iswebsite = 0
                 this.dialogVisible5 = true
@@ -458,6 +466,7 @@
             // },
             urlForm (e) {
                 let self = this
+                self.bosave = ''
                 let ImgObj = new Image()
                 ImgObj.src = self.formInline.url
                 // debugger
@@ -557,6 +566,61 @@
                         if (res.status === 1) {
                             self.$message.success('数据保存成功')
                             self.dialogVisible5 = false
+                        }
+                    })
+                    // console.log('success')
+                } else {
+                    this.$message.error('无法识别或保存图片');
+                    // console.log('error')
+                }
+                // console.log(height)
+                // console.log(e)
+                // console.log(this.textarea)
+                // console.log(this.iswebsite)
+                // console.log(this.ImageUrl)
+                // console.log(self.ImageUrl)
+            },
+            pinSave2 (e) {
+                // console.log(e)
+                // debugger
+                let h = document.getElementById("imgData")
+                let height = h.offsetHeight
+                let self = this
+                let ImgObj = new Image()
+                ImgObj.src = self.webUrl
+                if (height > 1111) {
+                    height = 1111
+                }
+                if (ImgObj.width > 0 && ImgObj.height > 0) {
+                    let formData = new FormData()
+                    formData.append("id", self.arrCookie)
+                    formData.append("height", height)
+                    if (e.bid === self.bosave.bid) {
+                        formData.append("url", '')
+                    } else {
+                        formData.append("url", self.webUrl)
+                    }
+                    formData.append("idescription", self.textarea)
+                    formData.append("bid", e.bid)
+                    formData.append("bname", e.bname)
+                    formData.append("iswebsite", self.iswebsite)
+                    formData.append("iid", self.bosave.iid)
+                    // fetch(':3000/todos', {
+                    fetch(self.http + '/camU/index/index/uploadpin2', {
+                        method: 'POST',
+                        body: formData
+                        // mode: 'no-cors',
+                        // headers: { 'Content-Type': 'application/json' },
+                        // credentials: 'same-origin'
+                    })
+                    .then(res => res.json())
+                    .then(function (res) {
+                        // console.log(res)
+                        if (res.status === 1) {
+                            self.$message.success('数据保存成功')
+                            self.dialogVisible5 = false
+                        } else {
+                            self.$message.error('数据保存失败')
                         }
                     })
                     // console.log('success')

@@ -6,11 +6,11 @@
             <ul class="" style="width:25%;padding: 7px 2px">
                 <li>
                     <router-link to="/settings" class="iconButton">
-                        <el-button v-if="name.name!==userName" :disabled="true" type="text" class="Button editSettingsButton mr2">
+                        <el-button v-if="name.name===userName" type="text" class="Button editSettingsButton mr2">
                             <em style="margin-left: 9px"></em>
                             <span class="accessibilityText">Edit settings</span>
                         </el-button>
-                        <el-button v-else type="text" class="Button editSettingsButton mr2">
+                        <el-button v-else :disabled="true" type="text" class="Button editSettingsButton mr2">
                             <em style="margin-left: 9px"></em>
                             <span class="accessibilityText">Edit settings</span>
                         </el-button>
