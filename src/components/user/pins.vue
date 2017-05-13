@@ -402,8 +402,8 @@
                 .then(function (pins) {
                     let length = pins.length
                     for (let i = 0; i < length; i++) {
-                        if (pins[i].iswebsite === 0) {
-                            pins[i].url = self.http + "/camu" + pins[i].url
+                        if (parseInt(pins[i].iswebsite) === 0) {
+                            pins[i].url = self.http + "/camU" + pins[i].url
                             // console.log(pins)
                         }
                     }
@@ -647,7 +647,7 @@
                 .then(res => res.json())
                 .then(function (pin) {
                     if (pin.iswebsite === 0) {
-                        pin.url = self.http + "/camu" + pin.url
+                        pin.url = self.http + "/camU" + pin.url
                         // console.log(pins)
                     }
                     self.form1 = pin
@@ -673,7 +673,7 @@
                 formData.append('id', self.arrCookie)
                 formData.append('idescription', e.idescription)
                 formData.append('url', e.url)
-                fetch(self.http + '/camu/index/index/savepinedit', {
+                fetch(self.http + '/camU/index/index/savepinedit', {
                     method: 'POST',
                     body: formData
                 })
@@ -703,7 +703,7 @@
                 formData.append('iid', e.iid)
                 formData.append('bid', e.bid)
                 formData.append('cover', e.url)
-                fetch(self.http + '/camu/index/index/delpin', {
+                fetch(self.http + '/camU/index/index/delpin', {
                     method: 'POST',
                     body: formData
                 })

@@ -168,7 +168,7 @@ import WaterfallSlot from 'vue-waterfall/lib/waterfall-slot'
                 // .then(res => res.json())
                 .then(function (pin) {
                     if (pin.iswebsite === 0) {
-                        pin.url = self.http + "/camu" + pin.url
+                        pin.url = self.http + "/camU" + pin.url
                         // console.log(pins)
                     }
                     // console.log(pins)
@@ -202,7 +202,7 @@ import WaterfallSlot from 'vue-waterfall/lib/waterfall-slot'
                     for (let i = 0; i < length; i++) {
                         pins[i].height = 114 + parseInt(pins[i].height)
                         if (pins[i].iswebsite === 0) {
-                            pins[i].url = self.http + "/camu" + pins[i].url
+                            pins[i].url = self.http + "/camU" + pins[i].url
                             // console.log(pins)
                         }
                     }

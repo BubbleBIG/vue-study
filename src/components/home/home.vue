@@ -39,7 +39,7 @@
                 <div style="padding:8px 0px;clear:both" align="left">
                     <a href="####" style="height: 30px;color: #a8a8a8">
                         <div class="userPic" style="float:left">
-                            <img v-if="pin1.uimg" :src="http+'/camu'+pin1.uimg"
+                            <img v-if="pin1.uimg" :src="http+'/camU'+pin1.uimg"
                         style="vertical-align: middle;width:24px;height:24px">
                             <img v-else src="../../common/images/person.png"
                         style="vertical-align: middle;width:24px;height:24px">
@@ -139,7 +139,7 @@
                         <div style="padding:8px 0px;clear:both" align="left">
                             <a href="####" style="height: 30px;color: #a8a8a8">
                                 <div class="userPic" style="float:left">
-                                    <img v-if="pin.uimg" :src="http+'/camu'+pin.uimg"
+                                    <img v-if="pin.uimg" :src="http+'/camU'+pin.uimg"
                                 style="vertical-align: middle;width:24px;height:24px">
                                     <img v-else src="../../common/images/person.png"
                                 style="vertical-align: middle;width:24px;height:24px">
@@ -326,7 +326,7 @@ import WaterfallSlot from 'vue-waterfall/lib/waterfall-slot'
                         for (let i = 0; i < length; i++) {
                             pins[i].height = 114 + parseInt(pins[i].height)
                             if (pins[i].iswebsite === 0) {
-                                pins[i].url = self.http + "/camu" + pins[i].url
+                                pins[i].url = self.http + "/camU" + pins[i].url
                                 // console.log(pins)
                             }
                             for (let j = 0; j < length2; j++) {
@@ -353,7 +353,7 @@ import WaterfallSlot from 'vue-waterfall/lib/waterfall-slot'
                 .then(res => res.json())
                 .then(function (pin) {
                     if (pin.iswebsite === 0) {
-                        pin.url = self.http + "/camu" + pin.url
+                        pin.url = self.http + "/camU" + pin.url
                         // console.log(pins)
                     }
                     // console.log(pins)
@@ -382,7 +382,7 @@ import WaterfallSlot from 'vue-waterfall/lib/waterfall-slot'
                             for (let i = 0; i < length; i++) {
                                 pins[i].height = 114 + parseInt(pins[i].height)
                                 if (pins[i].iswebsite === 0) {
-                                    pins[i].url = self.http + "/camu" + pins[i].url
+                                    pins[i].url = self.http + "/camU" + pins[i].url
                                     // console.log(pins)
                                 }
                                 for (let j = 0; j < length2; j++) {

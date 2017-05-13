@@ -88,13 +88,13 @@
                 </div>
                 <router-link :to="'/'+inviter.invitedwname+'/'" v-for="inviter in inviters.mess" v-if="inviter.status===1" class="user-info-li">
                     <el-tooltip class="" effect="light" :content="inviter.inviteduname+' invited by '+board.name" placement="top">
-                        <img v-if="inviter.img" :src="http+'/camu'+inviter.img" width="56" height="56">
+                        <img v-if="inviter.img" :src="http+'/camU'+inviter.img" width="56" height="56">
                         <img v-else src="../../common/images/person.png" width="56" height="56" />
                     </el-tooltip>
                 </router-link>
                 <router-link :to="'/'+board.name+'/'" class="user-info-li">
                     <el-tooltip class="" effect="light" :content="board.name+', the Owner'" placement="top">
-                        <img v-if="board.img" :src="http+'/camu'+board.img" width="56" height="56">
+                        <img v-if="board.img" :src="http+'/camU'+board.img" width="56" height="56">
                         <img v-else src="../../common/images/person.png" width="56" height="56" >
                     </el-tooltip>
                 </router-link>
@@ -135,12 +135,12 @@
                 <div style="padding:8px 0px;clear:both" align="left">
                     <a href="####" style="height: 30px;color: #a8a8a8;position:relative;">
                         <div class="userPic" style="float:left">
-                            <img v-if="pin.uid===board.uid" :src="http+'/camu'+board.img"
+                            <img v-if="pin.uid===board.uid" :src="http+'/camU'+board.img"
                             style="position:absolute;z-index:2;vertical-align: middle;width:24px;height:24px;border-radius:50%;">
                             <img v-else src="../../common/images/person.png"
                             style="position:absolute;z-index:1;vertical-align: middle;width:24px;height:24px">
                             </div>
-                            <img v-for="inviter in inviters.mess" v-if="pin.uid===inviter.inviteduid" :src="http+'/camu'+inviter.img"
+                            <img v-for="inviter in inviters.mess" v-if="pin.uid===inviter.inviteduid" :src="http+'/camU'+inviter.img"
                             style="position:absolute;z-index:2;vertical-align: middle;width:24px;height:24px;border-radius:50%;">
                         <div style="padding:0px 32px;" class="creditName">Saved to</div>
                         <div style="padding:0px 32px;" class="creditTitle">{{ pin.bname }}</div>
@@ -434,7 +434,7 @@
                                     <div class="board-list">
                                         <div>
                                             <el-button type="text" class="board-list-btn" style="margin-left: 5px;">
-                                                <img v-if="board.img" :src="http+'/camu'+board.img" style="vertical-align:middle;width:35px;
+                                                <img v-if="board.img" :src="http+'/camU'+board.img" style="vertical-align:middle;width:35px;
                                                 height:34px;object-fit: cover;border-radius:3px;">
                                                 <img v-else src="../../common/images/pg.png" style="vertical-align:middle">
                                                 <span style="display:inline">{{ board.name }}</span>
@@ -445,7 +445,7 @@
                                 <div v-if="inviters.status===1" v-for="inviter in inviters.mess">
                                     <div v-if="parseInt(arrCookie)===parseInt(inviter.inviteduid)" class="board-list">
                                         <el-button type="text" class="board-list-btn" style="margin-left: 5px;">
-                                            <img v-if="inviter.img" :src="http+'/camu'+inviter.img" style="vertical-align:middle;width:35px;
+                                            <img v-if="inviter.img" :src="http+'/camU'+inviter.img" style="vertical-align:middle;width:35px;
                                             height:34px;object-fit: cover;border-radius:3px;">
                                             <img v-else src="../../common/images/person.png" style="width:35px;height:34px;vertical-align:middle">
                                             <span style="display:inline">{{ inviter.inviteduname }}</span>
@@ -457,7 +457,7 @@
                                     </div>
                                     <div v-else class="board-list">
                                         <el-button v-if="inviter.status===1" type="text" class="board-list-btn" style="margin-left: 5px;">
-                                            <img v-if="inviter.img" :src="http+'/camu'+inviter.img" style="vertical-align:middle;width:35px;
+                                            <img v-if="inviter.img" :src="http+'/camU'+inviter.img" style="vertical-align:middle;width:35px;
                                             height:34px;object-fit: cover;border-radius:3px;">
                                             <img v-else src="../../common/images/person.png" style="width:35px;height:34px;vertical-align:middle">
                                             <span style="display:inline">{{ inviter.inviteduname }}</span>
@@ -465,7 +465,7 @@
                                             <i v-else class="el-icon-circle-cross el-icon--right"></i>
                                             </el-button>
                                         <el-button v-else type="text" class="board-list-btn" style="margin-left: 5px;opacity:0.5">
-                                        <img v-if="inviter.img" :src="http+'/camu'+inviter.img" style="vertical-align:middle;width:35px;
+                                        <img v-if="inviter.img" :src="http+'/camU'+inviter.img" style="vertical-align:middle;width:35px;
                                         height:34px;object-fit: cover;border-radius:3px;">
                                         <img v-else src="../../common/images/person.png" style="width:35px;height:34px;vertical-align:middle">
                                         <span style="display:inline">{{ inviter.inviteduname }}</span>
@@ -641,7 +641,7 @@ import WaterfallSlot from 'vue-waterfall/lib/waterfall-slot'
                         for (let i = 0; i < length; i++) {
                             pins.pins[i].height = 114 + parseInt(pins.pins[i].height)
                             if (pins.pins[i].iswebsite === 0) {
-                                pins.pins[i].url = self.http + "/camu" + pins.pins[i].url
+                                pins.pins[i].url = self.http + "/camU" + pins.pins[i].url
                                 // console.log(pins)
                             }
                         }
@@ -681,8 +681,8 @@ import WaterfallSlot from 'vue-waterfall/lib/waterfall-slot'
                         let length = pins.pins.length
                         for (let i = 0; i < length; i++) {
                             pins.pins[i].height = 114 + parseInt(pins.pins[i].height)
-                            if (pins.pins[i].iswebsite === 0) {
-                                pins.pins[i].url = self.http + "/camu" + pins.pins[i].url
+                            if (parseInt(pins.pins[i].iswebsite === 0)) {
+                                pins.pins[i].url = self.http + "/camU" + pins.pins[i].url
                                 // console.log(pins)
                             }
                         }
@@ -718,7 +718,7 @@ import WaterfallSlot from 'vue-waterfall/lib/waterfall-slot'
                         for (let i = 0; i < length; i++) {
                             pins.pins[i].height = 114 + parseInt(pins.pins[i].height)
                             if (pins.pins[i].iswebsite === 0) {
-                                pins.pins[i].url = self.http + "/camu" + pins.pins[i].url
+                                pins.pins[i].url = self.http + "/camU" + pins.pins[i].url
                                 // console.log(pins)
                             }
                         }
@@ -926,7 +926,7 @@ import WaterfallSlot from 'vue-waterfall/lib/waterfall-slot'
                 // })
                 // .then(res => res.json())
                 .then(function (pins) {
-                    pins.url = self.http + "/camu" + pins.url
+                    pins.url = self.http + "/camU" + pins.url
                     self.pinss = pins
                 })
                 console.log(e + 'hhhh')
@@ -955,7 +955,7 @@ import WaterfallSlot from 'vue-waterfall/lib/waterfall-slot'
                 // })
                 // .then(res => res.json())
                 .then(function (pins) {
-                    pins.url = self.http + "/camu" + pins.url
+                    pins.url = self.http + "/camU" + pins.url
                     self.pinss = pins
                 })
                 // console.log(this.pinss.bid)
@@ -1231,7 +1231,7 @@ import WaterfallSlot from 'vue-waterfall/lib/waterfall-slot'
                 formData.append('status', self.status)
                 formData.append('id', self.arrCookie)
                 formData.append('bid', e)
-                fetch(self.http + '/camu/index/index/handlenews', {
+                fetch(self.http + '/camU/index/index/handlenews', {
                     method: 'POST',
                     body: formData
                 })

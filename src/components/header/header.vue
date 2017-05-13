@@ -27,7 +27,7 @@
                     <div style="line-height: 24px;">people</div>
                     <router-link :to="'/'+item.wname+'/'" v-for="item in searchLists.user" style="padding:0;">
                         <div style="vertical-align:center;">
-                            <img v-if="item.uimg" :src="http+'/camu'+item.uimg" width="40" height="40" style="display:inline-block;">
+                            <img v-if="item.uimg" :src="http+'/camU'+item.uimg" width="40" height="40" style="display:inline-block;">
                             <div v-else style="vertical-align:center;display:inline-block;width:40px;height:40px;border:1px solid #eee;"></div>
                             <div style="height:40px;display:inline-block;vertical-align:top;">
                                 <span style="line-height: 20px;font-size:18px;font-weight:bold;">{{ item.uname }}</span>
@@ -180,7 +180,7 @@
                 self.count += 1
                 let formData = new FormData()
                 formData.append('id', self.arrCookie)
-                fetch(self.http + '/camu/index/index/getnews', {
+                fetch(self.http + '/camU/index/index/getnews', {
                     method: 'POST',
                     body: formData
                 })
@@ -202,7 +202,7 @@
                 formData.append('status', self.status)
                 formData.append('id', self.arrCookie)
                 formData.append('bid', self.bid)
-                fetch(self.http + '/camu/index/index/handlenews', {
+                fetch(self.http + '/camU/index/index/handlenews', {
                     method: 'POST',
                     body: formData
                 })
@@ -262,7 +262,7 @@
             //         for (let i = 0; i < length; i++) {
             //             pins[i].height = 114 + parseInt(pins[i].height)
             //             if (pins[i].iswebsite === 0) {
-            //                 pins[i].url = self.http + "/camu" + pins[i].url
+            //                 pins[i].url = self.http + "/camU" + pins[i].url
             //                 // console.log(pins)
             //             }
             //         }
@@ -278,7 +278,7 @@
                 let self = this
                 let formData = new FormData()
                 formData.append('word', self.searchWords)
-                fetch(self.http + '/camu/index/index/getsearch', {
+                fetch(self.http + '/camU/index/index/getsearch', {
                     method: 'POST',
                     body: formData
                 })

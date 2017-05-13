@@ -257,7 +257,7 @@ import header from '../header/header.vue'
                 .then(function (res) {
                     // let value = res.uimg.match(/http:\/\/.+/)
                     if (res.uimg) {
-                        res.uimg = self.http + '/camu' + res.uimg
+                        res.uimg = self.http + '/camU' + res.uimg
                     }
                     self.form1 = res
                 })

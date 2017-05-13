@@ -40,7 +40,7 @@
                                 <div style="width:60px;height:60px;border-radius:50%;overflow:hidden;
                                 background:#eff;border:3px solid #eff;position:absolute;left:4%;bottom:90%;">
                                 <div style="position:relative;margin-right:1px;width:30px;transform: translateX(0px) translateY(0px);">
-                                <div style="overflow:hidden;"><div style="position:"><img v-if="bo.uimg" :src="http+'/camu'+bo.uimg" width="60" height="60" style="left:-15px;">
+                                <div style="overflow:hidden;"><div style="position:"><img v-if="bo.uimg" :src="http+'/camU'+bo.uimg" width="60" height="60" style="left:-15px;">
                                 <img v-else src="../../common/images/person.png" width="60" height="60" style="margin-left:-30px;"></div></div>
                                 </div>
                                 <div style="position:absolute;margin-left:2px;top:0;width:30px;transform: translateX(31px) translateY(0px);">
@@ -98,7 +98,7 @@
                                 <div style="width:60px;height:60px;border-radius:50%;overflow:hidden;
                                 background:#eff;border:3px solid #eff;position:absolute;left:4%;bottom:90%;">
                                 <div style="position:relative;margin-right:1px;width:30px;transform: translateX(0px) translateY(0px);">
-                                <div style="overflow:hidden;"><div style="position:"><img v-if="bo.uimg" :src="http+'/camu'+bo.uimg" width="60" height="60" style="left:-15px;">
+                                <div style="overflow:hidden;"><div style="position:"><img v-if="bo.uimg" :src="http+'/camU'+bo.uimg" width="60" height="60" style="left:-15px;">
                                 <img v-else src="../../common/images/person.png" width="60" height="60" style="margin-left:-30px;"></div></div>
                                 </div>
                                 <div style="position:absolute;margin-left:2px;top:0;width:30px;transform: translateX(31px) translateY(0px);">
@@ -440,7 +440,7 @@ import header from '../header/header.vue'
                 // })
                 // .then(res => res.json())
                 .then(function (pins) {
-                    pins.url = self.http + "/camu" + pins.url
+                    pins.url = self.http + "/camU" + pins.url
                     self.pinss = pins
                 })
                 console.log(e + 'hhhh')
@@ -469,7 +469,7 @@ import header from '../header/header.vue'
                 // })
                 // .then(res => res.json())
                 .then(function (pins) {
-                    pins.url = self.http + "/camu" + pins.url
+                    pins.url = self.http + "/camU" + pins.url
                     self.pinss = pins
                 })
                 console.log(this.pinss.bid)
