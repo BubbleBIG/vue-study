@@ -40,7 +40,6 @@
             document.title = this.$route.path   // 改变网页title
             // let strCookie = document.cookie;
             // let arrCookie = strCookie.split("=")
-            // console.log(arrCookie[1])
         },
     data() {
       var checkName = (rule, value, callback) => {
@@ -67,7 +66,7 @@
         }
       }
       return {
-        http: 'http://localhost',
+        http: this.GLOBAL.url,
         url: this.$route.path,
         ruleForm1: {
           pass: '',

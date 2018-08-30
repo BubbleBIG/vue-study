@@ -6,7 +6,7 @@
     <div style="margin-top: 65px"></div>
     <div class="error-page">
     <h2>404</h2>
-    <div>
+    </div>
     <!--<router-view name="pin"></router-view>-->
   </div>
 </template>

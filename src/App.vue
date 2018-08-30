@@ -4,6 +4,12 @@
     <!--<v-header></v-header>-->
     <!--</div>-->
     <div style="margin-top: 65px"></div>
+    <!--<router-link to="/message/" style="position:fixed;top:40%;right:2px;z-index:99;padding:8px 4px;background:#F522D4;
+    text-align:center;color:#dedede;font-size:14px;line-height:16px;">
+      <div>
+      <p>留</p><p>言</p><p>板</p>
+      </div>
+    </router-link>-->
     <router-view></router-view>
     <!--<router-view name="pin"></router-view>-->
   </div>

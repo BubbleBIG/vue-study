@@ -202,7 +202,7 @@ import header from '../header/header.vue'
                 }
             }
             return {
-                http: 'http://localhost',
+                http: this.GLOBAL.url,
                 arrCookie: arrCookie[1],
                 imageUrl: '',
                 userImg: '',

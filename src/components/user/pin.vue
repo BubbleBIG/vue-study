@@ -28,7 +28,7 @@
                             <div class="userPic" style="float:left"><img src="../../common/images/person.png"
                             style="vertical-align: middle;width:24px;height:24px"></div>
                             <div style="padding:0px 32px;" class="creditName">Saved to</div>
-                            <div style="padding:0px 32px;" class="creditTitle">first</div>
+                            <div style="padding:0px 32px;" class="creditTitle">{{pin.bname}}</div>
                         </a>
                     </div>
                 </div>
@@ -70,11 +70,11 @@
                         <div style="padding:8px 0px;clear:both" align="left">
                             <a href="####" style="height: 30px;color: #a8a8a8">
                                 <div class="userPic" style="float:left">
-                                    <!--<img src="../../common/images/person.png"
-                                style="vertical-align: middle;width:24px;height:24px">-->
+                                    <img src="../../common/images/person.png"
+                                style="vertical-align: middle;width:24px;height:24px">
                                 </div>
                                 <div style="padding:0px 32px;" class="creditName">Saved to</div>
-                                <div style="padding:0px 32px;" class="creditTitle">first</div>
+                                <div style="padding:0px 32px;" class="creditTitle">{{pin.bname}}</div>
                             </a>
                         </div>
                     </div>
@@ -121,7 +121,7 @@ import WaterfallSlot from 'vue-waterfall/lib/waterfall-slot'
             let arr = strCookie.split(";")
             let arrCookie = arr[0].split("=")
             return {
-                http: 'http://localhost',
+                http: this.GLOBAL.url,
                 width: width,
                 dialogPin: true,
                 id: a.id,
@@ -148,7 +148,7 @@ import WaterfallSlot from 'vue-waterfall/lib/waterfall-slot'
             getPin () {
                 let self = this
                 let formData = new FormData()
-                // formData.append("id", self.arrCookie)
+                formData.append("id", self.arrCookie)
                 formData.append("iid", self.id)
                 fetch(self.http + '/camU/index/index/getpin', {
                     method: 'POST',
@@ -167,7 +167,7 @@ import WaterfallSlot from 'vue-waterfall/lib/waterfall-slot'
                 // })
                 // .then(res => res.json())
                 .then(function (pin) {
-                    if (pin.iswebsite === 0) {
+                    if (parseInt(pin.iswebsite) === 0) {
                         pin.url = self.http + "/camU" + pin.url
                         // console.log(pins)
                     }
@@ -201,7 +201,7 @@ import WaterfallSlot from 'vue-waterfall/lib/waterfall-slot'
                     let length = pins.length
                     for (let i = 0; i < length; i++) {
                         pins[i].height = 114 + parseInt(pins[i].height)
-                        if (pins[i].iswebsite === 0) {
+                        if (parseInt(pins[i].iswebsite) === 0) {
                             pins[i].url = self.http + "/camU" + pins[i].url
                             // console.log(pins)
                         }

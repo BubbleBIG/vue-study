@@ -76,7 +76,7 @@
         }
       }
       return {
-        http: 'http://localhost',
+        http: this.GLOBAL.url,
         url: this.$route.path,
         ruleForm2: {
           pass: '',

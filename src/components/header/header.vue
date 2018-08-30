@@ -3,7 +3,7 @@
     <div v-if="show" class="l-modal"></div>
     <div class="navb flex">
         <span class="navb-group navb-g" style="width:40px;margin:0 10px 0 20px">
-            <router-link to="/"style="padding:0"><img width="40" height="40" alt="Brand"
+            <router-link to="/" style="padding:0"><img width="40" height="40" alt="Brand"
             src="../../assets/v.png"></router-link>
         </span>
         <!--<span class="navb-group" style="width:30px;margin-left:16px;background-color:#ebebeb;
@@ -25,7 +25,7 @@
                 <div style="padding:2px 15px;height:100%;">
                 <div v-if="searchLists.user">
                     <div style="line-height: 24px;">people</div>
-                    <router-link :to="'/'+item.wname+'/'" v-for="item in searchLists.user" style="padding:0;">
+                    <router-link :to="'/'+item.wname+'/'" v-for="item in searchLists.user" :key="item.uimg" style="padding:0;">
                         <div style="vertical-align:center;">
                             <img v-if="item.uimg" :src="http+'/camU'+item.uimg" width="40" height="40" style="display:inline-block;">
                             <div v-else style="vertical-align:center;display:inline-block;width:40px;height:40px;border:1px solid #eee;"></div>
@@ -38,7 +38,7 @@
                 </div>
                 <div>
                     <div v-if="searchWords" style="line-height: 24px;">Boards</div>
-                    <router-link v-if="item.secret==='true'" :to="'/'+item.wname+'/'+item.bname+'/'" v-for="item in searchLists.board" style="padding:0;">
+                    <router-link v-if="item.secret==='true'" :to="'/'+item.wname+'/'+item.bname+'/'" v-for="item in searchLists.board" :key="item.uid" style="padding:0;">
                         <div v-if="parseInt(item.uid)===parseInt(arrCookie)" style="vertical-align:center;">
                             <img v-if="item.cover" :src="item.cover" width="40" height="40" style="display:inline-block;">
                             <div v-else style="vertical-align:center;display:inline-block;width:40px;height:40px;border:1px solid #eee;"></div>
@@ -48,7 +48,7 @@
                             </div>
                         </div>
                     </router-link>
-                    <router-link v-if="item.secret==='false'" :to="'/'+item.wname+'/'+item.bname+'/'" v-for="item in searchLists.board" style="padding:0;">
+                    <router-link v-if="item.secret==='false'" :to="'/'+item.wname+'/'+item.bname+'/'" v-for="item in searchLists.board" :key="item.uid" style="padding:0;">
                         <div style="vertical-align:center;">
                             <img v-if="item.cover" :src="item.cover" width="40" height="40" style="display:inline-block;">
                             <div v-else style="vertical-align:center;display:inline-block;width:40px;height:40px;border:1px solid #eee;"></div>
@@ -69,7 +69,7 @@
             <el-popover ref="popover1" placement="bottom" width="320" trigger="click">
             <div id="category-link" style="height:283px;padding:16px 0px 0px 0px;border-bottom:1px solid #eee">
                 <router-link  style="width:160px;float:left;font-size:14px;font-weight:600;line-height: 18px;"
-                :to="'/category/' + item.label" v-for="item in categoryLists">
+                :to="'/category/' + item.label" v-for="item in categoryLists" :key="item.uid">
                     {{ item.value }}
                 </router-link>
             </div>
@@ -77,7 +77,7 @@
                 <router-link :to="'/'">Home</router-link>
             </div>
             </el-popover>
-        <el-button type="text" v-popover:popover1 class="" style="width:52px;margin-top:-4px;"><span class="categoriesHeader" style="margin-left:14px;"></span></button>
+        <el-button type="text" v-popover:popover1 class="" style="width:52px;margin-top:-4px;"><span class="categoriesHeader" style="margin-left:14px;"></span></el-button>
         </span>
         <span class="navb-group navb-g" style="width:px;padding:4px 0;vertical-align: middles">
         <router-link :to="'/' + userName + '/'" class="userimg" style="margin-top:-2px;"><div class="userImg"></div>
@@ -87,7 +87,7 @@
             <el-popover ref="popover2" placement="bottom" width="250" trigger="click">
             <div style="height:272px;">
                 <div class="news-list" style="height:270px;overflow:auto">
-                    <div v-for="item in news" style="margin-top:12px;margin-bottom: 5px;">
+                    <div v-for="item in news" style="margin-top:12px;margin-bottom: 5px;" :key="item.action">
                         <div v-if="item.action==='add'">
                             <ul>
                                 <li style="width:40px;height:40px;overflow:hidden;border-radius:8px;">
@@ -130,7 +130,7 @@
             let arrCookie = arr[0].split("=")
             let arrName = arr[1].split("=")
             return {
-                http: 'http://localhost',
+                http: this.GLOBAL.url,
                 categoryLists: '',
                 arrCookie: arrCookie[1],
                 userName: arrName[1],

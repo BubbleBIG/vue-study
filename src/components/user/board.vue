@@ -29,11 +29,11 @@
                         </el-button>
                     </div>
                 </li>
-                <li v-if="parseInt(board.uid)===parseInt(arrCookie)" class="" id="userInfo">
+                <li class="" id="userInfo">
                     <div class="iconButton">
                          <el-popover ref="popover3" placement="bottom" width="100" trigger="click">
                             <div style="height:130px;text-align:center">
-                                <el-button style="display: inline;" type="text" @click="">sth.</el-button>
+                                <el-button style="display: inline;" type="text" @click="back()">Back</el-button>
                             </div>
                         </el-popover>
                         <el-button type="text" v-popover:popover3 class="Button userMenuButton">
@@ -50,9 +50,9 @@
         </div>
     </div>
     <div class="userCommon">
-        <div v-for="item in inviters.mess" v-if="item.status===0&&parseInt(item.inviteduid)===parseInt(arrCookie)" style="margin-bottom:-66px;padding-top:76px;padding-left:10px;text-align:center;">
+        <div v-for="item in inviters.mess" :key="item.bid" v-if="item.status===0&&parseInt(item.inviteduid)===parseInt(arrCookie)" style="margin-bottom:-66px;padding-top:76px;padding-left:10px;text-align:center;">
             <div style="padding:8px 4px;background-color:#aaa;border-radius:8px;">
-            <span style="display:inline;padding-right:25px;font-size:14px;">Bubble invited you to collaborate on this board</span>
+            <span style="display:inline;padding-right:25px;font-size:14px;">{{item.inviteruname}} invited you to collaborate on this board</span>
             <el-button @click="status=0,handlenews(item.bid)">Ignore</el-button>
             <el-button @click="status=1,handlenews(item.bid)" type="primary">Accept</el-button>
             </div>
@@ -80,13 +80,13 @@
                     6-5.755c0-1.253-.423-2.47-1.2-3.454zm-2.36 0H5.56V4.566c0-1.29 1.095-2.34 2.44-2.34s2.44 1.05 2.44 2.34v2.225z"></path></svg>
                 </div>
                 <div class="user-info-li">
-                    <el-button v-for="inviter in inviters.mess" v-if="inviter.status===1&&parseInt(inviter.inviteduid)===parseInt(arrCookie)" type="text" @click="dialogVisible6=true,getInvite()" class="hasIcon borderless">
+                    <el-button v-for="inviter in inviters.mess" :key="inviter.uid" v-if="inviter.status===1&&parseInt(inviter.inviteduid)===parseInt(arrCookie)" type="text" @click="dialogVisible6=true,getInvite()" class="hasIcon borderless">
                         <i style="font-size:36px;font-weight:bold;" class="el-icon-plus"></i></el-button>
                     <el-button v-if="parseInt(board.uid)===parseInt(arrCookie)" type="text" @click="dialogVisible6=true,getInvite()" class="hasIcon borderless">
                         <i style="font-size:36px;font-weight:bold;" class="el-icon-plus"></i></el-button>
                     <el-button v-else :disabled="true" type="text" class="hasIcon borderless"><i style="font-size:36px;font-weight:bold;" class="el-icon-plus"></i></el-button>
                 </div>
-                <router-link :to="'/'+inviter.invitedwname+'/'" v-for="inviter in inviters.mess" v-if="inviter.status===1" class="user-info-li">
+                <router-link :to="'/'+inviter.invitedwname+'/'" v-for="inviter in inviters.mess" :key="inviter.uid" v-if="inviter.status===1" class="user-info-li">
                     <el-tooltip class="" effect="light" :content="inviter.inviteduname+' invited by '+board.name" placement="top">
                         <img v-if="inviter.img" :src="http+'/camU'+inviter.img" width="56" height="56">
                         <img v-else src="../../common/images/person.png" width="56" height="56" />
@@ -135,12 +135,12 @@
                 <div style="padding:8px 0px;clear:both" align="left">
                     <a href="####" style="height: 30px;color: #a8a8a8;position:relative;">
                         <div class="userPic" style="float:left">
-                            <img v-if="pin.uid===board.uid" :src="http+'/camU'+board.img"
+                            <img v-if="pin.uid===board.uid&&board.img" :src="http+'/camU'+board.img"
                             style="position:absolute;z-index:2;vertical-align: middle;width:24px;height:24px;border-radius:50%;">
                             <img v-else src="../../common/images/person.png"
                             style="position:absolute;z-index:1;vertical-align: middle;width:24px;height:24px">
                             </div>
-                            <img v-for="inviter in inviters.mess" v-if="pin.uid===inviter.inviteduid" :src="http+'/camU'+inviter.img"
+                            <img v-for="inviter in inviters.mess" :key="inviter.uid" v-if="pin.uid===inviter.inviteduid&&inviter.img" :src="http+'/camU'+inviter.img"
                             style="position:absolute;z-index:2;vertical-align: middle;width:24px;height:24px;border-radius:50%;">
                         <div style="padding:0px 32px;" class="creditName">Saved to</div>
                         <div style="padding:0px 32px;" class="creditTitle">{{ pin.bname }}</div>
@@ -181,6 +181,7 @@
                 <el-select v-model="board.category" placeholder="What kind of board is it?" clearable>
                     <el-option
                     v-for="item in options"
+                    :key="item.value"
                     :value="item.value">
                     </el-option>
                 </el-select>
@@ -263,142 +264,142 @@
         </span>
     </el-dialog>
     <el-dialog title="Save from" v-model="dialogVisible3" class="pin-tiny" size="tiny">
-            <div>
-                <el-row style="width:320px">
-                <el-col :span="12"><button class="grid-content bg-purple"
-                @click="dialogVisible4 = true,dialogVisible3 = false">
-                    <em></em>
-                    <span>The web</span>
-                    </button>
-                </el-col>
-                <el-col :span="12"><button class="grid-content bg-purple-light"
-                @click="dialogVisible2 = true,dialogVisible3 = false">
-                    <em></em>
-                    <span>Your device</span>
-                    </button>
-                </el-col>
-                </el-row>
-                <!--<el-button>The web</el-button>
-                <button>The web</button>-->
-            </div>
-        </el-dialog>
-        <el-dialog title="Upload a Pin" v-model="dialogVisible2" size="tiny">
-            <el-upload name="photo"
-            style="padding: 18px;background:#ededed;"
-            :action="http + '/camU/index/index/uploadpintmp'"
-            :on-change="handleResponse"
-            :on-remove="handleRemove"
-            :before-upload="beforeAvatarUpload"
-            :show-file-list="false">
-            <el-button size="small" type="primary">Choose image</el-button>
-            <div slot="tip" class="el-upload__tip">只能上传jpeg/jpg/png/gif文件，且不超过2M</div>
-            </el-upload>
-            <!--<el-upload
-            action="/camU/index/index/uploadPins.html"
-            list-type="picture-card" name="photo"
-            :on-change="handleResponse"
-            :on-preview="handlePictureCardPreview"
-            :on-remove="handleRemove">
-            <i class="el-icon-plus"></i>
-            </el-upload>-->
-            <!--<span>
-                <form name="board" id="board2" class="formUploadPin">  
-                    <input type="file" name="photo" id="photo" accept="image/gif,
-                    image/png, image/jpeg, image/bmp, image/webp" @change="uploadOne1">
-                </form>
-            </span>-->
-        </el-dialog>
+        <div>
+            <el-row style="width:320px">
+            <el-col :span="12"><button class="grid-content bg-purple"
+            @click="dialogVisible4 = true,dialogVisible3 = false">
+                <em></em>
+                <span>The web</span>
+                </button>
+            </el-col>
+            <el-col :span="12"><button class="grid-content bg-purple-light"
+            @click="dialogVisible2 = true,dialogVisible3 = false">
+                <em></em>
+                <span>Your device</span>
+                </button>
+            </el-col>
+            </el-row>
+            <!--<el-button>The web</el-button>
+            <button>The web</button>-->
+        </div>
+    </el-dialog>
+    <el-dialog title="Upload a Pin" v-model="dialogVisible2" size="tiny">
+        <el-upload name="photo"
+        style="padding: 18px;background:#ededed;"
+        :action="http + '/camU/index/index/uploadpintmp'"
+        :on-change="handleResponse"
+        :on-remove="handleRemove"
+        :before-upload="beforeAvatarUpload"
+        :show-file-list="false">
+        <el-button size="small" type="primary">Choose image</el-button>
+        <div slot="tip" class="el-upload__tip">只能上传jpeg/jpg/png/gif文件，且不超过2M</div>
+        </el-upload>
+        <!--<el-upload
+        action="/camU/index/index/uploadPins.html"
+        list-type="picture-card" name="photo"
+        :on-change="handleResponse"
+        :on-preview="handlePictureCardPreview"
+        :on-remove="handleRemove">
+        <i class="el-icon-plus"></i>
+        </el-upload>-->
+        <!--<span>
+            <form name="board" id="board2" class="formUploadPin">  
+                <input type="file" name="photo" id="photo" accept="image/gif,
+                image/png, image/jpeg, image/bmp, image/webp" @change="uploadOne1">
+            </form>
+        </span>-->
+    </el-dialog>
         <!--<el-dialog v-model="dialogImgVisible">
             <div>
                 <img width="100%" :src="dialogImageUrl" alt="">
             </div>
         </el-dialog>-->
-        <el-dialog title="Save from a website" v-model="dialogVisible4">
-            <el-form :model="formInline" :rules="rules3" ref="formInline">
-            <el-form-item prop="url">
-                <el-input v-model="formInline.url" placeholder="http://..." auto-complete="off"
-                style="width:464px;margin-right:10px"></el-input>
-                <el-button v-if="!formInline.url" type="primary" :disabled="true">Next</el-button>
-                <el-button v-else type="info" @click="urlForm('formInline')">Next</el-button>
-            </el-form-item>
-            </el-form>
-            <!--<el-input v-model="input" placeholder="请输入内容"></el-input>
-            <el-button type="info">信息按钮</el-button>-->
-        </el-dialog>
-        <el-dialog title="" v-model="dialogVisible5">
-            <el-form>
-                <el-row>
-                <el-col :span="12" style="border-right: 1px solid #efefef;background-color:#fdfdfd">
-                    <div style="width:236px;min-height: 410px;max-height:480px;margin:auto;padding-top:2px">
-                        <div style="margin-bottom: 5px;">
-                        <img :src="webUrl" width="100%" id="imgData" style="border-radius: 4px;">
-                        </div>
-                        <el-input v-model="ImageUrl" style="display:none"></el-input>
-                        <el-input v-model="iswebsite" style="display:none"></el-input>
-                        <div style="padding-bottom: 20px">
-                            <el-input
-                            type="textarea"
-                            :rows="2"
-                            placeholder="Tell us about this Pin.."
-                            v-model="textarea">
-                            </el-input>
-                        </div>
+    <el-dialog title="Save from a website" v-model="dialogVisible4">
+        <el-form :model="formInline" :rules="rules3" ref="formInline">
+        <el-form-item prop="url">
+            <el-input v-model="formInline.url" placeholder="http://..." auto-complete="off"
+            style="width:464px;margin-right:10px"></el-input>
+            <el-button v-if="!formInline.url" type="primary" :disabled="true">Next</el-button>
+            <el-button v-else type="info" @click="urlForm('formInline')">Next</el-button>
+        </el-form-item>
+        </el-form>
+        <!--<el-input v-model="input" placeholder="请输入内容"></el-input>
+        <el-button type="info">信息按钮</el-button>-->
+    </el-dialog>
+    <el-dialog title="" v-model="dialogVisible5">
+        <el-form>
+            <el-row>
+            <el-col :span="12" style="border-right: 1px solid #efefef;background-color:#fdfdfd">
+                <div style="width:236px;min-height: 410px;max-height:480px;margin:auto;padding-top:2px">
+                    <div style="margin-bottom: 5px;">
+                    <img :src="webUrl" width="100%" id="imgData" style="border-radius: 4px;">
                     </div>
-                </el-col>
-                <el-col :span="12" style="padding-left: 20px">
+                    <el-input v-model="ImageUrl" style="display:none"></el-input>
+                    <el-input v-model="iswebsite" style="display:none"></el-input>
+                    <div style="padding-bottom: 20px">
+                        <el-input
+                        type="textarea"
+                        :rows="2"
+                        placeholder="Tell us about this Pin.."
+                        v-model="textarea">
+                        </el-input>
+                    </div>
+                </div>
+            </el-col>
+            <el-col :span="12" style="padding-left: 20px">
+                <div>
+                    <div style="padding-bottom: 10px;border-bottom: 1px solid #efefef">
+                        <div class="title" style="font-size: 18px;font-weight: bold;
+                        padding-bottom: 8px;">Choose board</div>
+                        <el-input
+                        icon="search"
+                        placeholder="search"
+                        v-model="input2"
+                        :on-icon-click="handleIconClick">
+                        </el-input>
+                    </div>
                     <div>
-                        <div style="padding-bottom: 10px;border-bottom: 1px solid #efefef">
-                            <div class="title" style="font-size: 18px;font-weight: bold;
-                            padding-bottom: 8px;">Choose board</div>
-                            <el-input
-                            icon="search"
-                            placeholder="search"
-                            v-model="input2"
-                            :on-icon-click="handleIconClick">
-                            </el-input>
+                        <div style="padding: 8px 0px">All boards</div>
+                        <!--<el-button-group v-for="bo in bos">
+                            <el-button type="text">{{ bo.bname }}</el-button>
+                            <el-button type="primary" icon="share">Save</el-button>
+                        </el-button-group>-->
+                        <div class="choose-board">
+                            <div v-for="bo in bos" :key="bo.secret">
+                                <div class="board-list">
+                                    <div style="position:relative">
+                                        <el-button type="text" class="board-list-btn">
+                                            <img v-if="bo.cover" :src="bo.cover" style="vertical-align:middle;width:35px;
+                                            height:34px;object-fit: cover;border-radius:3px;">
+                                            <img v-else src="../../common/images/pg.png" style="vertical-align:middle">
+                                            <span style="display:inline">{{ bo.bname }}</span>
+                                            <svg v-if="bo.secret === 'true'" class="_2X6AN" style="right:20px;" viewBox="0 0 16 16"><path d="M12.8 6.791h-.04V4.566C12.76 2.048 10.625 0 8 0S3.24 2.048 
+                                            3.24 4.566v2.225H3.2A5.577 5.577 0 0 0 2 10.245C2 13.423 4.686 16 8 16s6-2.577 6-5.755a5.579 5.579 0 0 0-1.2-3.454zm-2.36 
+                                            0H5.56V4.566c0-1.29 1.095-2.34 2.44-2.34s2.44 1.05 2.44 2.34v2.225z" fill-rule="evenodd"></path></svg>
+                                            <svg v-if="parseInt(bo.uid)!==parseInt(arrCookie)" class="_2X6AN" viewBox="0 0 16 16"><path d="M9.143 10.2A4 4 0 0 1 16 13v1H0v-1a5 5 0 0 1 9.143-2.8zM12
+                                            8a2 2 0 1 0 .001-3.999A2 2 0 0 0 12 8zM5 7a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5z" fill-rule="evenodd"></path></svg>
+                                            </el-button>
+                                        <el-button style="position:absolute;top:0;right:0;" type="primary" class="board-list-save"
+                                        @click="pinSave(bo)">Save</el-button>
+                                    </div>
+                                </div>
+                                <!--<div>
+                                    <div>{{ bo.bname }}</div>
+                                    <div><el-button type="primary">Save</el-button></div>
+                                </div>-->
+                            </div>
                         </div>
                         <div>
-                            <div style="padding: 8px 0px">All boards</div>
-                            <!--<el-button-group v-for="bo in bos">
-                                <el-button type="text">{{ bo.bname }}</el-button>
-                                <el-button type="primary" icon="share">Save</el-button>
-                            </el-button-group>-->
-                            <div class="choose-board">
-                                <div v-for="bo in bos">
-                                    <div class="board-list">
-                                        <div style="position:relative">
-                                            <el-button type="text" class="board-list-btn">
-                                                <img v-if="bo.cover" :src="bo.cover" style="vertical-align:middle;width:35px;
-                                                height:34px;object-fit: cover;border-radius:3px;">
-                                                <img v-else src="../../common/images/pg.png" style="vertical-align:middle">
-                                                <span style="display:inline">{{ bo.bname }}</span>
-                                                <svg v-if="bo.secret === 'true'" class="_2X6AN" style="right:20px;" viewBox="0 0 16 16"><path d="M12.8 6.791h-.04V4.566C12.76 2.048 10.625 0 8 0S3.24 2.048 
-                                                3.24 4.566v2.225H3.2A5.577 5.577 0 0 0 2 10.245C2 13.423 4.686 16 8 16s6-2.577 6-5.755a5.579 5.579 0 0 0-1.2-3.454zm-2.36 
-                                                0H5.56V4.566c0-1.29 1.095-2.34 2.44-2.34s2.44 1.05 2.44 2.34v2.225z" fill-rule="evenodd"></path></svg>
-                                                <svg v-if="parseInt(bo.uid)!==parseInt(arrCookie)" class="_2X6AN" viewBox="0 0 16 16"><path d="M9.143 10.2A4 4 0 0 1 16 13v1H0v-1a5 5 0 0 1 9.143-2.8zM12
-                                                8a2 2 0 1 0 .001-3.999A2 2 0 0 0 12 8zM5 7a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5z" fill-rule="evenodd"></path></svg>
-                                                </el-button>
-                                            <el-button style="position:absolute;top:0;right:0;" type="primary" class="board-list-save"
-                                            @click="pinSave(bo)">Save</el-button>
-                                        </div>
-                                    </div>
-                                    <!--<div>
-                                        <div>{{ bo.bname }}</div>
-                                        <div><el-button type="primary">Save</el-button></div>
-                                    </div>-->
-                                </div>
-                            </div>
-                            <div>
-                                <div class="creat-board">
-                                    <el-button><i></i><em>Create board</em></el-button>
-                                </div>
+                            <div class="creat-board">
+                                <el-button><i></i><em>Create board</em></el-button>
                             </div>
                         </div>
                     </div>
-                </el-col>
-                </el-row>
-            </el-form>
-        </el-dialog>
+                </div>
+            </el-col>
+            </el-row>
+        </el-form>
+    </el-dialog>
         <el-dialog title="Invite people to join this board" v-model="dialogVisible6">
             <el-form>
                 <el-row>
@@ -442,7 +443,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div v-if="inviters.status===1" v-for="inviter in inviters.mess">
+                                <div v-if="inviters.status===1" v-for="inviter in inviters.mess" :key="inviter.uid">
                                     <div v-if="parseInt(arrCookie)===parseInt(inviter.inviteduid)" class="board-list">
                                         <el-button type="text" class="board-list-btn" style="margin-left: 5px;">
                                             <img v-if="inviter.img" :src="http+'/camU'+inviter.img" style="vertical-align:middle;width:35px;
@@ -549,7 +550,7 @@ import WaterfallSlot from 'vue-waterfall/lib/waterfall-slot'
                 }, 500);
             }
             return {
-                http: 'http://localhost',
+                http: this.GLOBAL.url,
                 bName: bname,
                 arrCookie: arrCookie[1],
                 arrname: arrCookie2[1],
@@ -603,7 +604,8 @@ import WaterfallSlot from 'vue-waterfall/lib/waterfall-slot'
                 status: '',
                 count: 0,
                 // rmInviter: 0,
-                username: this.$route.params.username
+                username: this.$route.params.username,
+                st: 1
             }
         },
         created: function () {
@@ -640,7 +642,7 @@ import WaterfallSlot from 'vue-waterfall/lib/waterfall-slot'
                         let length = pins.pins.length
                         for (let i = 0; i < length; i++) {
                             pins.pins[i].height = 114 + parseInt(pins.pins[i].height)
-                            if (pins.pins[i].iswebsite === 0) {
+                            if (parseInt(pins.pins[i].iswebsite) === 0) {
                                 pins.pins[i].url = self.http + "/camU" + pins.pins[i].url
                                 // console.log(pins)
                             }
@@ -650,6 +652,7 @@ import WaterfallSlot from 'vue-waterfall/lib/waterfall-slot'
                         } else {
                             pins.board.secret = true
                         }
+                        self.inviters = ''
                         // console.log(pins)
                         self.pins = pins.pins
                         self.board = pins.board
@@ -681,7 +684,7 @@ import WaterfallSlot from 'vue-waterfall/lib/waterfall-slot'
                         let length = pins.pins.length
                         for (let i = 0; i < length; i++) {
                             pins.pins[i].height = 114 + parseInt(pins.pins[i].height)
-                            if (parseInt(pins.pins[i].iswebsite === 0)) {
+                            if (parseInt(pins.pins[i].iswebsite) === 0) {
                                 pins.pins[i].url = self.http + "/camU" + pins.pins[i].url
                                 // console.log(pins)
                             }
@@ -717,7 +720,7 @@ import WaterfallSlot from 'vue-waterfall/lib/waterfall-slot'
                         let length = pins.pins.length
                         for (let i = 0; i < length; i++) {
                             pins.pins[i].height = 114 + parseInt(pins.pins[i].height)
-                            if (pins.pins[i].iswebsite === 0) {
+                            if (parseInt(pins.pins[i].iswebsite) === 0) {
                                 pins.pins[i].url = self.http + "/camU" + pins.pins[i].url
                                 // console.log(pins)
                             }
@@ -1253,6 +1256,10 @@ import WaterfallSlot from 'vue-waterfall/lib/waterfall-slot'
                 // console.log(self.status)
                 // console.log(self.bid)
                 // console.log(self.arrCookie)
+            },
+            back () {
+                let self = this
+                self.$router.go(-1)
             }
             // getNewsNums () {
             //     let self = this

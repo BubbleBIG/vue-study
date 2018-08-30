@@ -3,7 +3,8 @@
         <v-header></v-header>
         <div class="boards">
             <div class="boardsItems flex-wrap">
-                <div v-for="bo in bos" v-if="bo.secret === 'false'" class="ProfileBoardCard" style="margin:20px 0;padding: 0 12px">
+                <div style="position:absolute;top:100px;left:200px;font-size:30px;">Nothing</div>
+                <div v-for="bo in bos" :key="bo" v-if="bo.secret === 'false'" class="ProfileBoardCard" style="margin:20px 0;padding: 0 12px">
                     <div class="createCard" type="text">
                         <router-link :to="'/' + bo.name + '/' + bo.bname + '/'">
                         <div style="position: relative;width:301px;height:200px;">
@@ -14,21 +15,21 @@
                                     height: 200px;object-fit: cover;max-width:100%;border:1px solid #eee">
                                 </li>
                                 <!--{{ bo.img.length }}-->
-                                <li v-if="bo.count !== 0" v-for="item in bo.img" style="width:98px;height:99px;padding:1px 1px;">
+                                <li v-if="bo.count !== 0" v-for="item in bo.img" :key="item" style="width:98px;height:99px;padding:1px 1px;">
                                     <img :src="http+'/camU'+item.url" style="width:100px;height:100px;object-fit: cover;">
                                 </li>
                                 <!--{{ bo.img.length }}-->
-                                <li v-if="bo.count !== 0" v-for="item in 2-bo.img.length" style="width:98px;height:99px;padding:1px 1px;">
+                                <li v-if="bo.count !== 0" v-for="item in 2-bo.img.length"  :key="item" style="width:98px;height:99px;padding:1px 1px;">
                                     <div style="width:100%;height:100%;border:1px solid #eee"></div>
                                 </li>
                                 </ul>
                                 <ul v-else>
                                 <!--{{ bo.img.length }}-->
-                                <li v-if="bo.count !== 0" v-for="item in bo.img" style="width:98px;height:99px;padding:1px 1px;">
+                                <li v-if="bo.count !== 0" v-for="item in bo.img" :key="item" style="width:98px;height:99px;padding:1px 1px;">
                                     <img :src="http+'/camU'+item.url" style="width:99px;height:100px;object-fit: cover;">
                                 </li>
                                 <!--{{ bo.img.length }}-->
-                                <li v-for="item in 6-bo.img.length" style="width:98px;height:99px;padding:1px 1px;">
+                                <li v-for="item in 6-bo.img.length" :key="item" style="width:98px;height:99px;padding:1px 1px;">
                                     <div style="width:100%;height:100%;border:1px solid #eee"></div>
                                 </li>
                                 </ul>
@@ -54,14 +55,14 @@
                             <button class="pz3 pz5" style="color: #555;" @click="changeBoard(bo.bid),
                                 dialogFormVisible1 = true">Edit</button></div>
                             <div v-else>
-                            <button class="pz3 pz5" style="color: #555;" @click="">Follow</button></div>
+                            <button class="pz3 pz5" style="color: #555;">Follow</button></div>
                             <!--<div v-if="bo.invited===1">-->
                             <!--<button class="pz3 pz5" style="color: #555;width:80px;" @click="changeBoard(bo.bid),
                                 dialogFormVisible1 = true">Edit</button></div>-->
                         </div>
                     </div>
                 </div>
-                <div v-for="bo in bos" v-if="bo.secret === 'true'&&bo.invited===1||bo.uid===parseInt(arrCookie)" class="ProfileBoardCard" style="margin:20px 0;padding: 0 12px">
+                <div v-for="bo in bos" :key="bo" v-if="bo.secret === 'true'&&bo.invited===1||bo.uid===parseInt(arrCookie)" class="ProfileBoardCard" style="margin:20px 0;padding: 0 12px">
                     <div class="createCard" type="text">
                         <router-link :to="'/' + bo.name + '/' + bo.bname + '/'">
                         <div style="position: relative;width:301px;height:200px;">
@@ -72,21 +73,21 @@
                                     height: 200px;object-fit: cover;max-width:100%;border:1px solid #eee">
                                 </li>
                                 <!--{{ bo.img.length }}-->
-                                <li v-if="bo.count !== 0" v-for="item in bo.img" style="width:98px;height:99px;padding:1px 1px;">
+                                <li v-if="bo.count !== 0" v-for="item in bo.img" :key="item" style="width:98px;height:99px;padding:1px 1px;">
                                     <img :src="http+'/camU'+item.url" style="width:100px;height:100px;object-fit: cover;">
                                 </li>
                                 <!--{{ bo.img.length }}-->
-                                <li v-if="bo.count !== 0" v-for="item in 2-bo.img.length" style="width:98px;height:99px;padding:1px 1px;">
+                                <li v-if="bo.count !== 0" v-for="item in 2-bo.img.length" :key="item" style="width:98px;height:99px;padding:1px 1px;">
                                     <div style="width:100%;height:100%;border:1px solid #eee"></div>
                                 </li>
                                 </ul>
                                 <ul v-else>
                                 <!--{{ bo.img.length }}-->
-                                <li v-if="bo.count !== 0" v-for="item in bo.img" style="width:98px;height:99px;padding:1px 1px;">
+                                <li v-if="bo.count !== 0" v-for="item in bo.img"  :key="item" style="width:98px;height:99px;padding:1px 1px;">
                                     <img :src="http+'/camU'+item.url" style="width:99px;height:100px;object-fit: cover;">
                                 </li>
                                 <!--{{ bo.img.length }}-->
-                                <li v-for="item in 6-bo.img.length" style="width:98px;height:99px;padding:1px 1px;">
+                                <li v-for="item in 6-bo.img.length" :key="item" style="width:98px;height:99px;padding:1px 1px;">
                                     <div style="width:100%;height:100%;border:1px solid #eee"></div>
                                 </li>
                                 </ul>
@@ -112,10 +113,11 @@
                             <button class="pz3 pz5" style="color: #555;" @click="changeBoard(bo.bid),
                                 dialogFormVisible1 = true">Edit</button></div>
                             <div v-else>
-                            <button class="pz3 pz5" style="color: #555;" @click="">Follow</button></div>
+                            <button class="pz3 pz5" style="color: #555;">Follow</button></div>
                             <div v-if="bo.invited===1">
                             <!--<button class="pz3 pz5" style="color: #555;width:80px;" @click="changeBoard(bo.bid),
-                                dialogFormVisible1 = true">Edit</button></div>-->
+                                dialogFormVisible1 = true">Edit</button>-->
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -137,6 +139,7 @@
                     <el-select v-model="form1.category" placeholder="What kind of board is it?" clearable>
                         <el-option
                         v-for="item in options"
+                         :key="item"
                         :value="item.value">
                         </el-option>
                     </el-select>
@@ -171,6 +174,7 @@
                     <el-radio-button label="No"></el-radio-button>>
                 </el-radio-group>-->
                 </el-form-item>
+                </div>
                 <hr>
                 <div class="dialog-footer">
                     <el-button v-if="parseInt(arrCookie)===parseInt(form1.uid)" class="pz3" :plain="true" type="danger" @click="dialogVisible = true" style="float:left">Delete board</el-button>
@@ -250,7 +254,7 @@ import header from '../header/header.vue'
             let arrCookie = arr[0].split("=")
             let arrName = arr[1].split("=")
             return {
-                http: 'http://localhost',
+                http: this.GLOBAL.url,
                 userName: arrName[1],
                 arrCookie: arrCookie[1],
                 radio1: false,

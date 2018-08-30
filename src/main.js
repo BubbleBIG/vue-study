@@ -20,11 +20,15 @@ import board from './components/user/board'
 import category from './components/user/category'
 import error from './components/user/404'
 import search from './components/user/search'
+import message from './components/user/message'
 import VueAwesomeSwiper from 'vue-awesome-swiper'
 // import '../static/js/test.js'
 // require('es6-promise').polyfill()
 // require('isomorphic-fetch')
 import Vuex from 'vuex'
+
+import global_ from './global'
+Vue.prototype.GLOBAL = global_
 
 Vue.use(Vuex)
 Vue.use(VueRouter)
@@ -60,6 +64,7 @@ Vue.use(VueAwesomeSwiper)
     { path: '/settings', component: settings },
     { path: '/404', component: error },
     { path: '/error', component: error },
+    { path: '/message', component: message },
     // { path: '/pin/:id', name: 'pin', component: pin },
     { path: '/pin/:id', component: pin },
     { path: '/category/:name', name: 'category', component: category },

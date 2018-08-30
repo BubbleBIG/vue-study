@@ -12,7 +12,7 @@
                     </a>
                 </div>
             </div>
-            <div v-for="pin in pins" class="pinsItemsClass pinsItem" align="center">
+            <div v-for="pin in pins" :key="pin.iid" class="pinsItemsClass pinsItem" align="center">
                 <div class="">
                 <div class="pinsCard pinsCard2 gradient-wrap">
                     <div class="pin-img" style="margin:0;width:210px;">
@@ -125,7 +125,7 @@
                         <div style="padding-bottom: 10px;border-bottom: 1px solid #efefef">
                             <div class="title" style="font-size: 18px;font-weight: bold;
                             padding-bottom: 8px;">Choose board</div>
-                            <div v-for="bo in bos">
+                            <div v-for="bo in bos" :key="bo.bid">
                                 <div v-if="bo.bid === bosave.bid" style="margin-bottom:8px;background-color:#ffe581;font-size:12px;padding:2px;">
                                     Pssst! Looks like you've already <span style="display:inline;width；100%;color:#bd081c;font-weight:600;">saved this Pin to {{ bo.bname }}.</span>
                                 </div>
@@ -133,7 +133,7 @@
                             <!--<div v-if="bosave.iid === saveimg.oiid" style="margin-bottom:8px;background-color:#ffe581;font-size:12px;padding:2px;">
                                 Pssst! Looks like you've already <span style="display:inline;width；100%;color:#bd081c;font-weight:600;">saved this Pin to {{ saveimg.bname }}.</span>
                             </div>-->
-                            <div v-for="bo in bos" v-if="hash&&hash.bid === bo.bid" style="margin-bottom:8px;background-color:#ffe581;font-size:12px;padding:2px;">
+                            <div v-for="bo in bos" :key="bo.bid" v-if="hash&&hash.bid === bo.bid" style="margin-bottom:8px;background-color:#ffe581;font-size:12px;padding:2px;">
                                 Pssst! Looks like you've already <span style="display:inline;width；100%;color:#bd081c;font-weight:600;">upload this Pin to {{ bo.bname }}.</span>
                             </div>
                             <el-input
@@ -150,7 +150,7 @@
                                 <el-button type="primary" icon="share">Save</el-button>
                             </el-button-group>-->
                             <div class="choose-board">
-                                <div v-for="bo in bos">
+                                <div v-for="bo in bos" :key="bo.bid">
                                     <div class="board-list">
                                         <div style="position:relative">
                                             <el-button type="text" class="board-list-btn">
@@ -196,6 +196,7 @@
                     <el-select v-model="form1.bname" placeholder="What kind of board is it?">
                         <el-option
                         v-for="item in bos"
+                        :key="item.bname"
                         :value="item.bname">
                         {{ item.bname }}
                          <svg v-if="item.secret === 'true'" class="_2X6AN" style="right:20px;" viewBox="0 0 16 16"><path d="M12.8 6.791h-.04V4.566C12.76 2.048 10.625 0 8 0S3.24 2.048 
@@ -216,7 +217,6 @@
                     </div></el-col>
                 </el-row>
                 </div>
-                <div>
                 <hr>
                 <div class="dialog-footer">
                     <el-button class="pz3" :plain="true" type="danger" @click="dialogVisible = true" style="float:left">Delete Pin</el-button>
@@ -289,7 +289,7 @@
                 }
             }
             return {
-                http: 'http://localhost',
+                http: this.GLOBAL.url,
                 textarea: '',
                 input2: '',
                 arrCookie: arrCookie[1],
@@ -646,7 +646,7 @@
                 })
                 .then(res => res.json())
                 .then(function (pin) {
-                    if (pin.iswebsite === 0) {
+                    if (parseInt(pin.iswebsite) === 0) {
                         pin.url = self.http + "/camU" + pin.url
                         // console.log(pins)
                     }

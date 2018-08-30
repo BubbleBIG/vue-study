@@ -126,7 +126,7 @@ import header from '../header/header.vue'
             let arrCookie = arr[0].split("=")
             let arrName = arr[1].split("=")
             return {
-                http: 'http://localhost',
+                http: this.GLOBAL.url,
                 userName: arrName[1],
                 name: '',
                 uname: ''

@@ -20,7 +20,8 @@
                         <el-button type="danger" :plain="true"
                         style="color: #fab000" icon="star-on" @click="like(pin1.iid)"></el-button></el-tooltip>
                         <el-tooltip v-else effect="dark" content="like" placement="bottom">
-                        <el-button :plain="true" type="danger" icon="star-on" @click="like(pin1.iid)"></el-button></div></el-tooltip>
+                        <el-button :plain="true" type="danger" icon="star-on" @click="like(pin1.iid)"></el-button></el-tooltip>
+                    </div>
                     <div style="margin-left: 72px;" class="btn"><el-button type="primary" @click="dialogVisible5=true,savePin(pin1)">save</el-button></div>
                 </div>
                 <div @click="dialogPin = true,getPin(pin1.iid)" >
@@ -185,7 +186,7 @@
                         <div style="padding-bottom: 10px;border-bottom: 1px solid #efefef">
                             <div class="title" style="font-size: 18px;font-weight: bold;
                             padding-bottom: 8px;">Choose board</div>
-                            <div v-for="bo in bos">
+                            <div v-for="bo in bos" :key="bo.bid">
                                 <div v-if="bo.bid === bosave.bid" style="margin-bottom:8px;background-color:#ffe581;font-size:12px;padding:2px;">
                                     Pssst! Looks like you've already <span style="display:inline;width；100%;color:#bd081c;font-weight:600;">saved this Pin to {{ bo.bname }}.</span>
                                 </div>
@@ -207,7 +208,7 @@
                                 <el-button type="primary" icon="share">Save</el-button>
                             </el-button-group>-->
                             <div class="choose-board">
-                                <div v-for="bo in bos">
+                                <div v-for="bo in bos" :key="bo">
                                     <div class="board-list">
                                         <div style="position:relative">
                                             <el-button type="text" class="board-list-btn">
@@ -285,7 +286,7 @@ import WaterfallSlot from 'vue-waterfall/lib/waterfall-slot'
                 iswebsite: '',
                 dialogPin: false,
                 dialogVisible5: false,
-                http: 'http://localhost',
+                http: this.GLOBAL.url,
                 arrCookie: arrCookie[1],
                 pins: [],
                 pins2: [],
@@ -325,7 +326,7 @@ import WaterfallSlot from 'vue-waterfall/lib/waterfall-slot'
                         let length2 = res.mess.length
                         for (let i = 0; i < length; i++) {
                             pins[i].height = 114 + parseInt(pins[i].height)
-                            if (pins[i].iswebsite === 0) {
+                            if (parseInt(pins[i].iswebsite) === 0) {
                                 pins[i].url = self.http + "/camU" + pins[i].url
                                 // console.log(pins)
                             }
@@ -352,7 +353,7 @@ import WaterfallSlot from 'vue-waterfall/lib/waterfall-slot'
                 })
                 .then(res => res.json())
                 .then(function (pin) {
-                    if (pin.iswebsite === 0) {
+                    if (parseInt(pin.iswebsite) === 0) {
                         pin.url = self.http + "/camU" + pin.url
                         // console.log(pins)
                     }
@@ -381,7 +382,7 @@ import WaterfallSlot from 'vue-waterfall/lib/waterfall-slot'
                             let length2 = res.mess.length
                             for (let i = 0; i < length; i++) {
                                 pins[i].height = 114 + parseInt(pins[i].height)
-                                if (pins[i].iswebsite === 0) {
+                                if (parseInt(pins[i].iswebsite) === 0) {
                                     pins[i].url = self.http + "/camU" + pins[i].url
                                     // console.log(pins)
                                 }
